@@ -1,0 +1,14 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.nego.carpooling.Settings">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_awesome_toolbar"
+        android:layout_height="?android:attr/actionBarSize"
+        android:layout_width="match_parent"
+        android:theme="@style/style_actionBar"
+        android:background="@color/primary"
+        android:elevation="2dp" />
+
+</RelativeLayout>

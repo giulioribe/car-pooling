@@ -1,0 +1,135 @@
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/primary"
+            android:transitionName="toolbar" />
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/my_awesome_toolbar"
+            android:layout_height="220dp"
+            android:layout_width="match_parent"
+            android:theme="@style/style_actionBar"
+            android:background="@color/primary"
+            android:transitionName="my_awesome_toolbar"
+            android:elevation="2dp"
+            android:scaleType="centerCrop"
+            android:paddingTop="24dp"
+            android:paddingRight="4dp"
+            android:paddingEnd="4dp" >
+
+        </android.support.v7.widget.Toolbar>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="3dp"
+            app:cardElevation="4dp"
+            android:id="@+id/card_grid"
+            android:background="@color/back_card"
+            app:cardBackgroundColor="@color/back_card"
+            app:cardPreventCornerOverlap="true"
+            android:layout_margin="64dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="280dp"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:background="@drawable/list_item_background">
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_action_people"
+                            android:id="@+id/imageView" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:textColor="@color/white_back"
+                            android:text="@string/title_activity_choose_people"
+                            android:layout_toRightOf="@+id/imageView"
+                            android:layout_toEndOf="@+id/imageView"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginStart="16dp"/>
+                    </RelativeLayout>
+
+                </LinearLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="16dp"
+                        android:id="@+id/no_persons"
+                        android:visibility="gone"
+                        android:orientation="vertical"
+                        android:layout_centerInParent="true">
+                        <ImageView
+                            android:layout_width="250dp"
+                            android:layout_height="250dp"
+                            android:layout_gravity="center_horizontal"
+                            android:src="@drawable/no_persons"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:gravity="center_horizontal"
+                            android:text="Che divertimento c'è\na viaggiare da soli?\nAggiungi una persona!"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:textColor="@color/white_back" />
+                    </LinearLayout>
+                    <ProgressBar
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/loader"
+                        android:layout_gravity="center"
+                        android:layout_centerInParent="true" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/grid_people"/>
+                </RelativeLayout>
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+    </RelativeLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:src="@drawable/ic_arrow_forward_big"
+        android:id="@+id/next_button"
+        android:elevation="8dp"
+        android:clickable="true"
+        android:animateLayoutChanges="true"
+        android:layout_gravity="end|bottom"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:transitionName="floating_button"
+        app:borderWidth="0dp"
+        android:layout_margin="64dp"
+        app:backgroundTint="@color/accent"/>
+
+</android.support.design.widget.CoordinatorLayout>
