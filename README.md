@@ -1,2 +1,3 @@
-# car-pooling
-Progetto Ricerca Operativa
+#Progetto Ricerca Operativa
+## Car pooling
+Sono note le origini degli spostamenti casa-lavoro degli studenti del polo. Supponendo che tutti abbiano gli stessi orari (vogliano arrivare al polo alla stessa ora a inizio giornata e ripartire dal polo alla stessa ora a fine giornata), si organizzino gli itinerari (ad esempio in andata), sapendo che tutte le macchine hanno capienza 5 e che ciascun utente ha un massimo tempo di viaggio consentito. Ogni persona puo’ essere o autista o passeggero: se passeggero, e’ prelevabile o a casa propria o in uno tra un insieme di punti preassegnato. Si vuole minimizzare la somma delle durate dei percorsi delle macchine. Si modellizzi il problema su un grafo orientato e si scelga un approccio risolutivo.
