@@ -95,20 +95,18 @@ public class CalculateDistances extends AppCompatActivity {
         String uri_dest = "&destinations=";
 
         String uri_o = "";
-        String uri_d = "";
         int k = 0;
         for (Person p : persons) {
             String divider = "|";
             if (k == 0)
                 divider = "";
             uri_o = uri_o + divider + Uri.encode(p.getAddress());
-            uri_d = uri_d + divider + Uri.encode(p.getAddress());
             k++;
         }
 
         String uri_lan = "&language=" + Locale.getDefault().getLanguage();
         String uri_key = "&key=AIzaSyB27xz94JVRPsuX4qJMMiZpGVoQiQITFb8";
-        new DownloadTask().execute(uri + uri_o + uri_dest + uri_d + uri_lan + uri_key);
+        new DownloadTask().execute(uri + uri_o + uri_dest + uri_o + uri_lan + uri_key);
     }
 
     @Override

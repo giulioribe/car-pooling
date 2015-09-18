@@ -7,129 +7,202 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:background="@color/primary"
-            android:transitionName="toolbar" />
+        <!-- BACKGROUND -->
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/my_awesome_toolbar"
-            android:layout_height="220dp"
+        <ImageView
             android:layout_width="match_parent"
-            android:theme="@style/style_actionBar"
-            android:background="@color/primary"
-            android:transitionName="my_awesome_toolbar"
-            android:elevation="2dp"
-            android:scaleType="centerCrop"
-            android:paddingTop="24dp"
-            android:paddingRight="4dp"
-            android:paddingEnd="4dp" >
+            android:layout_height="match_parent"
+            android:src="@drawable/pr_t"
+            android:scaleType="centerCrop"/>
 
-        </android.support.v7.widget.Toolbar>
+        <!-- WELCOME AND ADD PEOPLE-->
 
         <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:cardCornerRadius="3dp"
-            app:cardElevation="4dp"
-            android:id="@+id/card_grid"
-            android:background="@color/back_card"
-            app:cardBackgroundColor="@color/back_card"
+            app:cardElevation="3dp"
+            android:layout_centerInParent="true"
+            android:id="@+id/welcome_grid"
+            android:background="@color/black_opacity"
+            app:cardBackgroundColor="@color/black_opacity"
+            android:padding="16dp"
             app:cardPreventCornerOverlap="true"
-            android:layout_margin="64dp">
+            android:visibility="gone">
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="32dp"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Benvenuto"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white_back"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Inserisci i tuoi dati"/>
+                <ImageView
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:src="@drawable/no_persons"/>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:background="@drawable/item_background"
+                    android:text="Inizia"/>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="300dp"
+            android:layout_height="400dp"
+            app:cardCornerRadius="3dp"
+            app:cardElevation="3dp"
+            android:id="@+id/card_grid"
+            android:layout_centerInParent="true"
+            android:background="@color/black_opacity"
+            app:cardBackgroundColor="@color/black_opacity"
+            app:cardPreventCornerOverlap="true"
+            android:visibility="gone">
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/my_awesome_toolbar"
+                    android:layout_height="?android:attr/actionBarSize"
+                    android:layout_width="match_parent"
+                    android:theme="@style/style_actionBar"
+                    android:background="@color/primary"
+                    android:scaleType="centerCrop"
+                    android:paddingRight="4dp"
+                    android:elevation="2dp"
+                    android:paddingEnd="4dp">
+
+                </android.support.v7.widget.Toolbar>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/primary_dark"
+                    android:id="@+id/arrivo"
+                    android:layout_below="@+id/my_awesome_toolbar">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:textColor="@android:color/white"
+                        android:singleLine="true"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:textAppearance="?android:attr/textAppearanceButton"
+                        android:text="Arrivo alle 16:00 in Via Saragat "/>
+                </RelativeLayout>
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/loader"
+                    android:layout_gravity="center"
+                    android:layout_centerInParent="true" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:layout_width="300dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/grid_people"
+                    android:layout_below="@+id/arrivo" />
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:src="@drawable/ic_arrow_forward_big"
+            android:id="@+id/next_button"
+            android:elevation="8dp"
+            android:clickable="true"
+            android:animateLayoutChanges="true"
+            android:layout_gravity="end|bottom"
+            android:transitionName="floating_button"
+            app:borderWidth="0dp"
+            app:backgroundTint="@color/accent"
+            android:layout_below="@+id/card_grid"
+            android:layout_alignRight="@+id/card_grid"
+            android:layout_alignEnd="@+id/card_grid"
+            android:layout_marginTop="-32dp"
+            android:layout_marginRight="32dp"
+            android:layout_marginEnd="32dp"
+            android:visibility="gone" />
+
+        <!-- AUTO
+            TODO: da inserire tutte le scrollview -->
+
+        <android.support.v7.widget.CardView
+            android:layout_width="300dp"
+            android:layout_height="400dp"
+            app:cardCornerRadius="3dp"
+            app:cardElevation="3dp"
+            android:id="@+id/todo_grid"
+            android:layout_centerInParent="true"
+            android:background="@color/black_opacity"
+            app:cardBackgroundColor="@color/black_opacity"
+            app:cardPreventCornerOverlap="true">
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/loader_todo"
+                    android:layout_gravity="center"
+                    android:layout_centerInParent="true" />
                 <LinearLayout
-                    android:layout_width="280dp"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="16dp"
-                        android:background="@drawable/list_item_background">
+                        android:padding="16dp">
                         <ImageView
                             android:layout_width="32dp"
                             android:layout_height="32dp"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/ic_action_people"
-                            android:id="@+id/imageView" />
+                            android:src="@drawable/ic_action_auto"
+                            android:tint="@color/accent"
+                            android:id="@+id/imageView"
+                            android:layout_centerVertical="true"/>
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
+                            android:id="@+id/name"
+                            android:textColor="@android:color/white"
                             android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:text="Tommaso Berlose"
+                            android:layout_toRightOf="@+id/imageView"
+                            android:layout_toEndOf="@+id/imageView"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginStart="16dp"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:textColor="@color/white_back"
-                            android:text="@string/title_activity_choose_people"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:fontFamily="sans-serif-medium"
+                            android:text="Partenza ore 15:00"
+                            android:layout_below="@+id/name"
                             android:layout_toRightOf="@+id/imageView"
                             android:layout_toEndOf="@+id/imageView"
                             android:layout_marginLeft="16dp"
                             android:layout_marginStart="16dp"/>
                     </RelativeLayout>
-
                 </LinearLayout>
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_margin="16dp"
-                        android:id="@+id/no_persons"
-                        android:visibility="gone"
-                        android:orientation="vertical"
-                        android:layout_centerInParent="true">
-                        <ImageView
-                            android:layout_width="250dp"
-                            android:layout_height="250dp"
-                            android:layout_gravity="center_horizontal"
-                            android:src="@drawable/no_persons"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:gravity="center_horizontal"
-                            android:text="Che divertimento c'è\na viaggiare da soli?\nAggiungi una persona!"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:textColor="@color/white_back" />
-                    </LinearLayout>
-                    <ProgressBar
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/loader"
-                        android:layout_gravity="center"
-                        android:layout_centerInParent="true" />
-
-                    <android.support.v7.widget.RecyclerView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/grid_people"/>
-                </RelativeLayout>
-
-            </LinearLayout>
+            </RelativeLayout>
         </android.support.v7.widget.CardView>
 
     </RelativeLayout>
-
-    <android.support.design.widget.FloatingActionButton
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:src="@drawable/ic_arrow_forward_big"
-        android:id="@+id/next_button"
-        android:elevation="8dp"
-        android:clickable="true"
-        android:animateLayoutChanges="true"
-        android:layout_gravity="end|bottom"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:transitionName="floating_button"
-        app:borderWidth="0dp"
-        android:layout_margin="64dp"
-        app:backgroundTint="@color/accent"/>
 
 </android.support.design.widget.CoordinatorLayout>
