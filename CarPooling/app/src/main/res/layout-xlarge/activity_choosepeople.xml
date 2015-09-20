@@ -68,8 +68,7 @@
             android:layout_centerInParent="true"
             android:background="@color/black_opacity"
             app:cardBackgroundColor="@color/black_opacity"
-            app:cardPreventCornerOverlap="true"
-            android:visibility="gone">
+            app:cardPreventCornerOverlap="true">
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -150,7 +149,8 @@
             android:layout_centerInParent="true"
             android:background="@color/black_opacity"
             app:cardBackgroundColor="@color/black_opacity"
-            app:cardPreventCornerOverlap="true">
+            app:cardPreventCornerOverlap="true"
+            android:visibility="gone">
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
