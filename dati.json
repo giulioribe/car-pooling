@@ -1,0 +1,21 @@
+{
+    "users" : [
+        {
+            "id" : 10,
+            "address" : "Via A. Volta, Castelguglielmo",
+            "max_duration" : 24,
+            "not_with" : "2",
+            "other_address" : ""
+        },
+        {
+            "id" : 20,
+            "address" : "Via della Fornace, Ferrara",
+            "max_duration" : 24,
+            "not_with" : "",
+            "other_address" : ""
+        }
+    ],
+
+    "time_to_arrive" : 9,
+    "place_to_arrive" : "Via Sagarat, Ferrara"
+}
