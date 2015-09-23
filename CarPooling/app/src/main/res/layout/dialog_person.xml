@@ -111,39 +111,32 @@
                     android:layout_margin="12dp"
                     android:layout_below="@+id/name"
                     android:background="@color/background_dialog_dark"
-                    android:hint="Address"
+                    android:hint="Principal Address"
                     android:singleLine="false"
                     android:maxLines="3"
                     android:inputType="textCapSentences"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@android:color/white"
                     android:textColorHint="@color/white_back" />
-                <RelativeLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/toggle_has_cas"
-                    android:layout_below="@+id/address">
-                    <TextView
+                    android:id="@+id/action_pop"
+                    android:layout_below="@+id/address"
+                    android:orientation="vertical">
+                    <EditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Automunito"
-                        android:textColor="@color/white_back"
+                        android:layout_margin="12dp"
+                        android:background="@color/background_dialog_dark"
+                        android:hint="+ Add alternative address"
+                        android:singleLine="false"
+                        android:maxLines="3"
+                        android:inputType="textCapSentences"
                         android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="12dp"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginBottom="12dp"
-                        android:layout_toLeftOf="@+id/switch_has_car"
-                        android:layout_toStartOf="@+id/switch_has_car" />
-                    <Switch
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/switch_has_car"
-                        android:layout_alignParentTop="false"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true" />
-                </RelativeLayout>
+                        android:textColor="@android:color/white"
+                        android:textColorHint="@color/white_back" />
+                </LinearLayout>
             </RelativeLayout>
         </RelativeLayout>
 
@@ -151,10 +144,24 @@
             android:layout_width="match_parent"
             android:layout_height="?android:attr/actionBarSize"
             android:layout_below="@+id/options"
-            android:layout_marginRight="16dp"
-            android:layout_marginEnd="16dp"
             android:paddingLeft="8dp"
             android:paddingRight="8dp">
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/ic_action_timer"
+                android:padding="8dp"
+                android:id="@+id/action_max_dur"
+                android:background="@drawable/button_ripple"/>
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/ic_action_not_with"
+                android:padding="8dp"
+                android:id="@+id/action_not_with"
+                android:layout_toRightOf="@+id/action_max_dur"
+                android:layout_toEndOf="@+id/action_max_dur"
+                android:background="@drawable/button_ripple"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

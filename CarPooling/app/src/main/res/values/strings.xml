@@ -20,4 +20,5 @@
     <string name="title_activity_calculate_distances">Distanze Calcolate</string>
     <string name="title_activity_follow">Buon Viaggio</string>
     <string name="action_share">Condividi</string>
+    <string name="text_version">v.</string>
 </resources>

@@ -13,6 +13,7 @@ import android.provider.ContactsContract;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,10 +40,10 @@ public class EditPerson extends AlertDialog {
     private EditText name;
     private EditText address;
     private ImageView img;
-    private Switch has_car;
     private ImageView edit_img;
     private ImageView delete_img;
-    private RelativeLayout has_car_container;
+
+    private Handler mHandler;
 
     private TextView save_button;
 
@@ -56,8 +57,6 @@ public class EditPerson extends AlertDialog {
         name = (EditText) dialogView.findViewById(R.id.name);
         address = (EditText) dialogView.findViewById(R.id.address);
         img = (ImageView) dialogView.findViewById(R.id.p_image);
-        has_car = (Switch) dialogView.findViewById(R.id.switch_has_car);
-        has_car_container = (RelativeLayout) dialogView.findViewById(R.id.toggle_has_cas);
         edit_img = (ImageView) dialogView.findViewById(R.id.action_edit_img);
         delete_img = (ImageView) dialogView.findViewById(R.id.action_delete);
         save_button = (TextView) dialogView.findViewById(R.id.action_save);
@@ -68,7 +67,6 @@ public class EditPerson extends AlertDialog {
 
             name.setText(p.getName());
             address.setText(p.getAddress());
-            has_car.setChecked(p.hasCar());
 
             person = p;
         }
@@ -84,14 +82,6 @@ public class EditPerson extends AlertDialog {
                 Intent chooserIntent = Intent.createChooser(getIntent, mContext.getString(R.string.choose_img));
 
                 ((ChoosePeople) mContext).startActivityForResult(chooserIntent, Costants.CODE_REQUEST_IMG);
-            }
-        });
-
-        // TOGGLE HAS CAR
-        has_car_container.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                has_car.setChecked(!has_car.isChecked());
             }
         });
 
@@ -125,7 +115,6 @@ public class EditPerson extends AlertDialog {
             address.setText(savedInstanceState.getString(Costants.KEY_DIALOG_ADDRESS));
             if (p_img != null)
                 setImg(p_img);
-            has_car.setChecked(savedInstanceState.getBoolean(Costants.KEY_DIALOG_HAS_CAR));
         }
 
         this.setView(dialogView);
@@ -143,32 +132,31 @@ public class EditPerson extends AlertDialog {
             } else {
                 save_button.setText("Valutazione indirizzo...");
                 save_button.setEnabled(false);
-                final Handler mHandler = new Handler();
+                mHandler = new Handler();
 
                 new Thread(new Runnable() {
                     public void run() {
                         final Address postal_address = Utils.getLocationFromAddress(mContext, a);
                         mHandler.post(new Runnable() {
                             public void run() {
-                                if (postal_address == null) {
-                                    Utils.SnackbarC(mContext, "Indirizzo non valido", address);
-                                    save_button.setText("save");
-                                    save_button.setEnabled(true);
-                                } else {
-                                    int c = 0;
-                                    if (has_car.isChecked())
-                                        c = 1;
-
-                                    if (person == null) {
-                                        PersonService.startAction(mContext, Costants.ACTION_CREATE, new Person(n, p_img, c, a));
+                                try {
+                                    if (postal_address == null) {
+                                        Utils.SnackbarC(mContext, "Indirizzo non valido", address);
+                                        save_button.setText("save");
+                                        save_button.setEnabled(true);
                                     } else {
-                                        person.setName(n);
-                                        person.setImg(p_img);
-                                        person.setHas_car(c);
-                                        person.setAddress(a);
-                                        PersonService.startAction(mContext, Costants.ACTION_UPDATE, person);
+                                        if (person == null) {
+                                            PersonService.startAction(mContext, Costants.ACTION_CREATE, new Person(n, 0, p_img, new ArrayList(), postal_address.getAddressLine(0) + ", " + postal_address.getAddressLine(1) + ", " + postal_address.getAddressLine(2), new ArrayList()));
+                                        } else {
+                                            person.setName(n);
+                                            person.setImg(p_img);
+                                            person.setAddress(postal_address.getAddressLine(0) + ", " + postal_address.getAddressLine(1) + ", " + postal_address.getAddressLine(2));
+                                            PersonService.startAction(mContext, Costants.ACTION_UPDATE, person);
+                                        }
+                                        dismiss();
                                     }
-                                    dismiss();
+                                } catch (Exception e) {
+                                    Log.i("error", e.toString());
                                 }
                             }
                         });
@@ -221,10 +209,6 @@ public class EditPerson extends AlertDialog {
         arrayList.add(name.getText().toString());
         arrayList.add(p_img);
         arrayList.add(address.getText().toString());
-        if (has_car.isChecked())
-            arrayList.add("1");
-        else
-            arrayList.add("0");
         return arrayList;
     }
 }

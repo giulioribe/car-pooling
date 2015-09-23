@@ -24,10 +24,6 @@
             android:name=".ChoosePeople"
             android:label="@string/title_activity_choose_people"
             android:theme="@style/AppTheme" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.nego.carpooling.Main" />
-
             <intent-filter>
                 <action android:name="com.nego.carpooling.intent.action.UPDATE_LIST" />
             </intent-filter>
@@ -39,38 +35,17 @@
         </service>
 
         <activity
-            android:name=".Help"
-            android:label="@string/title_activity_help" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.nego.carpooling.ChoosePeople" />
-        </activity>
-        <activity
             android:name=".Settings"
-            android:label="@string/title_activity_settings" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.nego.carpooling.ChoosePeople" />
+            android:label="@string/title_activity_settings"
+            android:theme="@style/AppTheme.Settings">
         </activity>
         <activity
             android:name=".Preferences"
-            android:label="@string/title_activity_preferences"
-            android:parentActivityName=".ChoosePeople" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.nego.carpooling.ChoosePeople" />
-        </activity>
-        <activity
-            android:name=".CalculateDistances"
-            android:label="@string/title_activity_calculate_distances" >
+            android:label="@string/title_activity_preferences">
         </activity>
         <activity
             android:name=".Follow"
-            android:label="@string/title_activity_follow"
-            android:parentActivityName=".CalculateDistances" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.nego.carpooling.CalculateDistances" />
+            android:label="@string/title_activity_follow">
         </activity>
     </application>
 

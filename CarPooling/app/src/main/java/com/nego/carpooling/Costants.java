@@ -33,4 +33,16 @@ public class Costants {
 
     public static final String KEY_PEOPLE_SELECTED = "KEY_PEOPLE_SELECTED";
     public static final String KEY_LAST_PLACE = "KEY_LAST_PLACE";
+
+    public static final String PREFERENCE_LAST_SERVER = "PREFERENCE_LAST_SERVER";
+
+    public static final String JSON_USERS = "users";
+    public static final String JSON_TIME_TO_ARRIVE = "time_to_arrive";
+    public static final String JSON_PLACE_TO_ARRIVE = "place_to_arrive";
+
+    public static final String JSON_USER_ID = "id";
+    public static final String JSON_USER_ADDRESS = "address";
+    public static final String JSON_USER_MAX_DUR = "max_duration";
+    public static final String JSON_USER_NOT_WITH = "not_with";
+    public static final String JSON_USER_POP = "other_address";
 }

@@ -119,13 +119,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             holder.img_c.findViewById(R.id.p_image_checked).setVisibility(View.GONE);
         }
 
-        // AUTOMUNITO
-        if (mDataset.get(position).getItem().hasCar()) {
-            holder.has_car.setVisibility(View.VISIBLE);
-        } else {
-            holder.has_car.findViewById(R.id.has_car).setVisibility(View.GONE);
-        }
-
         // CLICK LISTENER
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -184,8 +177,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     public void generate_list(DbAdapter dbHelper) {
         mDataset.clear();
         Cursor cursor = dbHelper.fetchAllPersons();
-        while (cursor.moveToNext())
-            mDataset.add(new Item(1, new Person(cursor)));
+        while (cursor.moveToNext()) {
+            Person p = new Person(cursor);
+            Cursor cursor_pop = dbHelper.getPopById(p.getId());
+            p.setPop(cursor_pop);
+            mDataset.add(new Item(1, p));
+        }
         cursor.close();
     }
 

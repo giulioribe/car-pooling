@@ -7,9 +7,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "peopledb";
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
 
-    private static final String DATABASE_CREATE = "create table IF NOT EXISTS people (id integer primary key autoincrement, name text not null, img text default '', has_car integer default '0', address text not null);";
+    private static final String DATABASE_CREATE_PEOPLE = "create table IF NOT EXISTS people (id integer primary key autoincrement, name text not null, img text default '', maxDur long default '0', address text not null, notWith text default '');";
+    private static final String DATABASE_CREATE_POP = "create table IF NOT EXISTS pop (id integer primary key autoincrement, person integer not null, address text not null);";
+
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -17,11 +19,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase database) {
-        database.execSQL(DATABASE_CREATE);
+        database.execSQL(DATABASE_CREATE_PEOPLE);
+        database.execSQL(DATABASE_CREATE_POP);
     }
 
     @Override
     public void onUpgrade( SQLiteDatabase database, int oldVersion, int newVersion ) {
+        if (oldVersion == 1) {
+            database.execSQL("DROP TABLE IF EXISTS people");
+            onUpgrade(database, 2, newVersion);
+        }
         onCreate(database);
     }
 }

@@ -14,13 +14,11 @@
     <style name="style_actionBar" parent="@style/Widget.AppCompat.ActionBar">
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:textColorSecondary">@android:color/white</item>
-        <item name="android:actionMenuTextAppearance">@style/save_actionbutton</item>
     </style>
 
-    <style name="save_actionbutton" parent="@style/TextAppearance.AppCompat.Light.Widget.PopupMenu.Large">
-        <item name="android:textSize">14sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textAllCaps">true</item>
+    <!-- SETTINGS THEME -->
+    <style name="AppTheme.Settings" parent="AppTheme">
+        <item name="windowActionModeOverlay">false</item>
     </style>
 
     <style name="Dialog_Pop" parent="Theme.AppCompat.Dialog">

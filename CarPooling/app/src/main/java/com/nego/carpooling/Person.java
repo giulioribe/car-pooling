@@ -4,37 +4,48 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.nego.carpooling.database.DbAdapter;
+
+import java.util.ArrayList;
 
 public class Person implements Parcelable {
 
     private int id;
     private String name;
     private String img;
-    private int has_car;
+    private long max_dur;
+    private ArrayList<String> notWith = new ArrayList<>();
     private String address;
+    private ArrayList<String> pop = new ArrayList<>();
 
-    public Person(int id, String name, String img, int has_car, String address) {
+    public Person(int id, String name, long max_dur, String img, ArrayList notWith, String address, ArrayList pop) {
         this.id = id;
         this.name = name;
         this.img = img;
-        this.has_car = has_car;
+        this.max_dur = max_dur;
+        this.notWith = notWith;
         this.address = address;
+        this.pop = pop;
     }
 
-    public Person(String name, String img, int has_car, String address) {
+    public Person(String name, long max_dur, String img, ArrayList<String> notWith, String address, ArrayList<String> pop) {
+        this.name = name;
         this.name = name;
         this.img = img;
-        this.has_car = has_car;
+        this.max_dur = max_dur;
+        this.notWith = notWith;
         this.address = address;
+        this.pop = pop;
     }
 
     public Person(Cursor cursor){
         this.id = cursor.getInt(cursor.getColumnIndex(DbAdapter.KEY_ID));
         this.name = cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_NAME));
-        this.img = cursor.getString( cursor.getColumnIndex(DbAdapter.KEY_IMG) );
-        this.has_car = cursor.getInt(cursor.getColumnIndex(DbAdapter.KEY_HAS_CAR));
+        this.img = cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_IMG));
+        this.max_dur = cursor.getLong(cursor.getColumnIndex(DbAdapter.KEY_MAX_DUR));
+        this.notWith = Utils.stringToArrayList(cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_NOT_WITH)));
         this.address = cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_ADDRESS));
     }
 
@@ -58,16 +69,34 @@ public class Person implements Parcelable {
         return img;
     }
 
-    public void setHas_car(int has_car) {
-        this.has_car = has_car;
+    public void setMax_dur(long max_dur) {
+        this.max_dur = max_dur;
     }
 
-    public int getHas_car() {
-        return has_car;
+    public long getMax_dur() {
+        return max_dur;
     }
 
-    public boolean hasCar() {
-        return has_car == 1;
+    public void setNotWith(ArrayList<String> notWith) {
+        this.notWith = notWith;
+    }
+
+    public ArrayList<String> getNotWith() {
+        return notWith;
+    }
+
+    public void setPop(ArrayList<String> pop) {
+        this.pop = pop;
+    }
+    public void setPop(Cursor cursor_pop) {
+        while (cursor_pop.moveToNext()) {
+            this.pop.clear();
+            this.pop.add(cursor_pop.getString(cursor_pop.getColumnIndex(DbAdapter.KEY_ADDRESS)));
+        }
+    }
+
+    public ArrayList<String> getPop() {
+        return pop;
     }
 
     public void setAddress(String address) {
@@ -79,15 +108,36 @@ public class Person implements Parcelable {
     }
 
     public boolean create(DbAdapter dbAdapter) {
-        return dbAdapter.createPerson(this);
+        if (dbAdapter.createPerson(this)) {
+            if (!pop.isEmpty()) {
+                for (String p : pop) {
+                    dbAdapter.createPop(p, id);
+                }
+            }
+            return true;
+        }
+        return false;
     }
 
     public boolean update(DbAdapter dbAdapter) {
-        return dbAdapter.updatePerson(this);
+        if (dbAdapter.updatePerson(this)) {
+            dbAdapter.deleteAllPop(id);
+            if (!pop.isEmpty()) {
+                for (String p : pop) {
+                    dbAdapter.createPop(p, id);
+                }
+            }
+            return true;
+        }
+        return false;
     }
 
     public boolean delete(DbAdapter dbAdapter) {
-        return dbAdapter.deletePerson(this.getId());
+        if (dbAdapter.deletePerson(this.getId())) {
+            dbAdapter.deleteAllPop(id);
+            return true;
+        }
+        return false;
     }
 
 
@@ -95,7 +145,7 @@ public class Person implements Parcelable {
 
     public static final Parcelable.Creator<Person> CREATOR = new Parcelable.Creator<Person>() {
         public Person createFromParcel(Parcel source) {
-            return new Person(source.readInt(), source.readString(), source.readString(), source.readInt(), source.readString());
+            return new Person(source.readInt(), source.readString(), source.readLong(), source.readString(), Utils.stringToArrayList(source.readString()), source.readString(), Utils.stringToArrayList(source.readString()));
         }
         public Person[] newArray(int size) {
             return new Person[size];
@@ -112,7 +162,9 @@ public class Person implements Parcelable {
         dest.writeInt(id);
         dest.writeString(name);
         dest.writeString(img);
-        dest.writeInt(has_car);
+        dest.writeLong(max_dur);
+        dest.writeString(Utils.arrayListToString(notWith));
         dest.writeString(address);
+        dest.writeString(Utils.arrayListToString(pop));
     }
 }

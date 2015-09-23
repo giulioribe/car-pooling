@@ -17,6 +17,10 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.nego.carpooling.database.DbAdapter;
+
+import java.util.ArrayList;
+
 public class Main extends AppCompatActivity {
 
     private TextView button_new_route;
@@ -26,8 +30,11 @@ public class Main extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // TODO da togliere
-        startActivity(new Intent(Main.this, ChoosePeople.class));
+        DbAdapter dbHelper = new DbAdapter(this);
+        dbHelper.open();
+        Person p = new Person("Tommaso Berlose", 0, "", new ArrayList(), "Via Otello Putinati 122, Ferrara", new ArrayList());
+        p.create(dbHelper);
+        dbHelper.close();
 
         button_new_route = (TextView) findViewById(R.id.button_new_route);
         button_new_route.setOnClickListener(new View.OnClickListener() {

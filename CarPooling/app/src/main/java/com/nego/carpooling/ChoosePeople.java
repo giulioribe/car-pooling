@@ -26,6 +26,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nego.carpooling.Adapter.MyAdapter;
@@ -38,7 +40,7 @@ public class ChoosePeople extends AppCompatActivity {
     private Toolbar toolbar;
     private RecyclerView grid_people;
     private EditPerson dialogPerson;
-    private FloatingActionButton button;
+    private TextView button;
 
     private BroadcastReceiver mReceiver;
     private MyAdapter mAdapter;
@@ -57,7 +59,7 @@ public class ChoosePeople extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("");
 
-        button = (FloatingActionButton) findViewById(R.id.next_button);
+        button = (TextView) findViewById(R.id.next_button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,8 +79,8 @@ public class ChoosePeople extends AppCompatActivity {
             }
         });
 
-        button.setScaleX(0);
-        button.setScaleY(0);
+        findViewById(R.id.button_layout).setScaleX(0);
+        findViewById(R.id.button_layout).setScaleY(0);
 
         grid_people = (RecyclerView) findViewById(R.id.grid_people);
         grid_people.setHasFixedSize(true);
@@ -186,16 +188,12 @@ public class ChoosePeople extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState (Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (dialogPerson != null) {
+        if (dialogPerson.isShowing()) {
             outState.putBoolean(Costants.KEY_DIALOG_OPEN, true);
             ArrayList<String> all = dialogPerson.saveIstance();
             outState.putString(Costants.KEY_DIALOG_NAME, all.get(0));
             outState.putString(Costants.KEY_DIALOG_IMG, all.get(1));
             outState.putString(Costants.KEY_DIALOG_ADDRESS, all.get(2));
-            if (all.get(3).equals("1"))
-                outState.putBoolean(Costants.KEY_DIALOG_HAS_CAR, true);
-            else
-                outState.putBoolean(Costants.KEY_DIALOG_HAS_CAR, false);
         } else {
             outState.putBoolean(Costants.KEY_DIALOG_OPEN, false);
         }
@@ -254,10 +252,10 @@ public class ChoosePeople extends AppCompatActivity {
     }
 
     public void countPeople() {
-        if (mAdapter.getSelectedItemCount() > 0 && Utils.checkAuto(mAdapter.getSelectedItem())) {
-            button.animate().scaleX(1).scaleY(1).setInterpolator(new AccelerateDecelerateInterpolator()).start();
+        if (mAdapter.getSelectedItemCount() > 0) {
+            findViewById(R.id.button_layout).animate().scaleX(1).scaleY(1).setInterpolator(new AccelerateDecelerateInterpolator()).start();
         } else {
-            button.animate().scaleX(0).scaleY(0).setInterpolator(new AccelerateDecelerateInterpolator()).start();
+            findViewById(R.id.button_layout).animate().scaleX(0).scaleY(0).setInterpolator(new AccelerateDecelerateInterpolator()).start();
         }
     }
 

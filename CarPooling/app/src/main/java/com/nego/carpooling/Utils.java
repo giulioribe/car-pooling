@@ -6,6 +6,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Build;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import java.text.SimpleDateFormat;
@@ -74,14 +75,6 @@ public class Utils {
         return Build.VERSION.SDK_INT >= min && Build.VERSION.SDK_INT <= max;
     }
 
-    public static boolean checkAuto(ArrayList<Person> persons) {
-        for (Person p : persons) {
-            if (p.hasCar())
-                return true;
-        }
-        return false;
-    }
-
 
     public static Address getLocationFromAddress(Context context, String strAddress) {
 
@@ -92,6 +85,7 @@ public class Utils {
         while (i<100) {
             try {
                 address = coder.getFromLocationName(strAddress, 5);
+                Log.i("address", address.get(0).toString());
                 if (address != null) {
                     return address.get(0);
                 }
@@ -153,6 +147,38 @@ public class Utils {
         c.set(Calendar.MINUTE, minute);
 
         return c.getTimeInMillis();
+    }
+
+    public static String arrayListToString (ArrayList<String> arrayList) {
+        String text = "";
+        String divider = "";
+        boolean first = true;
+
+        if (arrayList != null && arrayList.size() > 0) {
+
+            for (String k : arrayList) {
+                text += divider + k;
+                if (first) {
+                    divider = "_";
+                    first = false;
+                }
+            }
+        }
+
+        return text;
+    }
+
+    public static ArrayList<String> stringToArrayList (String s) {
+        ArrayList<String> arrayList = new ArrayList<>();
+        if (s != null && !s.equals("")) {
+            String[] strings = s.split("_");
+
+            for (String k : strings) {
+                arrayList.add(k);
+            }
+        }
+
+        return arrayList;
     }
 
 }

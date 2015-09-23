@@ -26,7 +26,6 @@
                         android:id="@+id/address"
                         android:padding="8dp"
                         android:layout_margin="8dp"
-                        android:hint="Punto di Arrivo"
                         android:singleLine="false"
                         android:maxLines="3"
                         android:inputType="textCapSentences"

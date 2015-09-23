@@ -3,6 +3,7 @@ package com.nego.carpooling.Functions;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.nego.carpooling.Costants;
 import com.nego.carpooling.Person;
@@ -34,18 +35,18 @@ public class PersonService extends IntentService {
             final String action = intent.getAction();
             if (Costants.ACTION_CREATE.equals(action)) {
                 final Person person = intent.getParcelableExtra(Costants.EXTRA_PERSON);
-                createReminder(person);
+                createPerson(person);
             } else if (Costants.ACTION_UPDATE.equals(action)) {
                 final Person person = intent.getParcelableExtra(Costants.EXTRA_PERSON);
-                updateReminder(person);
+                updatePerson(person);
             } else if (Costants.ACTION_DELETE.equals(action)) {
                 final Person person = intent.getParcelableExtra(Costants.EXTRA_PERSON);
-                deleteReminder(person);
+                deletePerson(person);
             }
         }
     }
 
-    private void createReminder(Person p) {
+    private void createPerson(Person p) {
         DbAdapter dbHelper = new DbAdapter(this);
         dbHelper.open();
         if (p.create(dbHelper)) {
@@ -54,7 +55,7 @@ public class PersonService extends IntentService {
         dbHelper.close();
     }
 
-    private void updateReminder(Person p) {
+    private void updatePerson(Person p) {
         DbAdapter dbHelper = new DbAdapter(this);
         dbHelper.open();
         if (p.update(dbHelper)) {
@@ -63,7 +64,7 @@ public class PersonService extends IntentService {
         dbHelper.close();
     }
 
-    private void deleteReminder(Person p) {
+    private void deletePerson(Person p) {
         DbAdapter dbHelper = new DbAdapter(this);
         dbHelper.open();
         if (p.delete(dbHelper)) {

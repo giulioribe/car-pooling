@@ -37,7 +37,7 @@ import java.util.Calendar;
 public class Preferences extends AppCompatActivity {
 
     private Toolbar toolbar;
-    private FloatingActionButton button;
+    private TextView button;
     private ArrayList<Person> persons;
 
     private Calendar calendar;
@@ -68,11 +68,11 @@ public class Preferences extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("");
 
-        button = (FloatingActionButton) findViewById(R.id.next_button);
+        button = (TextView) findViewById(R.id.next_button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent next = new Intent(Preferences.this, CalculateDistances.class);
+                Intent next = new Intent(Preferences.this, Follow.class);
 
                 next.putParcelableArrayListExtra(Costants.EXTRA_PEOPLE_SELECTED, persons);
                 next.putExtra(Costants.EXTRA_TIME, calendar.getTimeInMillis());

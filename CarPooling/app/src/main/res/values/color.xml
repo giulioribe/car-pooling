@@ -38,5 +38,6 @@
     <color name="background_dialog_dark">#424242</color>
     <color name="black_opacity">#cc000000</color>
     <color name="back_card">#424242</color>
+    <color name="black_op_aa">#aa000000</color>
 
 </resources>
