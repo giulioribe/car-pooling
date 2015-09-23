@@ -79,9 +79,6 @@ public class ChoosePeople extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.button_layout).setScaleX(0);
-        findViewById(R.id.button_layout).setScaleY(0);
-
         grid_people = (RecyclerView) findViewById(R.id.grid_people);
         grid_people.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(this);
@@ -188,7 +185,7 @@ public class ChoosePeople extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState (Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (dialogPerson.isShowing()) {
+        if (dialogPerson != null && dialogPerson.isShowing()) {
             outState.putBoolean(Costants.KEY_DIALOG_OPEN, true);
             ArrayList<String> all = dialogPerson.saveIstance();
             outState.putString(Costants.KEY_DIALOG_NAME, all.get(0));
@@ -253,9 +250,9 @@ public class ChoosePeople extends AppCompatActivity {
 
     public void countPeople() {
         if (mAdapter.getSelectedItemCount() > 0) {
-            findViewById(R.id.button_layout).animate().scaleX(1).scaleY(1).setInterpolator(new AccelerateDecelerateInterpolator()).start();
+            findViewById(R.id.button_layout).setVisibility(View.VISIBLE);
         } else {
-            findViewById(R.id.button_layout).animate().scaleX(0).scaleY(0).setInterpolator(new AccelerateDecelerateInterpolator()).start();
+            findViewById(R.id.button_layout).setVisibility(View.GONE);
         }
     }
 

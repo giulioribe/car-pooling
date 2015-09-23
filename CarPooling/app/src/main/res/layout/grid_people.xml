@@ -26,14 +26,6 @@
                 android:background="@drawable/back_icon_opacity_black"
                 android:src="@drawable/ic_tick"
                 android:visibility="gone" />
-            <ImageView
-                android:layout_width="12dp"
-                android:layout_height="12dp"
-                android:id="@+id/has_car"
-                android:padding="1dp"
-                android:background="@drawable/back_icon"
-                android:layout_alignBottom="@+id/p_image"
-                android:layout_alignRight="@+id/p_image" />
         </RelativeLayout>
         <LinearLayout
             android:layout_width="match_parent"

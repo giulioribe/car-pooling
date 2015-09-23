@@ -54,16 +54,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         public TextView address;
         public ImageView img;
         public ImageView img_c;
-        public ImageView has_car;
         public ImageView menu;
-        public ViewHolder(View v, TextView name, TextView address, ImageView img, ImageView img_c, ImageView has_car, ImageView menu) {
+        public ViewHolder(View v, TextView name, TextView address, ImageView img, ImageView img_c, ImageView menu) {
             super(v);
             mView = v;
             this.name = name;
             this.address = address;
             this.img = img;
             this.img_c = img_c;
-            this.has_car = has_car;
             this.menu = menu;
         }
 
@@ -88,7 +86,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                 (TextView) v.findViewById(R.id.p_address),
                 (ImageView) v.findViewById(R.id.p_image),
                 (ImageView) v.findViewById(R.id.p_image_checked),
-                (ImageView) v.findViewById(R.id.has_car),
                 (ImageView) v.findViewById(R.id.action_menu));
 
         return vh;

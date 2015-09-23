@@ -146,7 +146,9 @@ public class EditPerson extends AlertDialog {
                                         save_button.setEnabled(true);
                                     } else {
                                         if (person == null) {
-                                            PersonService.startAction(mContext, Costants.ACTION_CREATE, new Person(n, 0, p_img, new ArrayList(), postal_address.getAddressLine(0) + ", " + postal_address.getAddressLine(1) + ", " + postal_address.getAddressLine(2), new ArrayList()));
+                                            ArrayList<String> arrayList = new ArrayList<String>();
+                                            arrayList.add("");
+                                            PersonService.startAction(mContext, Costants.ACTION_CREATE, new Person(n, 0, p_img, postal_address.getAddressLine(0) + ", " + postal_address.getAddressLine(1) + ", " + postal_address.getAddressLine(2), arrayList, arrayList));
                                         } else {
                                             person.setName(n);
                                             person.setImg(p_img);
@@ -156,7 +158,7 @@ public class EditPerson extends AlertDialog {
                                         dismiss();
                                     }
                                 } catch (Exception e) {
-                                    Log.i("error", e.toString());
+                                    Toast.makeText(mContext, e.toString(), Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });

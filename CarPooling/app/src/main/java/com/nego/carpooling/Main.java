@@ -29,12 +29,7 @@ public class Main extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         DbAdapter dbHelper = new DbAdapter(this);
-        dbHelper.open();
-        Person p = new Person("Tommaso Berlose", 0, "", new ArrayList(), "Via Otello Putinati 122, Ferrara", new ArrayList());
-        p.create(dbHelper);
-        dbHelper.close();
 
         button_new_route = (TextView) findViewById(R.id.button_new_route);
         button_new_route.setOnClickListener(new View.OnClickListener() {
@@ -42,7 +37,8 @@ public class Main extends AppCompatActivity {
             public void onClick(View v) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(Main.this,
-                            Pair.create(findViewById(R.id.container), "toolbar"));
+                            Pair.create(findViewById(R.id.container), "toolbar"),
+                            Pair.create(findViewById(R.id.button_new_route), "floating_button"));
 
                     startActivity(new Intent(Main.this, ChoosePeople.class), options.toBundle());
                 } else {

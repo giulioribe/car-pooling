@@ -185,12 +185,13 @@ public class Follow extends AppCompatActivity {
         final SharedPreferences SP = getSharedPreferences(Costants.PREFERENCES_COSTANT, Context.MODE_PRIVATE);
 
         //URL url = new URL(SP.getString(Costants.PREFERENCE_LAST_SERVER, ""));
-        URL url = new URL("http://tommasoberlose.altervista.org/old/carpooling.php");
+        URL url = new URL("http://www.google.it");
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setReadTimeout(10000);
         conn.setConnectTimeout(15000);
-        conn.setRequestMethod("POST");
-        conn.setDoInput(true);
+        conn.setRequestMethod("GET");
+        conn.setDoInput(true);/*
+        TODO
         conn.setDoOutput(true);
         conn.setRequestProperty("Accept", "application/json");
         conn.setRequestProperty("Content-type", "application/json");
@@ -201,7 +202,7 @@ public class Follow extends AppCompatActivity {
         writer.write(jsonString, 0, jsonString.length());
         writer.flush();
         writer.close();
-        os.close();
+        os.close();*/
 
         // Start the query
         conn.connect();

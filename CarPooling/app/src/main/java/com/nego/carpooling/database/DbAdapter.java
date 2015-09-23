@@ -50,7 +50,7 @@ public class DbAdapter {
         dbHelper.close();
     }
 
-    private ContentValues createContentValues(int ID, String name, long max_dur, String img, ArrayList<String> notWith, String address) {
+    private ContentValues createContentValues(int ID, String name, long max_dur, String img, String address, ArrayList<String> notWith) {
         ContentValues values = new ContentValues();
         values.put(KEY_ID, ID);
         values.put(KEY_NAME, name);
@@ -62,7 +62,7 @@ public class DbAdapter {
         return values;
     }
 
-    private ContentValues createContentValues(String name, long max_dur, String img, ArrayList<String> notWith, String address) {
+    private ContentValues createContentValues(String name, long max_dur, String img, String address, ArrayList<String> notWith) {
         ContentValues values = new ContentValues();
         values.put(KEY_NAME, name);
         values.put(KEY_IMG, img);
@@ -82,12 +82,12 @@ public class DbAdapter {
     }
 
     public boolean createPerson(Person p) {
-        ContentValues initialValues = createContentValues(p.getName(), p.getMax_dur(), p.getImg(), p.getNotWith(), p.getAddress());
+        ContentValues initialValues = createContentValues(p.getName(), p.getMax_dur(), p.getImg(), p.getAddress(), p.getNotWith());
         return database.insertOrThrow(DATABASE_TABLE_PEOPLE, null, initialValues) > 0;
     }
 
     public boolean updatePerson(Person p) {
-        ContentValues updateValues = createContentValues(p.getId(), p.getName(), p.getMax_dur(), p.getImg(), p.getNotWith(), p.getAddress());
+        ContentValues updateValues = createContentValues(p.getId(), p.getName(), p.getMax_dur(), p.getImg(), p.getAddress(), p.getNotWith());
         return database.update(DATABASE_TABLE_PEOPLE, updateValues, KEY_ID + "==" + p.getId(), null) > 0;
     }
 
@@ -98,12 +98,12 @@ public class DbAdapter {
 
 
     public Cursor fetchAllPersons() {
-        return database.query(DATABASE_TABLE_PEOPLE, new String[]{KEY_ID, KEY_NAME, KEY_MAX_DUR, KEY_IMG, KEY_NOT_WITH, KEY_ADDRESS}, null, null, null, null, null);
+        return database.query(DATABASE_TABLE_PEOPLE, new String[]{KEY_ID, KEY_NAME, KEY_MAX_DUR, KEY_IMG, KEY_ADDRESS, KEY_NOT_WITH}, null, null, null, null, null);
     }
 
     public Cursor getPersonById(int id) {
         Cursor mCursor = database.query(true, DATABASE_TABLE_PEOPLE, new String[]{
-                        KEY_ID, KEY_NAME, KEY_MAX_DUR, KEY_IMG, KEY_NOT_WITH, KEY_ADDRESS},
+                        KEY_ID, KEY_NAME, KEY_MAX_DUR, KEY_IMG, KEY_ADDRESS, KEY_NOT_WITH},
                 KEY_ID + " == '" + id + "'", null, null, null, null, null);
 
         return mCursor;

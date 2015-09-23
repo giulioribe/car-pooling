@@ -16,27 +16,27 @@ public class Person implements Parcelable {
     private String name;
     private String img;
     private long max_dur;
-    private ArrayList<String> notWith = new ArrayList<>();
     private String address;
+    private ArrayList<String> notWith = new ArrayList<>();
     private ArrayList<String> pop = new ArrayList<>();
 
-    public Person(int id, String name, long max_dur, String img, ArrayList notWith, String address, ArrayList pop) {
+    public Person(int id, String name, long max_dur, String img, String address, ArrayList<String> notWith, ArrayList<String> pop) {
         this.id = id;
         this.name = name;
         this.img = img;
         this.max_dur = max_dur;
-        this.notWith = notWith;
         this.address = address;
+        this.notWith = notWith;
         this.pop = pop;
     }
 
-    public Person(String name, long max_dur, String img, ArrayList<String> notWith, String address, ArrayList<String> pop) {
+    public Person(String name, long max_dur, String img, String address, ArrayList<String> notWith, ArrayList<String> pop) {
         this.name = name;
         this.name = name;
         this.img = img;
         this.max_dur = max_dur;
-        this.notWith = notWith;
         this.address = address;
+        this.notWith = notWith;
         this.pop = pop;
     }
 
@@ -45,8 +45,8 @@ public class Person implements Parcelable {
         this.name = cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_NAME));
         this.img = cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_IMG));
         this.max_dur = cursor.getLong(cursor.getColumnIndex(DbAdapter.KEY_MAX_DUR));
-        this.notWith = Utils.stringToArrayList(cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_NOT_WITH)));
         this.address = cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_ADDRESS));
+        this.notWith = Utils.stringToArrayList(cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_NOT_WITH)));
     }
 
     public int getId() {
@@ -145,7 +145,7 @@ public class Person implements Parcelable {
 
     public static final Parcelable.Creator<Person> CREATOR = new Parcelable.Creator<Person>() {
         public Person createFromParcel(Parcel source) {
-            return new Person(source.readInt(), source.readString(), source.readLong(), source.readString(), Utils.stringToArrayList(source.readString()), source.readString(), Utils.stringToArrayList(source.readString()));
+            return new Person(source.readInt(), source.readString(), source.readLong(), source.readString(), source.readString(), Utils.stringToArrayList(source.readString()), Utils.stringToArrayList(source.readString()));
         }
         public Person[] newArray(int size) {
             return new Person[size];
@@ -161,10 +161,10 @@ public class Person implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
         dest.writeString(name);
-        dest.writeString(img);
         dest.writeLong(max_dur);
-        dest.writeString(Utils.arrayListToString(notWith));
+        dest.writeString(img);
         dest.writeString(address);
+        dest.writeString(Utils.arrayListToString(notWith));
         dest.writeString(Utils.arrayListToString(pop));
     }
 }
