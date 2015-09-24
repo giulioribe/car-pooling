@@ -2,13 +2,18 @@ package com.nego.carpooling;
 
 import android.content.Context;
 import android.content.pm.LauncherApps;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Build;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -179,6 +184,48 @@ public class Utils {
         }
 
         return arrayList;
+    }
+
+    public static String formatDur(long l) {
+        String format = "";
+        if (l == 0)
+            return "Nessuna Preferenza";
+        long minute = l;
+        long hour = minute / 60;
+        format = hour + "h " + (minute - 60 * hour) + "m";
+        return format;
+    }
+
+    public static void setBackground(final Context context, final View view, final int i) {
+        final Handler mHandler = new Handler();
+
+        new Thread(new Runnable() {
+            public void run() {
+
+                final Drawable drawable = ContextCompat.getDrawable(context, i);
+                mHandler.post(new Runnable() {
+                    public void run() {
+                        view.setBackground(drawable);
+                    }
+                });
+            }
+        }).start();
+    }
+
+    public static void setSrc(final Context context, final ImageView view, final int i) {
+        final Handler mHandler = new Handler();
+
+        new Thread(new Runnable() {
+            public void run() {
+
+                final Drawable drawable = ContextCompat.getDrawable(context, i);
+                mHandler.post(new Runnable() {
+                    public void run() {
+                        view.setImageDrawable(drawable);
+                    }
+                });
+            }
+        }).start();
     }
 
 }

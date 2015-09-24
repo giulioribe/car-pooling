@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
@@ -26,6 +27,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,7 +41,6 @@ public class ChoosePeople extends AppCompatActivity {
 
     private Toolbar toolbar;
     private RecyclerView grid_people;
-    private EditPerson dialogPerson;
     private TextView button;
 
     private BroadcastReceiver mReceiver;
@@ -59,6 +60,11 @@ public class ChoosePeople extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("");
 
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+            Utils.setSrc(this, (ImageView) findViewById(R.id.back_main), R.drawable.cp_t);
+        else
+            Utils.setBackground(this, toolbar, R.drawable.cp_t);
+
         button = (TextView) findViewById(R.id.next_button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,16 +72,7 @@ public class ChoosePeople extends AppCompatActivity {
                 Intent next = new Intent(ChoosePeople.this, Preferences.class);
                 next.putParcelableArrayListExtra(Costants.EXTRA_PEOPLE_SELECTED, mAdapter.getSelectedItem());
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(ChoosePeople.this,
-                            Pair.create(findViewById(R.id.line_t), "line_t"),
-                            Pair.create((View) button, "floating_button"),
-                            Pair.create(findViewById(R.id.card_grid), "grid_container"));
-
-                    startActivity(next, options.toBundle());
-                } else {
-                    startActivity(next);
-                }
+                startActivity(next);
             }
         });
 
@@ -85,14 +82,6 @@ public class ChoosePeople extends AppCompatActivity {
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         grid_people.setLayoutManager(llm);
         doList();
-
-        if (savedInstanceState != null) {
-            if (savedInstanceState.getBoolean(Costants.KEY_DIALOG_OPEN)) {
-                dialogPerson = new EditPerson(ChoosePeople.this, new Intent(), savedInstanceState);
-                dialogPerson.show();
-                savedInstanceState.remove(Costants.KEY_DIALOG_OPEN);
-            }
-        }
     }
 
     @Override
@@ -111,8 +100,7 @@ public class ChoosePeople extends AppCompatActivity {
         }
 
         if (id == R.id.new_person) {
-            dialogPerson = new EditPerson(ChoosePeople.this, new Intent(), savedInstanceState);
-            dialogPerson.show();
+            startActivityForResult(new Intent(this, EditP.class), 10);
         }
 
         return super.onOptionsItemSelected(item);
@@ -185,67 +173,22 @@ public class ChoosePeople extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState (Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (dialogPerson != null && dialogPerson.isShowing()) {
-            outState.putBoolean(Costants.KEY_DIALOG_OPEN, true);
-            ArrayList<String> all = dialogPerson.saveIstance();
-            outState.putString(Costants.KEY_DIALOG_NAME, all.get(0));
-            outState.putString(Costants.KEY_DIALOG_IMG, all.get(1));
-            outState.putString(Costants.KEY_DIALOG_ADDRESS, all.get(2));
-        } else {
-            outState.putBoolean(Costants.KEY_DIALOG_OPEN, false);
-        }
-
         if (mAdapter != null && mAdapter.getSelectedItemCount() > 0)
             outState.putParcelableArrayList(Costants.KEY_PEOPLE_SELECTED, mAdapter.getSelectedItem());
     }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Costants.CODE_REQUEST_IMG && resultCode == Activity.RESULT_OK) {
-            if (data != null) {
-                Uri selectedImageURI = data.getData();
-                dialogPerson.setImg(selectedImageURI.toString());
-            }
-        } else if (requestCode == Costants.CODE_REQUEST_CONTACT && resultCode == Activity.RESULT_OK) {
-            Uri contactData = data.getData();
-
-            String name = "";
-            String address = "";
-            String photo = "";
-            long id = 0;
-
-            Cursor cursor = getContentResolver().query(contactData, null, null, null, null);
-            if (cursor.moveToFirst()) {
-                name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                photo = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.PHOTO_URI));
-                id = cursor.getLong(cursor.getColumnIndex(ContactsContract.Contacts._ID));
-
-            }
-            cursor.close();
-
-            cursor = getContentResolver().query(ContactsContract.Data.CONTENT_URI,
-                    new String[]{ ContactsContract.CommonDataKinds.StructuredPostal.FORMATTED_ADDRESS,
-                            ContactsContract.CommonDataKinds.StructuredPostal.CITY},
-                    ContactsContract.Data.CONTACT_ID + "=? AND " +
-                            ContactsContract.CommonDataKinds.StructuredPostal.MIMETYPE + "=?",
-                    new String[]{String.valueOf(id), ContactsContract.CommonDataKinds.StructuredPostal.CONTENT_ITEM_TYPE},
-                    null);
-            if (cursor.moveToFirst()) {
-                address = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.StructuredPostal.FORMATTED_ADDRESS));
-            }
-
-            dialogPerson.setPerson(name, address, photo);
-
-            cursor.close();
+        if (requestCode == 10 && resultCode == Activity.RESULT_OK) {
+            doList();
         }
     }
 
     public void editPerson(Person person) {
-        Intent i = new Intent(Costants.ACTION_EDIT_PERSON);
+        Intent i = new Intent(this, EditP.class);
+        i.setAction(Costants.ACTION_EDIT_PERSON);
         i.putExtra(Costants.EXTRA_PERSON, person);
-        dialogPerson = new EditPerson(this, i, savedInstanceState);
-        dialogPerson.show();
+        startActivityForResult(i, 10);
     }
 
     public void countPeople() {

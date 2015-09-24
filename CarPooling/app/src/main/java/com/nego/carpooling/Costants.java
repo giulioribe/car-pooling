@@ -25,7 +25,9 @@ public class Costants {
     public static final String KEY_DIALOG_NAME = "KEY_DIALOG_NAME";
     public static final String KEY_DIALOG_IMG = "KEY_DIALOG_IMG";
     public static final String KEY_DIALOG_ADDRESS = "KEY_DIALOG_ADDRESS";
-    public static final String KEY_DIALOG_HAS_CAR = "KEY_DIALOG_HAS_CAR";
+    public static final String KEY_DIALOG_MAX_DUR = "KEY_DIALOG_MAX_DUR";
+    public static final String KEY_DIALOG_NOT_WITH = "KEY_DIALOG_NOT_WITH";
+    public static final String KEY_DIALOG_POP = "KEY_DIALOG_POP";
 
     public static final String KEY_PREFERENCES_CALENDAR_H = "KEY_PREFERENCES_CALENDAR_H";
     public static final String KEY_PREFERENCES_CALENDAR_M = "KEY_PREFERENCES_CALENDAR_M";

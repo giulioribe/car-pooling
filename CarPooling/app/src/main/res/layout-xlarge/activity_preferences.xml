@@ -10,7 +10,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/pr_t"
+        android:id="@+id/back_main"
         android:scaleType="centerCrop"/>
     <LinearLayout
         android:layout_width="match_parent"

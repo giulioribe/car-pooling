@@ -6,6 +6,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.location.Address;
 import android.os.Build;
 import android.os.Handler;
@@ -26,6 +27,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -68,6 +70,11 @@ public class Preferences extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("");
 
+        if (getResources().getConfiguration(). == Configuration.ORIENTATION_LANDSCAPE)
+            Utils.setSrc(this, (ImageView) findViewById(R.id.back_main), R.drawable.fo_t);
+        else
+            Utils.setBackground(this, toolbar, R.drawable.fo_t);
+
         button = (TextView) findViewById(R.id.next_button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,18 +85,7 @@ public class Preferences extends AppCompatActivity {
                 next.putExtra(Costants.EXTRA_TIME, calendar.getTimeInMillis());
                 next.putExtra(Costants.EXTRA_PLACE, location);
 
-                // TODO aggiungere le varie preferenze
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(Preferences.this,
-                            Pair.create(findViewById(R.id.trip_card), "grid_container"),
-                            Pair.create(findViewById(R.id.line_t), "line_t"),
-                            Pair.create((View) button, "floating_button"));
-
-                    startActivity(next, options.toBundle());
-                } else {
-                    startActivity(next);
-                }
+                startActivity(next);
             }
         });
 

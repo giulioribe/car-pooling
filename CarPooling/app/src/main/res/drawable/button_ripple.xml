@@ -4,7 +4,7 @@
         <shape android:shape="oval">
 
             <solid
-                android:color="@color/back_card"/>
+                android:color="@android:color/transparent"/>
         </shape>
     </item>
 </selector>

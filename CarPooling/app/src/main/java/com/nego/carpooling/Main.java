@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,17 +36,18 @@ public class Main extends AppCompatActivity {
         button_new_route.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(Main.this,
-                            Pair.create(findViewById(R.id.container), "toolbar"),
                             Pair.create(findViewById(R.id.button_new_route), "floating_button"));
 
                     startActivity(new Intent(Main.this, ChoosePeople.class), options.toBundle());
-                } else {
+                } else {*/
                     startActivity(new Intent(Main.this, ChoosePeople.class));
-                }
+                /*}*/
             }
         });
+
+        Utils.setSrc(this, (ImageView) findViewById(R.id.back_main), R.drawable.cp_t);
 
     }
 

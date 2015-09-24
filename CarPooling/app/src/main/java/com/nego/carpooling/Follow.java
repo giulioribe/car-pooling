@@ -4,6 +4,7 @@ import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -15,6 +16,7 @@ import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -53,6 +55,11 @@ public class Follow extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("");
+
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+            Utils.setSrc(this, (ImageView) findViewById(R.id.back_main), R.drawable.pr_t);
+        else
+            Utils.setBackground(this, toolbar, R.drawable.pr_t);
 
         try {
             Calendar c = Calendar.getInstance();

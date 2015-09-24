@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android" android:enterFadeDuration="@android:integer/config_shortAnimTime">
     <item>
-        <ripple android:color="@color/cardview_dark_background">
+        <ripple android:color="@color/ripple_material_dark">
             <item>
                 <shape android:shape="oval">
 
                     <solid
-                        android:color="@color/back_card"/>
+                        android:color="@android:color/transparent"/>
                 </shape>
             </item>
         </ripple>

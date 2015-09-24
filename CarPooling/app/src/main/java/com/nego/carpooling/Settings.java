@@ -51,7 +51,7 @@ public class Settings extends AppCompatActivity {
                     public void onClick(View v) {
                         final String a = ((EditText) dialogView.findViewById(R.id.address)).getText().toString();
                         if (a.equals("")) {
-                            Utils.SnackbarC(Settings.this, "Inserisci un indirizzo", dialogView.findViewById(R.id.address));
+                            Utils.SnackbarC(Settings.this, "Inserisci un indirizzo ip", dialogView.findViewById(R.id.address));
                         } else {
                             SP.edit().putString(Costants.PREFERENCE_LAST_SERVER, a).apply();
                             ((TextView) findViewById(R.id.subtitle_server)).setText(a);
