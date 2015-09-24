@@ -1,88 +1,88 @@
 {
-    "status": "OK", 
+    "status": "OK",
     "rows": [
         {
             "elements": [
                 {
                     "duration": {
-                        "text": "33 min", 
+                        "text": "33 min",
                         "value": 1976
-                    }, 
+                    },
                     "distance": {
-                        "text": "30,6 km", 
+                        "text": "30,6 km",
                         "value": 30593
-                    }, 
+                    },
                     "status": "OK"
-                }, 
+                },
                 {
                     "duration": {
-                        "text": "1 min", 
+                        "text": "1 min",
                         "value": 0
-                    }, 
+                    },
                     "distance": {
-                        "text": "1 m", 
+                        "text": "1 m",
                         "value": 0
-                    }, 
+                    },
                     "status": "OK"
-                }, 
+                },
                 {
                     "duration": {
-                        "text": "36 min", 
+                        "text": "36 min",
                         "value": 2154
-                    }, 
+                    },
                     "distance": {
-                        "text": "29,1 km", 
+                        "text": "29,1 km",
                         "value": 29082
-                    }, 
+                    },
                     "status": "OK"
                 }
             ]
-        }, 
+        },
         {
             "elements": [
                 {
                     "duration": {
-                        "text": "12 min", 
+                        "text": "12 min",
                         "value": 716
-                    }, 
+                    },
                     "distance": {
-                        "text": "5,7 km", 
+                        "text": "5,7 km",
                         "value": 5730
-                    }, 
+                    },
                     "status": "OK"
-                }, 
+                },
                 {
                     "duration": {
-                        "text": "36 min", 
+                        "text": "36 min",
                         "value": 2155
-                    }, 
+                    },
                     "distance": {
-                        "text": "29,3 km", 
+                        "text": "29,3 km",
                         "value": 29315
-                    }, 
+                    },
                     "status": "OK"
-                }, 
+                },
                 {
                     "duration": {
-                        "text": "1 min", 
+                        "text": "1 min",
                         "value": 0
-                    }, 
+                    },
                     "distance": {
-                        "text": "1 m", 
+                        "text": "1 m",
                         "value": 0
-                    }, 
+                    },
                     "status": "OK"
                 }
             ]
         }
-    ], 
+    ],
     "origin_addresses": [
-        "Via Alessandro Volta, 45020 Castelguglielmo RO, Italia", 
+        "Via Alessandro Volta, 45020 Castelguglielmo RO, Italia",
         "Via della Fornace, 44123 Ferrara FE, Italia"
-    ], 
+    ],
     "destination_addresses": [
-        "Via Giuseppe Saragat, 44122 Ferrara FE, Italia", 
-        "Via Alessandro Volta, 45020 Castelguglielmo RO, Italia", 
+        "Via Giuseppe Saragat, 44122 Ferrara FE, Italia",
+        "Via Alessandro Volta, 45020 Castelguglielmo RO, Italia",
         "Via della Fornace, 44123 Ferrara FE, Italia"
     ]
 }
