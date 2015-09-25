@@ -6,7 +6,7 @@ class Node:
         self.id = id
         self.dur = dur
         self.addr = addr
-        self.notWith = notWith
+        self.notWith = list(notWith.split(','))
 
     def setId(self, id):
         if id:

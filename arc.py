@@ -1,12 +1,12 @@
 
 class Arc(object):
     """docstring for Arc"""
-    def __init__(self, id_i, id_f, duration, distance):
+    def __init__(self, id_i, id_f, dur, dist):
         #super(Arc, self).__init__()
         self.id_i = id_i
         self.id_f = id_f
-        self.duration = duration
-        self.distance = distance
+        self.dur = dur
+        self.dist = dist
 
     def setId_i(self, id_i):
         if id_i:
@@ -16,23 +16,23 @@ class Arc(object):
         if id_f:
             self.id_f = id_f
 
-    def setDuration(self, duration):
-        if duration:
-            self.duration = duration
+    def setDur(self, dur):
+        if dur:
+            self.dur = dur
 
-    def setDistance(self, distance):
-        if distance:
-            self.distance = distance
+    def setDist(self, dist):
+        if dist:
+            self.dist = dist
 
-    def setArc(self, id_i='', id_f='', duration='', distance=''):
+    def setArc(self, id_i='', id_f='', dur='', dist=''):
         if id_i:
             self.id_i = id_i
         if id_f:
             self.id_f = id_f
-        if duration:
-            self.duration = duration
-        if distance:
-            self.distance = distance
+        if dur:
+            self.dur = dur
+        if dist:
+            self.dist = dist
 
     def  getId_i(self):
         return self.id_i
@@ -40,18 +40,18 @@ class Arc(object):
     def  getId_f(self):
         return self.id_f
 
-    def getDuration(self):
-        return self.duration
+    def getDur(self):
+        return self.dur
 
-    def getDistance(self):
-        return self.distance
+    def getDist(self):
+        return self.dist
 
     def getArc(self):
         return {
                 'id_i':self.id_i,
                 'id_f':self.id_f,
-                'duration':self.duration,
-                'distance':self.distance
+                'dur':self.dur,
+                'dist':self.dist
                 }
 
 
