@@ -47,4 +47,16 @@ public class Costants {
     public static final String JSON_USER_MAX_DUR = "max_duration";
     public static final String JSON_USER_NOT_WITH = "not_with";
     public static final String JSON_USER_POP = "other_address";
+
+    public static final String JSON_RESPONSE_EURISTICHE = "euristiche";
+    public static final String JSON_RESPONSE_NAME = "name";
+    public static final String JSON_RESPONSE_RESULTS = "results";
+    public static final String JSON_RESPONSE_GREEDY = "greedy";
+    public static final String JSON_RESPONSE_GRASP = "grasp";
+    public static final String JSON_RESPONSE_PATH_RELINKING = "path_rel";
+    public static final String JSON_RESPONSE_TABU = "tabu";
+    public static final String JSON_RESPONSE_CARS = "cars";
+    public static final String JSON_RESPONSE_ID = "id";
+    public static final String JSON_RESPONSE_PARTENZE = "partenze";
+    public static final String JSON_RESPONSE_COSTO = "costo";
 }

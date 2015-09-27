@@ -89,8 +89,8 @@ public class Person implements Parcelable {
         this.pop = pop;
     }
     public void setPop(Cursor cursor_pop) {
+        this.pop.clear();
         while (cursor_pop.moveToNext()) {
-            this.pop.clear();
             this.pop.add(cursor_pop.getString(cursor_pop.getColumnIndex(DbAdapter.KEY_ADDRESS)));
         }
     }

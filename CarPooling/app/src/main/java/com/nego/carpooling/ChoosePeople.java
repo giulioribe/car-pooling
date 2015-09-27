@@ -58,12 +58,10 @@ public class ChoosePeople extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle("");
+        setTitle(R.string.title_activity_choose_people);
 
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+        if (getResources().getConfiguration().screenLayout == Configuration.SCREENLAYOUT_SIZE_XLARGE)
             Utils.setSrc(this, (ImageView) findViewById(R.id.back_main), R.drawable.cp_t);
-        else
-            Utils.setBackground(this, toolbar, R.drawable.cp_t);
 
         button = (TextView) findViewById(R.id.next_button);
         button.setOnClickListener(new View.OnClickListener() {
@@ -72,7 +70,14 @@ public class ChoosePeople extends AppCompatActivity {
                 Intent next = new Intent(ChoosePeople.this, Preferences.class);
                 next.putParcelableArrayListExtra(Costants.EXTRA_PEOPLE_SELECTED, mAdapter.getSelectedItem());
 
-                startActivity(next);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(ChoosePeople.this,
+                            Pair.create(findViewById(R.id.card_grid), "grid_container"));
+
+                    startActivity(next, options.toBundle());
+                } else {
+                    startActivity(next);
+                }
             }
         });
 
@@ -99,16 +104,22 @@ public class ChoosePeople extends AppCompatActivity {
             return true;
         }
 
+        if (id == R.id.action_select_all) {
+            mAdapter.selectAll();
+            return true;
+        }
+
         if (id == R.id.new_person) {
             startActivityForResult(new Intent(this, EditP.class), 10);
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
     public void doList() {
-        findViewById(R.id.loader).animate().alpha(1).start();
-        grid_people.animate().alpha(0).start();
+        findViewById(R.id.loader).setVisibility(View.VISIBLE);
+        grid_people.setVisibility(View.GONE);
         final Handler mHandler = new Handler();
 
         new Thread(new Runnable() {
@@ -131,9 +142,9 @@ public class ChoosePeople extends AppCompatActivity {
                             mAdapter.setSelected(savedInstanceState);
                             savedInstanceState.remove(Costants.KEY_PEOPLE_SELECTED);
                         }
-                        findViewById(R.id.loader).animate().alpha(0).start();
+                        findViewById(R.id.loader).setVisibility(View.GONE);
                         countPeople();
-                        grid_people.animate().alpha(1).start();
+                        grid_people.setVisibility(View.VISIBLE);
                     }
                 });
             }

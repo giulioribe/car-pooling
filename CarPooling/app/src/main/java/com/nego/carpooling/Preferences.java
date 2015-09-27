@@ -68,12 +68,10 @@ public class Preferences extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle("");
+        setTitle(R.string.title_activity_preferences);
 
-        if (getResources().getConfiguration(). == Configuration.ORIENTATION_LANDSCAPE)
-            Utils.setSrc(this, (ImageView) findViewById(R.id.back_main), R.drawable.fo_t);
-        else
-            Utils.setBackground(this, toolbar, R.drawable.fo_t);
+        if (getResources().getConfiguration().screenLayout == Configuration.SCREENLAYOUT_SIZE_XLARGE)
+            Utils.setSrc(this, (ImageView) findViewById(R.id.back_main), R.drawable.pr_t);
 
         button = (TextView) findViewById(R.id.next_button);
         button.setOnClickListener(new View.OnClickListener() {
@@ -146,7 +144,7 @@ public class Preferences extends AppCompatActivity {
                                                 ((TextView) dialogView.findViewById(R.id.action_save)).setText("save");
                                                 dialogView.findViewById(R.id.action_save).setEnabled(true);
                                             } else {
-                                                setLocation(a);
+                                                setLocation(postal_address.getAddressLine(0) + ", " + postal_address.getAddressLine(1) + ", " + postal_address.getAddressLine(2));
                                                 dialog_arrivo.dismiss();
                                             }
                                         }

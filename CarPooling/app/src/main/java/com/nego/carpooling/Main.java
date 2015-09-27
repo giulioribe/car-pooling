@@ -6,9 +6,12 @@ import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.transition.Fade;
+import android.transition.Slide;
 import android.transition.Transition;
 import android.transition.TransitionValues;
 import android.util.Pair;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +24,7 @@ import android.widget.Toast;
 import com.nego.carpooling.database.DbAdapter;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class Main extends AppCompatActivity {
 
@@ -30,24 +34,14 @@ public class Main extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        DbAdapter dbHelper = new DbAdapter(this);
 
         button_new_route = (TextView) findViewById(R.id.button_new_route);
         button_new_route.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(Main.this,
-                            Pair.create(findViewById(R.id.button_new_route), "floating_button"));
-
-                    startActivity(new Intent(Main.this, ChoosePeople.class), options.toBundle());
-                } else {*/
-                    startActivity(new Intent(Main.this, ChoosePeople.class));
-                /*}*/
+                startActivity(new Intent(Main.this, ChoosePeople.class));
             }
         });
-
-        Utils.setSrc(this, (ImageView) findViewById(R.id.back_main), R.drawable.cp_t);
 
     }
 

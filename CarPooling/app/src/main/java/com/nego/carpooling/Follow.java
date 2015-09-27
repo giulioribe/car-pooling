@@ -5,19 +5,28 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.Pair;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.nego.carpooling.database.DbAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -39,7 +48,6 @@ import java.util.Locale;
 public class Follow extends AppCompatActivity {
 
     private Toolbar toolbar;
-    private TextView button;
     private ArrayList<Person> persons;
 
     private Calendar calendar;
@@ -54,12 +62,10 @@ public class Follow extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle("");
+        setTitle(R.string.title_activity_follow);
 
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
-            Utils.setSrc(this, (ImageView) findViewById(R.id.back_main), R.drawable.pr_t);
-        else
-            Utils.setBackground(this, toolbar, R.drawable.pr_t);
+        if (getResources().getConfiguration().screenLayout == Configuration.SCREENLAYOUT_SIZE_XLARGE)
+            Utils.setSrc(this, (ImageView) findViewById(R.id.back_main), R.drawable.fo_t);
 
         try {
             Calendar c = Calendar.getInstance();
@@ -84,39 +90,18 @@ public class Follow extends AppCompatActivity {
                 JSONObject json_p = new JSONObject();
                 json_p.put(Costants.JSON_USER_ID, p.getId());
                 json_p.put(Costants.JSON_USER_ADDRESS, p.getAddress());
-                json_p.put(Costants.JSON_USER_MAX_DUR, p.getMax_dur());
+                json_p.put(Costants.JSON_USER_MAX_DUR, p.getMax_dur() * 60 * 1000);
                 json_p.put(Costants.JSON_USER_NOT_WITH, Utils.arrayListToString(p.getNotWith()));
                 json_p.put(Costants.JSON_USER_POP, Utils.arrayListToString(p.getPop()));
                 users.put(json_p);
             }
 
             toSend.put(Costants.JSON_USERS, users);
+            new DownloadTask().execute(toSend);
 
         } catch (Exception e) {
 
         }
-
-/*
-
-        String uri = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=";
-        String uri_dest = "&destinations=";
-
-        String uri_o = "";
-        int k = 0;
-        for (Person p : persons) {
-            String divider = "|";
-            if (k == 0)
-                divider = "";
-            uri_o = uri_o + divider + Uri.encode(p.getAddress());
-            k++;
-        }
-
-        String uri_lan = "&language=" + Locale.getDefault().getLanguage();
-        String uri_key = "&key=AIzaSyB27xz94JVRPsuX4qJMMiZpGVoQiQITFb8";
-        new DownloadTask().execute(uri + uri_o + uri_dest + uri_o + uri_lan + uri_key);
-
-        */
-
     }
 
     @Override
@@ -132,10 +117,6 @@ public class Follow extends AppCompatActivity {
         if (id == android.R.id.home) {
             onBackPressed();
             return true;
-        }
-
-        if (id == R.id.action_share) {
-            // TODO share content
         }
 
 
@@ -162,10 +143,10 @@ public class Follow extends AppCompatActivity {
             JSONObject jsonObject = null;
             try {
                 jsonObject = new JSONObject(result);
-            } catch (Exception e) {}
-            // TODO usare bene il  file json
-            findViewById(R.id.loader).setVisibility(View.GONE);
-            ((TextView) findViewById(R.id.text_distance)).setText(result);
+                setResult(jsonObject);
+            } catch (Exception e) {
+                Log.i("error_json", e.toString());
+            }
         }
     }
 
@@ -192,13 +173,12 @@ public class Follow extends AppCompatActivity {
         final SharedPreferences SP = getSharedPreferences(Costants.PREFERENCES_COSTANT, Context.MODE_PRIVATE);
 
         //URL url = new URL(SP.getString(Costants.PREFERENCE_LAST_SERVER, ""));
-        URL url = new URL("http://www.google.it");
+        URL url = new URL("http://tommasoberlose.altervista.org/old/carpooling.php");
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setReadTimeout(10000);
         conn.setConnectTimeout(15000);
-        conn.setRequestMethod("GET");
-        conn.setDoInput(true);/*
-        TODO
+        conn.setRequestMethod("POST");
+        conn.setDoInput(true);
         conn.setDoOutput(true);
         conn.setRequestProperty("Accept", "application/json");
         conn.setRequestProperty("Content-type", "application/json");
@@ -209,7 +189,7 @@ public class Follow extends AppCompatActivity {
         writer.write(jsonString, 0, jsonString.length());
         writer.flush();
         writer.close();
-        os.close();*/
+        os.close();
 
         // Start the query
         conn.connect();
@@ -232,5 +212,97 @@ public class Follow extends AppCompatActivity {
         while ((inputStr = streamReader.readLine()) != null)
             responseStrBuilder.append(inputStr);
         return responseStrBuilder.toString();
+    }
+
+    private String destinations = "";
+    private String toSend = "";
+
+    public void setResult(JSONObject jsonObj) {
+        try {
+            findViewById(R.id.loader).setVisibility(View.GONE);
+            LinearLayout container = (LinearLayout) findViewById(R.id.container_result);
+            container.removeAllViews();
+
+            // Prendo tutte le euristiche
+            JSONArray jsonArrayEuristiche = jsonObj.getJSONArray(Costants.JSON_RESPONSE_EURISTICHE);
+            String jsonArrayName = (jsonArrayEuristiche.getJSONObject(0)).getString(Costants.JSON_RESPONSE_NAME);
+            JSONArray jsonArrayResults = (jsonArrayEuristiche.getJSONObject(0)).getJSONArray(Costants.JSON_RESPONSE_RESULTS);
+
+            String[] names = jsonArrayName.split(",");
+
+            for (int e = 0; e < jsonArrayResults.length(); e++) {
+                toSend = "";
+                if (e != 0)
+                    toSend += "\n";
+                View card_layout = LayoutInflater.from(this).inflate(R.layout.card_layout, null);
+                JSONArray js = (jsonArrayResults.getJSONObject(e)).getJSONArray(names[e]);
+                destinations = "";
+
+                JSONArray cars = (js.getJSONObject(0)).getJSONArray(Costants.JSON_RESPONSE_CARS);
+                String cost = (js.getJSONObject(0)).getString(Costants.JSON_RESPONSE_COSTO);
+                for (int k = 0; k < cars.length(); k++) {
+                    String car_id = (cars.getJSONObject(k)).getString(Costants.JSON_RESPONSE_ID);
+                    JSONArray car_partenze = (cars.getJSONObject(k)).getJSONArray(Costants.JSON_RESPONSE_PARTENZE);
+
+                    String[] ids = car_id.split(",");
+                    for (int i = 0; i < ids.length; i++) {
+                        String id = ids[i];
+                        String orario = car_partenze.getString(i);
+                        String name = "";
+                        for (Person p : persons) {
+                            if (id.equals("" + p.getId())) {
+                                if (i != 0)
+                                    destinations += ",";
+                                destinations += Uri.encode(p.getAddress());
+                                name = p.getName();
+                                break;
+                            }
+                        }
+
+                        View layout = LayoutInflater.from(this).inflate(R.layout.layout_euristiche, null);
+                        ((TextView) layout.findViewById(R.id.name)).setText(name);
+                        ((TextView) layout.findViewById(R.id.partenza)).setText(Utils.getHour(this, Long.parseLong(orario)));
+
+                        toSend += name;
+
+                        if (i != 0) {
+                            layout.findViewById(R.id.auto).setVisibility(View.INVISIBLE);
+                        } else {
+                            layout.findViewById(R.id.auto).setVisibility(View.VISIBLE);
+                        }
+                        toSend += "\n" + Utils.getHour(this, Long.parseLong(orario));
+                        ((LinearLayout) card_layout.findViewById(R.id.card_container)).addView(layout);
+                    }
+                }
+                ((TextView) card_layout.findViewById(R.id.title_e)).setText("Euristica " + names[e]);
+                ((TextView) card_layout.findViewById(R.id.costo_e)).setText("Costo: " + cost + "m");
+                card_layout.findViewById(R.id.action_share).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent sendIntent = new Intent();
+                        sendIntent.setAction(Intent.ACTION_SEND);
+                        sendIntent.putExtra(Intent.EXTRA_TEXT, toSend);
+                        sendIntent.setType("text/plain");
+                        try {
+                            startActivity(sendIntent);
+                        } catch (Exception ex) {
+                        }
+                    }
+                });
+                card_layout.findViewById(R.id.action_maps).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Uri gmmIntentUri = Uri.parse("google.navigation:q=" + destinations);
+                        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                        mapIntent.setPackage("com.google.android.apps.maps");
+                        startActivity(mapIntent);
+                    }
+                });
+                container.addView(card_layout);
+
+            }
+        } catch (Exception e) {
+            Log.i("error", e.toString());
+        }
     }
 }

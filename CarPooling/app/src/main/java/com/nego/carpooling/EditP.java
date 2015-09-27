@@ -7,11 +7,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.net.Uri;
 import android.os.Handler;
 import android.provider.ContactsContract;
+import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,6 +31,7 @@ import android.widget.Toast;
 import com.nego.carpooling.Functions.PersonService;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class EditP extends AppCompatActivity {
 
@@ -37,8 +41,9 @@ public class EditP extends AppCompatActivity {
     private ArrayList<String> notWith = new ArrayList<>();
     private ArrayList<String> pop = new ArrayList<>();
 
+    private ArrayList<Person> all_persons;
+
     private EditText name;
-    private EditText address;
     private ImageView img;
     private ImageView edit_img;
     private ImageView delete_img;
@@ -46,6 +51,9 @@ public class EditP extends AppCompatActivity {
     private LinearLayout action_max_dur;
     private TextView subtitle_not_with;
     private TextView subtitle_max_dur;
+    private EditText address;
+    private LinearLayout container_address;
+    private LinearLayout action_new_address;
 
     private Handler mHandler;
 
@@ -66,8 +74,12 @@ public class EditP extends AppCompatActivity {
         save_button = (ImageView) findViewById(R.id.action_save);
         action_max_dur = (LinearLayout) findViewById(R.id.action_max_dur);
         action_not_with = (LinearLayout) findViewById(R.id.action_not_with);
+        action_new_address = (LinearLayout) findViewById(R.id.action_pop);
         subtitle_max_dur = (TextView) findViewById(R.id.subtitle_max_dur);
         subtitle_not_with = (TextView) findViewById(R.id.subtitle_not_with);
+        container_address = (LinearLayout) findViewById(R.id.new_address_container);
+
+        all_persons = Utils.getAllPersons(this);
 
         findViewById(R.id.action_back_pressed).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,13 +91,11 @@ public class EditP extends AppCompatActivity {
         if (intent.getAction() != null && intent.getAction().equals(Costants.ACTION_EDIT_PERSON)) {
             Person p = intent.getParcelableExtra(Costants.EXTRA_PERSON);
             p_img = p.getImg();
-
-            name.setText(p.getName());
             address.setText(p.getAddress());
+            name.setText(p.getName());
             max_dur = p.getMax_dur();
             notWith = p.getNotWith();
             pop = p.getPop();
-
             person = p;
         }
 
@@ -157,10 +167,103 @@ public class EditP extends AppCompatActivity {
         action_not_with.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(EditP.this, "Da fare...", Toast.LENGTH_SHORT).show();
+
+                for (Person px : all_persons) {
+                    if (px.getId() == person.getId()) {
+                        all_persons.remove(px);
+                        break;
+                    }
+                }
+
+                String[] pN = new String[all_persons.size()];
+                final String[] pNid = new String[all_persons.size()];
+                final boolean[] pNb = new boolean[all_persons.size()];
+
+                if (all_persons.size() > 0) {
+                    int f = 0;
+                    for (Person p : all_persons) {
+                        pN[f] = p.getName();
+                        pNid[f] = "" + p.getId();
+                        pNb[f] = notWith.contains("" + p.getId());
+                        f++;
+                    }
+
+                    new android.support.v7.app.AlertDialog.Builder(EditP.this, R.style.mDialog)
+                            .setTitle(R.string.title_activity_choose_people)
+                            .setMultiChoiceItems(pN,
+                                    pNb, new DialogInterface.OnMultiChoiceClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                                            pNb[which] = isChecked;
+                                        }
+                                    })
+                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    notWith.clear();
+                                    for (int k = 0; k < all_persons.size(); k++) {
+                                        if (pNb[k])
+                                            notWith.add(pNid[k]);
+                                    }
+                                    setNotWith(notWith);
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .show();
+
+                } else {
+                    Toast.makeText(EditP.this, "Non ci sono persone", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
+        action_new_address.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final View dialogView = LayoutInflater.from(EditP.this).inflate(R.layout.dialog_pa, null);
+                final Dialog dialog_arrivo = new Dialog(EditP.this, R.style.mDialog);
+                dialogView.findViewById(R.id.action_save).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final String a = ((EditText) dialogView.findViewById(R.id.address)).getText().toString();
+                        if (a.equals("")) {
+                            Utils.SnackbarC(EditP.this, "Inserisci un indirizzo", dialogView.findViewById(R.id.address));
+                        } else {
+                            ((TextView) dialogView.findViewById(R.id.action_save)).setText("Valutazione indirizzo...");
+                            dialogView.findViewById(R.id.action_save).setEnabled(false);
+                            final Handler mHandler = new Handler();
+
+                            new Thread(new Runnable() {
+                                public void run() {
+                                    final Address postal_address = Utils.getLocationFromAddress(EditP.this, a);
+                                    mHandler.post(new Runnable() {
+                                        public void run() {
+                                            if (postal_address == null) {
+                                                Utils.SnackbarC(EditP.this, "Indirizzo non valido", dialogView.findViewById(R.id.address));
+                                                ((TextView) dialogView.findViewById(R.id.action_save)).setText("save");
+                                                dialogView.findViewById(R.id.action_save).setEnabled(true);
+                                            } else {
+                                                pop.add(postal_address.getAddressLine(0) + ", " + postal_address.getAddressLine(1) + ", " + postal_address.getAddressLine(2));
+                                                setPop(pop);
+                                                dialog_arrivo.dismiss();
+                                            }
+                                        }
+                                    });
+                                }
+                            }).start();
+                        }
+                    }
+                });
+                dialog_arrivo.setContentView(dialogView);
+                dialog_arrivo.show();
+            }
+        });
 
         if (savedInstanceState != null) {
             p_img = savedInstanceState.getString(Costants.KEY_DIALOG_IMG);
@@ -179,7 +282,7 @@ public class EditP extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         outState.putString(Costants.KEY_DIALOG_NAME, name.toString());
         outState.putString(Costants.KEY_DIALOG_IMG, p_img);
-        outState.putString(Costants.KEY_DIALOG_ADDRESS, address.toString());
+        outState.putString(Costants.KEY_DIALOG_ADDRESS, address.getText().toString());
         outState.putLong(Costants.KEY_DIALOG_MAX_DUR, max_dur);
         outState.putString(Costants.KEY_DIALOG_NOT_WITH, Utils.arrayListToString(notWith));
         outState.putString(Costants.KEY_DIALOG_POP, Utils.arrayListToString(pop));
@@ -248,7 +351,7 @@ public class EditP extends AppCompatActivity {
                             public void run() {
                                 try {
                                     if (postal_address == null) {
-                                        Utils.SnackbarC(EditP.this, "Indirizzo non valido", address);
+                                        Utils.SnackbarC(EditP.this, "Indirizzo non valido", name);
                                         save_button.setEnabled(true);
                                     } else {
                                         if (person == null) {
@@ -275,33 +378,57 @@ public class EditP extends AppCompatActivity {
         }
     }
 
-    public void setImg(String p_uri) {
+    public void setImg(final String p_uri) {
         p_img = p_uri;
-        if (p_uri.equals("")) {
-            delete_img.setVisibility(View.GONE);
-            img.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_person_null));
-        } else {
-            img.setImageURI(Uri.parse(p_img));
-            Drawable d_img = img.getDrawable();
-            if (d_img == null) {
-                setImg("");
-            }
-            delete_img.setVisibility(View.VISIBLE);
-            delete_img.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    new AlertDialog.Builder(EditP.this)
-                            .setTitle("Attenzione")
-                            .setMessage("Sicuro di voler eliminare questa foto?")
-                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int whichButton) {
-                                    setImg("");
-                                }
-                            })
-                            .setNegativeButton(android.R.string.no, null).show();
+        final Handler mHandler = new Handler();
+
+        new Thread(new Runnable() {
+            public void run() {
+
+                if (p_uri.equals("")) {
+                    final Drawable drawable = ContextCompat.getDrawable(EditP.this,  R.drawable.ic_person_null);
+                    mHandler.post(new Runnable() {
+                        public void run() {
+                            try {
+                                delete_img.setVisibility(View.GONE);
+                                img.setImageDrawable(drawable);
+                            } catch (Exception e) {}
+                        }
+                    });
+                } else {
+                    try {
+                        final Bitmap bm = MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.parse(p_img));
+
+                        mHandler.post(new Runnable() {
+                            public void run() {
+                                try {
+                                    img.setImageBitmap(bm);
+                                    Drawable d_img = img.getDrawable();
+                                    if (d_img == null) {
+                                        setImg("");
+                                    }
+                                    delete_img.setVisibility(View.VISIBLE);
+                                    delete_img.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            new AlertDialog.Builder(EditP.this)
+                                                    .setTitle("Attenzione")
+                                                    .setMessage("Sicuro di voler eliminare questa foto?")
+                                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int whichButton) {
+                                                            setImg("");
+                                                        }
+                                                    })
+                                                    .setNegativeButton(android.R.string.no, null).show();
+                                        }
+                                    });
+                                } catch (Exception e) {}
+                            }
+                        });
+                    } catch (Exception e) {}
                 }
-            });
-        }
+            }
+        }).start();
     }
 
     public void setPerson(String name_a, String address_a, String photo) {
@@ -318,11 +445,17 @@ public class EditP extends AppCompatActivity {
         String text = "";
         String d = "";
         boolean first = true;
-        for (String s : notWith) {
-            text += d + s;
-            if (first) {
-                first = false;
-                d = ", ";
+        if (notWith.size() == 0) {
+            text = "Nessuna Preferenza";
+        } else {
+            for (Person p : all_persons) {
+                if (notWith.contains("" + p.getId())) {
+                    text += d + p.getName();
+                    if (first) {
+                        first = false;
+                        d = ", ";
+                    }
+                }
             }
         }
         subtitle_not_with.setText(text);
@@ -330,15 +463,62 @@ public class EditP extends AppCompatActivity {
 
     public void setPop(ArrayList<String> arrayList) {
         pop = arrayList;
-        String text = "";
-        String d = "";
-        boolean first = true;
-        for (String s : notWith) {
-            text += d + s;
-            if (first) {
-                first = false;
-                d = ", ";
-            }
+        container_address.removeAllViews();
+
+        for (final String s : arrayList) {
+            final View address_layout = LayoutInflater.from(this).inflate(R.layout.new_address, null);
+            ((TextView) address_layout.findViewById(R.id.address)).setText(s);
+            address_layout.findViewById(R.id.action_remove).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    container_address.removeView(address_layout);
+                    pop.remove(s);
+                }
+            });
+            address_layout.findViewById(R.id.address).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final View dialogView = LayoutInflater.from(EditP.this).inflate(R.layout.dialog_pa, null);
+                    final Dialog dialog_arrivo = new Dialog(EditP.this, R.style.mDialog);
+                    ((TextView) dialogView.findViewById(R.id.address)).setText(s);
+                    dialogView.findViewById(R.id.action_save).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            final String a = ((EditText) dialogView.findViewById(R.id.address)).getText().toString();
+                            if (a.equals("")) {
+                                Utils.SnackbarC(EditP.this, "Inserisci un indirizzo", dialogView.findViewById(R.id.address));
+                            } else {
+                                ((TextView) dialogView.findViewById(R.id.action_save)).setText("Valutazione indirizzo...");
+                                dialogView.findViewById(R.id.action_save).setEnabled(false);
+                                final Handler mHandler = new Handler();
+
+                                new Thread(new Runnable() {
+                                    public void run() {
+                                        final Address postal_address = Utils.getLocationFromAddress(EditP.this, a);
+                                        mHandler.post(new Runnable() {
+                                            public void run() {
+                                                if (postal_address == null) {
+                                                    Utils.SnackbarC(EditP.this, "Indirizzo non valido", dialogView.findViewById(R.id.address));
+                                                    ((TextView) dialogView.findViewById(R.id.action_save)).setText("save");
+                                                    dialogView.findViewById(R.id.action_save).setEnabled(true);
+                                                } else {
+                                                    pop.remove(s);
+                                                    pop.add(postal_address.getAddressLine(0) + ", " + postal_address.getAddressLine(1) + ", " + postal_address.getAddressLine(2));
+                                                    setPop(pop);
+                                                    dialog_arrivo.dismiss();
+                                                }
+                                            }
+                                        });
+                                    }
+                                }).start();
+                            }
+                        }
+                    });
+                    dialog_arrivo.setContentView(dialogView);
+                    dialog_arrivo.show();
+                }
+            });
+            container_address.addView(address_layout);
         }
     }
 

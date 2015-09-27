@@ -15,46 +15,14 @@
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/my_awesome_toolbar"
-            android:layout_height="220dp"
+            android:layout_height="?android:attr/actionBarSize"
             android:layout_width="match_parent"
             android:theme="@style/style_actionBar"
             android:transitionName="my_awesome_toolbar"
+            android:background="@color/primary"
             android:elevation="2dp"
-            android:scaleType="centerCrop"
-            android:paddingTop="24dp"
             android:paddingRight="4dp"
-            android:paddingEnd="4dp" >
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_gravity="center|bottom"
-                android:id="@+id/container_title"
-                android:transitionName="container_title"
-                android:layout_marginBottom="64dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/title_activity_choose_people"
-                    android:textAllCaps="true"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_margin="8dp"
-                    android:textColor="@android:color/white"
-                    android:textSize="15sp"
-                    android:textAppearance="?android:attr/textAppearanceButton"
-                    android:id="@+id/title_t"
-                    android:transitionName="title_t"/>
-                <LinearLayout
-                    android:layout_width="150dp"
-                    android:layout_height="2dp"
-                    android:orientation="vertical"
-                    android:background="@android:color/white"
-                    android:id="@+id/line_t"
-                    android:transitionName="line_t"
-                    android:layout_gravity="center_horizontal" />
-            </LinearLayout>
-        </android.support.v7.widget.Toolbar>
+            android:paddingEnd="4dp" />
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
@@ -67,10 +35,7 @@
             android:background="@color/back_card"
             app:cardBackgroundColor="@color/back_card"
             app:cardPreventCornerOverlap="true"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="-32dp">
+            android:layout_margin="16dp">
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

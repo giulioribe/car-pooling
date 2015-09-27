@@ -177,16 +177,24 @@
                                         android:textColor="@android:color/white"
                                         android:textColorHint="@color/white_back" />
                                 </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingLeft="16dp"
+                                android:paddingStart="16dp"
+                                android:paddingEnd="16dp"
+                                android:paddingRight="16dp"
+                                android:id="@+id/new_address_container"
+                                android:orientation="vertical"/>
+
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:paddingLeft="16dp"
-                                    android:paddingRight="16dp"
-                                    android:background="@drawable/list_item_background"
+                                    android:paddingLeft="48dp"
+                                    android:paddingRight="48dp"
                                     android:id="@+id/action_pop"
-                                    android:orientation="vertical"
-                                    android:layout_marginLeft="32dp"
-                                    android:layout_marginStart="32dp">
+                                    android:background="@drawable/list_item_background"
+                                    android:orientation="vertical">
                                     <TextView
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
@@ -200,7 +208,6 @@
                                         android:textAppearance="?android:attr/textAppearanceMedium"
                                         android:textColor="@color/white_back" />
                                 </LinearLayout>
-
 
                                 <LinearLayout
                                     android:layout_width="match_parent"

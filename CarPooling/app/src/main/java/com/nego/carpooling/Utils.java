@@ -1,18 +1,29 @@
 package com.nego.carpooling;
 
+import android.animation.Animator;
 import android.content.Context;
 import android.content.pm.LauncherApps;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Build;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewAnimationUtils;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import com.nego.carpooling.Adapter.MyAdapter;
+import com.nego.carpooling.database.DbAdapter;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -61,6 +72,17 @@ public class Utils {
         return "Arrivo per le " + HM.format(new Date(byR.getTimeInMillis())) + today;
     }
 
+    public static String getHour(Context context, long date) {
+        Calendar byR = Calendar.getInstance();
+        Calendar now = Calendar.getInstance();
+        byR.setTimeInMillis(date);
+        SimpleDateFormat HM = new SimpleDateFormat("HH:mm");
+        String today = "";
+        if (byR.get(Calendar.HOUR_OF_DAY) < now.get(Calendar.HOUR_OF_DAY) || (byR.get(Calendar.HOUR_OF_DAY) == now.get(Calendar.HOUR_OF_DAY) && byR.get(Calendar.MINUTE) < now.get(Calendar.MINUTE)))
+            today = " di domani";
+        return "Partenza alle " + HM.format(new Date(byR.getTimeInMillis())) + today;
+    }
+
     public static boolean isOldDate(long date) {
         Calendar today = Calendar.getInstance();
         return (today.getTimeInMillis() > date);
@@ -87,15 +109,14 @@ public class Utils {
         List<Address> address;
 
         int i = 0;
-        while (i<100) {
+        while (i<10) {
             try {
                 address = coder.getFromLocationName(strAddress, 5);
                 Log.i("address", address.get(0).toString());
-                if (address != null) {
-                    return address.get(0);
-                }
+                return address.get(0);
 
             } catch (Exception ex) {
+                Log.i("errore_address", ex.toString());
             }
             i++;
         }
@@ -110,14 +131,15 @@ public class Utils {
         Geocoder coder = new Geocoder(context);
         List<Address> address;
         int i = 0;
-        while (i<100) {
+        while (i<10) {
             try {
-                address = coder.getFromLocation(new Double(lat), new Double(lon), 5);
+                address = coder.getFromLocation(Double.valueOf(lat), Double.valueOf(lon), 5);
                 if (address != null) {
                     return address.get(0);
                 }
 
             } catch (Exception ex) {
+                Log.i("errore_address", ex.toString());
             }
             i++;
         }
@@ -196,8 +218,9 @@ public class Utils {
         return format;
     }
 
-    public static void setBackground(final Context context, final View view, final int i) {
+    public static void setSrc(final Context context, final ImageView view, final int i) {
         final Handler mHandler = new Handler();
+        view.setVisibility(View.INVISIBLE);
 
         new Thread(new Runnable() {
             public void run() {
@@ -205,27 +228,38 @@ public class Utils {
                 final Drawable drawable = ContextCompat.getDrawable(context, i);
                 mHandler.post(new Runnable() {
                     public void run() {
-                        view.setBackground(drawable);
+                        try {
+                            view.setImageDrawable(drawable);
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                final int cx = view.getWidth() / 2;
+                                final int cy = view.getHeight() / 2;
+                                final int finalRadius = Math.max(cx, cy);
+                                Animator anim =
+                                        ViewAnimationUtils.createCircularReveal((View) view, cx, cy, 0, finalRadius);
+                                view.setVisibility(View.VISIBLE);
+                                anim.setDuration(500);
+                                anim.start();
+                            } else {
+                                view.setVisibility(View.VISIBLE);
+                            }
+                        } catch (Exception e) {}
                     }
                 });
             }
         }).start();
     }
 
-    public static void setSrc(final Context context, final ImageView view, final int i) {
-        final Handler mHandler = new Handler();
-
-        new Thread(new Runnable() {
-            public void run() {
-
-                final Drawable drawable = ContextCompat.getDrawable(context, i);
-                mHandler.post(new Runnable() {
-                    public void run() {
-                        view.setImageDrawable(drawable);
-                    }
-                });
-            }
-        }).start();
+    public static ArrayList<Person> getAllPersons(final Context context) {
+        ArrayList<Person> persons = new ArrayList<>();
+        DbAdapter dbHelper = new DbAdapter(context);
+        dbHelper.open();
+        Cursor c = dbHelper.fetchAllPersons();
+        while (c.moveToNext()) {
+            persons.add(new Person(c));
+        }
+        dbHelper.close();
+        c.close();
+        return persons;
     }
 
 }

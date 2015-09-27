@@ -23,7 +23,7 @@
         <activity
             android:name=".ChoosePeople"
             android:label="@string/title_activity_choose_people"
-            android:theme="@style/AppTheme" >
+            android:theme="@style/AppTheme.Settings" >
             <intent-filter>
                 <action android:name="com.nego.carpooling.intent.action.UPDATE_LIST" />
             </intent-filter>
@@ -41,11 +41,13 @@
         </activity>
         <activity
             android:name=".Preferences"
-            android:label="@string/title_activity_preferences" >
+            android:label="@string/title_activity_preferences"
+            android:theme="@style/AppTheme.Settings" >
         </activity>
         <activity
             android:name=".Follow"
-            android:label="@string/title_activity_follow" >
+            android:label="@string/title_activity_follow"
+            android:theme="@style/AppTheme.Settings" >
         </activity>
         <activity
             android:name=".EditP"
