@@ -72,7 +72,6 @@ public class Follow extends AppCompatActivity {
             calendar = Calendar.getInstance();
             calendar.setTimeInMillis(getIntent().getLongExtra(Costants.EXTRA_TIME, c.getTimeInMillis()));
             location = getIntent().getStringExtra(Costants.EXTRA_PLACE);
-            Log.i("data arrivo", "" + calendar.getTimeInMillis());
         } catch (Exception e) {
             finish();
         }
@@ -86,7 +85,7 @@ public class Follow extends AppCompatActivity {
 
             for (Person p : persons) {
                 JSONObject json_p = new JSONObject();
-                json_p.put(Costants.JSON_USER_ID, p.getId());
+                json_p.put(Costants.JSON_USER_ID, "" + p.getId());
                 json_p.put(Costants.JSON_USER_ADDRESS, p.getAddress());
                 json_p.put(Costants.JSON_USER_MAX_DUR, p.getMax_dur() * 60 * 1000);
                 json_p.put(Costants.JSON_USER_NOT_WITH, Utils.arrayListToString(p.getNotWith()));

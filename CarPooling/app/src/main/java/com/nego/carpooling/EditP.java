@@ -168,10 +168,12 @@ public class EditP extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                for (Person px : all_persons) {
-                    if (px.getId() == person.getId()) {
-                        all_persons.remove(px);
-                        break;
+                if (person != null) {
+                    for (Person px : all_persons) {
+                        if (px.getId() == person.getId()) {
+                            all_persons.remove(px);
+                            break;
+                        }
                     }
                 }
 
