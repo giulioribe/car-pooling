@@ -3,18 +3,18 @@ class Arc(object):
     """docstring for Arc"""
     def __init__(self, id_i, id_f, dur, dist):
         #super(Arc, self).__init__()
-        self.id_i = id_i
-        self.id_f = id_f
+        self.id_i = id_i.encode('ascii','ignore')
+        self.id_f = id_f.encode('ascii','ignore')
         self.dur = dur
         self.dist = dist
 
     def setId_i(self, id_i):
         if id_i:
-            self.id_i = id_i
+            self.id_i = id_i.encode('ascii','ignore')
 
     def setId_f(self, id_f):
         if id_f:
-            self.id_f = id_f
+            self.id_f = id_f.encode('ascii','ignore')
 
     def setDur(self, dur):
         if dur:
@@ -26,9 +26,9 @@ class Arc(object):
 
     def setArc(self, id_i='', id_f='', dur='', dist=''):
         if id_i:
-            self.id_i = id_i
+            self.id_i = id_i.encode('ascii','ignore')
         if id_f:
-            self.id_f = id_f
+            self.id_f = id_f.encode('ascii','ignore')
         if dur:
             self.dur = dur
         if dist:
