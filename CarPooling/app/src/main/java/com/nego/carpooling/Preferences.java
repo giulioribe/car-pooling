@@ -70,9 +70,6 @@ public class Preferences extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle(R.string.title_activity_preferences);
 
-        if (getResources().getConfiguration().screenLayout == Configuration.SCREENLAYOUT_SIZE_XLARGE)
-            Utils.setSrc(this, (ImageView) findViewById(R.id.back_main), R.drawable.pr_t);
-
         button = (TextView) findViewById(R.id.next_button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,6 +106,10 @@ public class Preferences extends AppCompatActivity {
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         calendar.set(Calendar.HOUR_OF_DAY, selectedHour);
                         calendar.set(Calendar.MINUTE, selectedMinute);
+                        if (Utils.isOldDate(calendar.getTimeInMillis()))
+                            calendar.add(Calendar.DAY_OF_MONTH, 1);
+                        else
+                            calendar.set(Calendar.DAY_OF_MONTH, Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
                         ((TextView) findViewById(R.id.time_to_arrive)).setText(Utils.getTime(Preferences.this, calendar.getTimeInMillis()));
                         checkGo();
                     }

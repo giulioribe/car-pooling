@@ -64,9 +64,6 @@ public class Follow extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle(R.string.title_activity_follow);
 
-        if (getResources().getConfiguration().screenLayout == Configuration.SCREENLAYOUT_SIZE_XLARGE)
-            Utils.setSrc(this, (ImageView) findViewById(R.id.back_main), R.drawable.fo_t);
-
         try {
             Calendar c = Calendar.getInstance();
             c.set(Calendar.HOUR_OF_DAY, 9);
@@ -75,6 +72,7 @@ public class Follow extends AppCompatActivity {
             calendar = Calendar.getInstance();
             calendar.setTimeInMillis(getIntent().getLongExtra(Costants.EXTRA_TIME, c.getTimeInMillis()));
             location = getIntent().getStringExtra(Costants.EXTRA_PLACE);
+            Log.i("data arrivo", "" + calendar.getTimeInMillis());
         } catch (Exception e) {
             finish();
         }
@@ -142,6 +140,7 @@ public class Follow extends AppCompatActivity {
         protected void onPostExecute(String result) {
             JSONObject jsonObject = null;
             try {
+                Log.i("result", result);
                 jsonObject = new JSONObject(result);
                 setResult(jsonObject);
             } catch (Exception e) {
@@ -172,8 +171,8 @@ public class Follow extends AppCompatActivity {
 
         final SharedPreferences SP = getSharedPreferences(Costants.PREFERENCES_COSTANT, Context.MODE_PRIVATE);
 
-        //URL url = new URL(SP.getString(Costants.PREFERENCE_LAST_SERVER, ""));
-        URL url = new URL("http://tommasoberlose.altervista.org/old/carpooling.php");
+        URL url = new URL(SP.getString(Costants.PREFERENCE_LAST_SERVER, ""));
+        //URL url = new URL("http://tommasoberlose.altervista.org/old/carpooling.php");
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setReadTimeout(10000);
         conn.setConnectTimeout(15000);
@@ -224,9 +223,9 @@ public class Follow extends AppCompatActivity {
             container.removeAllViews();
 
             // Prendo tutte le euristiche
-            JSONArray jsonArrayEuristiche = jsonObj.getJSONArray(Costants.JSON_RESPONSE_EURISTICHE);
-            String jsonArrayName = (jsonArrayEuristiche.getJSONObject(0)).getString(Costants.JSON_RESPONSE_NAME);
-            JSONArray jsonArrayResults = (jsonArrayEuristiche.getJSONObject(0)).getJSONArray(Costants.JSON_RESPONSE_RESULTS);
+            JSONObject jsonArrayEuristiche = jsonObj.getJSONObject(Costants.JSON_RESPONSE_EURISTICHE);
+            String jsonArrayName = jsonArrayEuristiche.getString(Costants.JSON_RESPONSE_NAME);
+            JSONObject jsonArrayResults = jsonArrayEuristiche.getJSONObject(Costants.JSON_RESPONSE_RESULTS);
 
             String[] names = jsonArrayName.split(",");
 
@@ -235,19 +234,20 @@ public class Follow extends AppCompatActivity {
                 if (e != 0)
                     toSend += "\n";
                 View card_layout = LayoutInflater.from(this).inflate(R.layout.card_layout, null);
-                JSONArray js = (jsonArrayResults.getJSONObject(e)).getJSONArray(names[e]);
+                JSONObject js = jsonArrayResults.getJSONObject(names[e]);
                 destinations = "";
 
-                JSONArray cars = (js.getJSONObject(0)).getJSONArray(Costants.JSON_RESPONSE_CARS);
-                String cost = (js.getJSONObject(0)).getString(Costants.JSON_RESPONSE_COSTO);
+                JSONArray cars = js.getJSONArray(Costants.JSON_RESPONSE_CARS);
+                String cost = js.getString(Costants.JSON_RESPONSE_COSTO);
                 for (int k = 0; k < cars.length(); k++) {
                     String car_id = (cars.getJSONObject(k)).getString(Costants.JSON_RESPONSE_ID);
-                    JSONArray car_partenze = (cars.getJSONObject(k)).getJSONArray(Costants.JSON_RESPONSE_PARTENZE);
+                    String car_partenze = (cars.getJSONObject(k)).getString(Costants.JSON_RESPONSE_PARTENZE);
 
                     String[] ids = car_id.split(",");
+                    String[] partenze_s = car_partenze.split(",");
                     for (int i = 0; i < ids.length; i++) {
                         String id = ids[i];
-                        String orario = car_partenze.getString(i);
+                        String orario = partenze_s[i];
                         String name = "";
                         for (Person p : persons) {
                             if (id.equals("" + p.getId())) {
