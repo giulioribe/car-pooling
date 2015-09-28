@@ -6,7 +6,10 @@ class Node:
         self.id = id.encode('ascii','ignore')
         self.dur = dur
         self.addr = addr.encode('ascii','ignore')
-        self.notWith = list(notWith.split(','))
+        if notWith:
+            self.notWith = list(notWith.split(','))
+        else:
+            self.notWith = ''
 
     def setId(self, id):
         if id:
@@ -23,6 +26,8 @@ class Node:
     def setNotWith(self, notWith):
         if notWith:
             self.notWith = list(notWith.split(','))
+        else:
+            self.notWith = ''
 
     def setNode(self, id='', dur='', addr='', notWith=''):
         if id:
@@ -33,6 +38,8 @@ class Node:
             self.dur = dur
         if notWith:
             self.notWith = list(notWith.split(','))
+        else:
+            self.notWith = ''
 
     def getId(self):
         return self.id

@@ -17,7 +17,7 @@ def createNode(dati_dict):
     node_dict['0'] = (Node(
         ### TODO: id controllare se il JSON restituisce  int o str
         id='0',
-        dur=int(dati_dict['time_to_arrive']),
+        dur=dati_dict['time_to_arrive'],
         addr=dati_dict['place_to_arrive'])
     )
 
@@ -87,7 +87,9 @@ def checkNotWith(cars_list, nauto, node_dict, newper):
     return True
 
 def minDuration(dur, newdur, mindur):
-    if (dur+newdur) > mindur:
+    if newdur == 0 or dur == 0:
+        return True
+    elif (dur+newdur) > mindur:
         return False
     return True
 
@@ -184,8 +186,30 @@ def updateDataOutput(dataOut, eur_type, cars_list, dur_list, dist, timeEnd):
             else:
                 dataOut['euristiche']['results'][eur_type]['cars'][i]['partenze'] = (str(tmpEnd) +
                 ',' + dataOut['euristiche']['results'][eur_type]['cars'][i]['partenze'])
-        #dataOut['euristiche']['results'][eur_type]['cars'][i]['partenze'] = ','.join(map(str, dur))
     dataOut['euristiche']['results'][eur_type]['costo'] = str(dist)
+
+def googleMapsRequest(node_dict):
+    url = 'https://maps.googleapis.com/maps/api/distancematrix/json?'
+    params = dict(
+        origins='',
+        destinations='',
+        mode='driving',#transit
+        language='it-IT',
+        units='metric',
+        key='AIzaSyB27xz94JVRPsuX4qJMMiZpGVoQiQITFb8'
+    )
+    params['destinations'] = node_dict['0'].getAddr() + "|"
+    for key in node_dict:
+        if key != '0':
+            params['origins'] += node_dict[key].getAddr() + "|"
+            params['destinations'] += node_dict[key].getAddr() + "|"
+    params['origins'] = params['origins'][:-1]
+    params['destinations'] = params['destinations'][:-1]
+    resp = requests.get(url=url, params=params)
+    google_dict = json.loads(resp.text)
+    with open('googleMaps.json', 'w') as outfile:
+        json.dump(google_dict, outfile, indent=4)
+    return google_dict
 
 def printNode(node_dict):
     for node in node_dict:
@@ -205,83 +229,33 @@ def printArc(arc_dict):
 @app.expose("/")
 @service.json
 def home():
-    print "-------->Reqest weppy:", request
-    print "-------->Reqest.vars weppy:", request.vars
+    #with open('dati.json', 'r') as data_file:
+    #    dati_dict = json.load(data_file)
+    #node_dict = createNode(dati_dict)
+    with open('dati2.json', 'w') as outfile:
+        json.dump(request.vars, outfile, indent=4)
+    node_dict = createNode(request.vars)
 
-    with open('dati.json', 'r') as data_file:
-        dati_dict = json.load(data_file)
-    node_dict = createNode(dati_dict)
-
-    '''
-    url = 'https://maps.googleapis.com/maps/api/staticmap?parameters'
-    params = dict(
-        size='1024x1024',
-        markers='',
-        key='AIzaSyB27xz94JVRPsuX4qJMMiZpGVoQiQITFb8'
-    )
-
-    for key in node_dict.keys():
-        params['markers'] += node_dict[key].getAddr() + "|"
-    params['markers'] = params['markers'][:-1]
-    import webbrowser
-    resp = requests.get(url=url, PendingDeprecationWarning(" error")ms=params)
-    webbrowser.open(resp.url)
-    '''
-
-    '''
-    with open('dati.json', 'r') as data_file:
-        dati_dict = json.load(data_file)
-    node_dict = createNode(dati_dict)
-    for node in node_dict:
-        print (node_dict[node].getId(),
-            node_dict[node].getDur(),
-            node_dict[node].getAddr(),
-            node_dict[node].getNotWith())
-
-    url = 'https://maps.googleapis.com/maps/api/distancematrix/json?'
-    params = dict(
-        origins='',
-        destinations='',
-        mode='driving',#transit
-        language='it-IT',
-        units='metric',
-        key='AIzaSyB27xz94JVRPsuX4qJMMiZpGVoQiQITFb8'
-    )
-
-    params['destinations'] = node_dict['0'].getAddr() + "|"
-    for key in node_dict:
-        if key != '0':
-            params['origins'] += node_dict[key].getAddr() + "|"
-            params['destinations'] += node_dict[key].getAddr() + "|"
-
-    params['origins'] = params['origins'][:-1]
-    params['destinations'] = params['destinations'][:-1]
-
-    resp = requests.get(url=url, params=params)
-    data = json.loads(resp.text)
-    with open('googleMaps.json', 'w') as outfile:
-        json.dump(data, outfile, indent=4)
-    '''
     printNode(node_dict)
-    with open('googleMaps.json', 'r') as data_file:
-        google_dict = json.load(data_file)
+
+    google_dict = googleMapsRequest(node_dict)
     arc_dict = createArc(google_dict, node_dict)
+
     print "----------------------------"
     printArc((arc_dict))
     print "----------------------------"
+
     (cars_list, dur_list, dist) = greedy(node_dict, arc_dict)
-    print cars_list
-    print dur_list
-    print dist
+
+    print "cars_list:",cars_list
+    print "dur_list:", dur_list
+    print "dist:", dist
 
     dataOut = initDataOuttput()
-    updateDataOutput(dataOut, 'greedy', cars_list, dur_list, dist,
-        node_dict['0'].getDur())
-    with open('response.json', 'w') as outfile:
-        json.dump(dataOut, outfile, indent=4)
+    updateDataOutput(dataOut, 'greedy', cars_list, dur_list, dist, node_dict['0'].getDur())
 
     #return dict(status="OK", data="Sono tanto stupido")
-    return dict(status="OK", data=dataOut)
+    return dataOut
 
 
 @app.expose("/test")
