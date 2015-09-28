@@ -60,9 +60,6 @@ public class ChoosePeople extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle(R.string.title_activity_choose_people);
 
-        if (getResources().getConfiguration().screenLayout == Configuration.SCREENLAYOUT_SIZE_XLARGE)
-            Utils.setSrc(this, (ImageView) findViewById(R.id.back_main), R.drawable.cp_t);
-
         button = (TextView) findViewById(R.id.next_button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -2,8 +2,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/primary">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -49,8 +48,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="?android:attr/actionBarSize"
                     android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:layout_marginTop="25dp">
+                    android:paddingRight="8dp">
                     <ImageView
                         android:layout_width="48dp"
                         android:layout_height="48dp"
