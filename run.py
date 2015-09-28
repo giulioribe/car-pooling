@@ -17,7 +17,7 @@ def createNode(dati_dict):
     node_dict['0'] = (Node(
         ### TODO: id controllare se il JSON restituisce  int o str
         id='0',
-        dur=dati_dict['time_to_arrive'],
+        dur=int(dati_dict['time_to_arrive']),
         addr=dati_dict['place_to_arrive'])
     )
 
@@ -48,7 +48,7 @@ def createArc(google_dict, node_dict):
                 ### TODO: id controllare se il JSON restituisce  int o str
                 id_i=key,
                 # id_f=0 perche' il nodo di destionazione e' 0
-                id_f=0,
+                id_f='0',
                 # -1 perche' gli indirizzi non hanno il nodo destinazione in
                 # prima posizione
                 # prendo il nodo in posizione 0 (destinazione uguale per tutti)
@@ -57,7 +57,6 @@ def createArc(google_dict, node_dict):
                 dist=google_dict['rows'][i-1]['elements'][0]['distance']['value'])
             )
     keys_list = node_dict.keys()
-    print keys_list
     for i in range(len(google_dict['origin_addresses'])):
         # il ciclo parte da 1 perche' nella prima posizione c'e' la
         # destinazione di tutti
@@ -65,7 +64,6 @@ def createArc(google_dict, node_dict):
             dur = google_dict['rows'][i]['elements'][y]['duration']['value']
             dist = google_dict['rows'][i]['elements'][y]['distance']['value']
             if dur > 0 and dist > 0:
-                print "i", i, "y", y
                 if (arc_dict[keys_list[i+1]][0].getDur() >
                         arc_dict[keys_list[y]][0].getDur()):
                     arc_dict[keys_list[i+1]].append(Arc(
@@ -83,7 +81,8 @@ def createArc(google_dict, node_dict):
 
 def checkNotWith(cars_list, nauto, node_dict, newper):
     for car in cars_list[nauto]:
-        if newper in node_dict[car].getNotWith():
+        if (newper in node_dict[car].getNotWith() or
+                car in node_dict[newper].getNotWith()):
             return False
     return True
 
@@ -92,6 +91,9 @@ def minDuration(dur, newdur, mindur):
         return False
     return True
 
+def updateAddress(node_dict, google_dict):
+    for i, key in enumerate(node_dict):
+        node_dict[key].setAddr(google_dict['destination_addresses'][i])
 
 def greedy(node_dict, arc_dict):
     """
@@ -109,6 +111,8 @@ def greedy(node_dict, arc_dict):
     # valore = 0
     nauto = -1
     cars_list = list()
+    dur_list = list()
+    dist_list = list()
     find = False
     # finche' ci sono archi verso la destionazione continuo a ciclare
     while len(arcToDest_dict) > 0:
@@ -122,46 +126,91 @@ def greedy(node_dict, arc_dict):
             dur = 0
             mindur = node_dict[car].getDur()
             cars_list.append(list())
+            dur_list.append(list())
+            dist_list.append(list())
             nauto += 1
             cars_list[nauto].append(car)
         else:
             find = False
-        print "nauto", nauto, "cars_list", cars_list[nauto]
         # prendo la lista di archi dal nodo di partenza
         arc_list = arc_dict[car]
         # ordina la lista di archi in ordine crescente
         for arc in sorted(arc_list, key=attrgetter('dist')):
-            print car, arc_dict[car][0].getDist(), arc.getId_f(), arc.getDist()
             if (arc.getId_f() in arcToDest_dict and
                     arc_dict[car][0].getDist() >= arc.getDist() and
                     checkNotWith(cars_list, nauto, node_dict, arc.getId_f()) and
                     minDuration(dur, arc.getDur(), mindur)):
-                print "sono nell'if"
-                print "car", car, "next car", arc.getId_f(), "dur", dur, "arc.getDur()", arc.getDur(), "mindur", mindur
                 car = arc.getId_f()
                 dur += arc.getDur()
-                mindur = node_dict[car].getDur()
+                dur_list[nauto].append(arc.getDur())
+                dist_list[nauto].append(arc.getDist())
+                if mindur > node_dict[car].getDur():
+                    mindur = node_dict[car].getDur()
                 cars_list[nauto].append(car)
                 arcToDest_dict.pop(car)
                 if len(cars_list[nauto]) < 5:
                     find = True
                 break
-    print cars_list
+    # aggiungo alla lista la distanza e la durata verso il nodo finale
+    for i, car in enumerate(cars_list):
+        dur_list[i].append(arc_dict[car[-1]][0].getDur())
+        dist_list[i].append(arc_dict[car[-1]][0].getDist())
+    # per ogni lista all'interno di dist_list sommo tutte le distanze
+    dist = sum(map(sum, dist_list))
+    return (cars_list, dur_list, dist)
 
+def initDataOuttput():
+    dataOut = dict()
+    dataOut['euristiche'] = dict()
+    dataOut['euristiche']['name'] = ''
+    dataOut['euristiche']['results'] = dict()
+    return dataOut
 
-@app.expose("/")
-@service.json
-def home():
-    print "-------->Reqest weppy:", request.vars
+def updateDataOutput(dataOut, eur_type, cars_list, dur_list, dist, timeEnd):
+    if dataOut['euristiche']['name']:
+        dataOut['euristiche']['name'] += ','
+    dataOut['euristiche']['name'] += eur_type
+    dataOut['euristiche']['results'][eur_type] = dict()
+    dataOut['euristiche']['results'][eur_type]['cars'] = list()
+    for i, (cars, dur) in enumerate(zip(cars_list, dur_list)):
+        tmpEnd = timeEnd
+        dataOut['euristiche']['results'][eur_type]['cars'].append(dict())
+        dataOut['euristiche']['results'][eur_type]['cars'][i]['id'] = ','.join(cars)
+        dataOut['euristiche']['results'][eur_type]['cars'][i]['partenze'] = ''
+        for d in reversed(dur):
+            tmpEnd = tmpEnd - d
+            if not dataOut['euristiche']['results'][eur_type]['cars'][i]['partenze']:
+                dataOut['euristiche']['results'][eur_type]['cars'][i]['partenze'] = str(tmpEnd)
+            else:
+                dataOut['euristiche']['results'][eur_type]['cars'][i]['partenze'] = (str(tmpEnd) +
+                ',' + dataOut['euristiche']['results'][eur_type]['cars'][i]['partenze'])
+        #dataOut['euristiche']['results'][eur_type]['cars'][i]['partenze'] = ','.join(map(str, dur))
+    dataOut['euristiche']['results'][eur_type]['costo'] = str(dist)
 
-    with open('dati.json', 'r') as data_file:
-        dati_dict = json.load(data_file)
-    node_dict = createNode(dati_dict)
+def printNode(node_dict):
     for node in node_dict:
         print (node_dict[node].getId(),
             node_dict[node].getDur(),
             node_dict[node].getAddr(),
             node_dict[node].getNotWith())
+
+def printArc(arc_dict):
+    for arc in arc_dict:
+        for a in arc_dict[arc]:
+            print (a.getId_i(),
+                a.getId_f(),
+                a.getDur(),
+                a.getDist())
+
+@app.expose("/")
+@service.json
+def home():
+    print "-------->Reqest weppy:", request
+    print "-------->Reqest.vars weppy:", request.vars
+
+    with open('dati.json', 'r') as data_file:
+        dati_dict = json.load(data_file)
+    node_dict = createNode(dati_dict)
 
     '''
     url = 'https://maps.googleapis.com/maps/api/staticmap?parameters'
@@ -213,32 +262,36 @@ def home():
     with open('googleMaps.json', 'w') as outfile:
         json.dump(data, outfile, indent=4)
     '''
-
+    printNode(node_dict)
     with open('googleMaps.json', 'r') as data_file:
         google_dict = json.load(data_file)
     arc_dict = createArc(google_dict, node_dict)
     print "----------------------------"
-    for arc in arc_dict:
-        for a in arc_dict[arc]:
-            print (a.getId_i(),
-                a.getId_f(),
-                a.getDur(),
-                a.getDist())
+    printArc((arc_dict))
     print "----------------------------"
-    greedy(node_dict, arc_dict)
+    (cars_list, dur_list, dist) = greedy(node_dict, arc_dict)
+    print cars_list
+    print dur_list
+    print dist
 
-    return dict(status="OK", data="Sono stupido")
-    #return dict(status="OK", data=data)
+    dataOut = initDataOuttput()
+    updateDataOutput(dataOut, 'greedy', cars_list, dur_list, dist,
+        node_dict['0'].getDur())
+    with open('response.json', 'w') as outfile:
+        json.dump(dataOut, outfile, indent=4)
+
+    #return dict(status="OK", data="Sono tanto stupido")
+    return dict(status="OK", data=dataOut)
 
 
 @app.expose("/test")
 @service.json
 def test():
-    print ############
+    print '############'
     print request.vars
     for r in request.vars:
         print r, ":", request.vars[r]
-    print ############
+    print '############'
 
     with open('dati.json', 'r') as data_file:
         dati_dict = json.load(data_file)
@@ -276,3 +329,4 @@ def test():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0")
+    #app.run()
