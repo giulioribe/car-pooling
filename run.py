@@ -2,7 +2,9 @@ import json
 import requests
 import collections
 import random
+import math
 from operator import attrgetter
+from euristiche import Euristiche
 from node import Node
 from arc import Arc
 from weppy import App, request
@@ -80,161 +82,9 @@ def createArc(google_dict, node_dict):
                     )
     return arc_dict
 
-def checkNotWith(cars_list, nauto, node_dict, newper):
-    for car in cars_list[nauto]:
-        if (newper in node_dict[car].getNotWith() or
-                car in node_dict[newper].getNotWith()):
-            return False
-    return True
-
-def minDuration(dur, newdur, mindur):
-    if newdur == 0 or dur == 0:
-        return True
-    elif (dur+newdur) > mindur:
-        return False
-    return True
-
 def updateAddress(node_dict, google_dict):
     for i, key in enumerate(node_dict):
         node_dict[key].setAddr(google_dict['destination_addresses'][i])
-
-def greedy(node_dict, arc_dict):
-    """
-    per ogni chiave del dizionario estraggo i nodi e li inserisco in un
-    dizionario che contiene solo nodi verso la destinazione
-    """
-    arcToDest_dict = dict()
-    for key in arc_dict.keys():
-        arcToDest_dict[key] = arc_dict[key][0]
-    """
-    creo una lista di liste dove ogni lista contiene il percorso di una
-    macchina
-    """
-    # imposto a -1 nauto cosi' nel ciclo while la prima volta che aggiungo un
-    # valore = 0
-    nauto = -1
-    cars_list = list()
-    dur_list = list()
-    dist_list = list()
-    find = False
-    # finche' ci sono archi verso la destionazione continuo a ciclare
-    while len(arcToDest_dict) > 0:
-        if not find:
-            # ordino il dizionario e prendo l'arco che ha il nodo iniziale
-            # piu' distante
-            car = sorted(arcToDest_dict.values(),
-                    key=attrgetter('dist'),
-                    reverse=True)[0].getId_i()
-            arcToDest_dict.pop(car)
-            dur = 0
-            mindur = node_dict[car].getDur()
-            cars_list.append(list())
-            dur_list.append(list())
-            dist_list.append(list())
-            nauto += 1
-            cars_list[nauto].append(car)
-        else:
-            find = False
-        # prendo la lista di archi dal nodo di partenza
-        arc_list = arc_dict[car]
-        # ordina la lista di archi in ordine crescente
-        for arc in sorted(arc_list, key=attrgetter('dist')):
-            if (arc.getId_f() in arcToDest_dict and
-                    arc_dict[car][0].getDist() >= arc.getDist() and
-                    checkNotWith(cars_list, nauto, node_dict, arc.getId_f()) and
-                    minDuration(dur, arc.getDur(), mindur)):
-                car = arc.getId_f()
-                dur += arc.getDur()
-                dur_list[nauto].append(arc.getDur())
-                dist_list[nauto].append(arc.getDist())
-                if mindur > node_dict[car].getDur():
-                    mindur = node_dict[car].getDur()
-                cars_list[nauto].append(car)
-                arcToDest_dict.pop(car)
-                if len(cars_list[nauto]) < 5:
-                    find = True
-                break
-    # aggiungo alla lista la distanza e la durata verso il nodo finale
-    for i, car in enumerate(cars_list):
-        dur_list[i].append(arc_dict[car[-1]][0].getDur())
-        dist_list[i].append(arc_dict[car[-1]][0].getDist())
-    # per ogni lista all'interno di dist_list sommo tutte le distanze
-    dist = sum(map(sum, dist_list))
-    return (cars_list, dur_list, dist)
-
-def grasp(node_dict, arc_dict):
-    """
-    per ogni chiave del dizionario estraggo i nodi e li inserisco in un
-    dizionario che contiene solo nodi verso la destinazione
-    """
-    arcToDest_dict = dict()
-    for key in arc_dict.keys():
-        arcToDest_dict[key] = arc_dict[key][0]
-    """
-    creo una lista di liste dove ogni lista contiene il percorso di una
-    macchina
-    """
-    # imposto a -1 nauto cosi' nel ciclo while la prima volta che aggiungo un
-    # valore = 0
-    nauto = -1
-    cars_list = list()
-    dur_list = list()
-    dist_list = list()
-    find = False
-    # finche' ci sono archi verso la destionazione continuo a ciclare
-    while len(arcToDest_dict) > 0:
-        if not find:
-            # ordino il dizionario e prendo l'arco che ha il nodo iniziale
-            # piu' distante
-            car = sorted(arcToDest_dict.values(),
-                    key=attrgetter('dist'),
-                    reverse=True)[0].getId_i()
-            arcToDest_dict.pop(car)
-            dur = 0
-            mindur = node_dict[car].getDur()
-            cars_list.append(list())
-            dur_list.append(list())
-            dist_list.append(list())
-            nauto += 1
-            cars_list[nauto].append(car)
-        else:
-            find = False
-        # prendo la lista di archi dal nodo di partenza
-        arc_list = arc_dict[car]
-        # crea lista degli archi papabili
-        arc_list_pope = list()
-        # ordina la lista di archi in ordine crescente
-        for arc in sorted(arc_list, key=attrgetter('dist')):
-            if (arc.getId_f() in arcToDest_dict and
-                    arc_dict[car][0].getDist() >= arc.getDist() and
-                    checkNotWith(cars_list, nauto, node_dict, arc.getId_f()) and
-                    minDuration(dur, arc.getDur(), mindur)):
-                arc_list_pope.append(arc)
-                # devo fare il break solo quando ne ho trovati tre
-            if len(arc_list_pope) > 3:
-                break
-
-        # prendo un elemento a random tra quelli possibili appena estratti
-        if len(arc_list_pope) > 0:
-            arc_random = random.choice(arc_list_pope)
-            car = arc_random.getId_f()
-            dur += arc_random.getDur()
-            dur_list[nauto].append(arc_random.getDur())
-            dist_list[nauto].append(arc_random.getDist())
-            if mindur > node_dict[car].getDur():
-                mindur = node_dict[car].getDur()
-            cars_list[nauto].append(car)
-            arcToDest_dict.pop(car)
-            if len(cars_list[nauto]) < 5:
-                find = True
-
-    # aggiungo alla lista la distanza e la durata verso il nodo finale
-    for i, car in enumerate(cars_list):
-        dur_list[i].append(arc_dict[car[-1]][0].getDur())
-        dist_list[i].append(arc_dict[car[-1]][0].getDist())
-    # per ogni lista all'interno di dist_list sommo tutte le distanze
-    dist = sum(map(sum, dist_list))
-    return (cars_list, dur_list, dist)
 
 def initDataOuttput():
     dataOut = dict()
@@ -319,22 +169,40 @@ def home():
     print "----------------------------"
     printArc((arc_dict))
     print "----------------------------"
-
-    (cars_list, dur_list, dist) = greedy(node_dict, arc_dict)
+    greedy = Euristiche(node_dict, arc_dict)
+    (cars_list, dur_list, dist) = greedy.greedy()
     print "-->Greedy"
-    print "cars_list:",cars_list
+    print "cars_list:", cars_list
     print "dur_list:", dur_list
     print "dist:", dist
 
     dataOut = initDataOuttput()
     updateDataOutput(dataOut, 'greedy', cars_list, dur_list, dist, node_dict['0'].getDur())
 
-    (cars_list, dur_list, dist) = grasp(node_dict, arc_dict)
+    grasp = Euristiche(node_dict, arc_dict)
+    (cars_list, dur_list, dist) = grasp.grasp()
     print "-->Grasp"
-    print "cars_list:",cars_list
+    print "cars_list:", cars_list
     print "dur_list:", dur_list
     print "dist:", dist
     updateDataOutput(dataOut, 'grasp', cars_list, dur_list, dist, node_dict['0'].getDur())
+
+    tabu = Euristiche(node_dict, arc_dict)
+    localSearch_list = list()
+    localSearch_list.append(greedy)
+    for i in range(math.factorial(len(node_dict)/2)):
+        g = Euristiche(node_dict, arc_dict)
+        g.grasp()
+        if not (g in localSearch_list):
+            localSearch_list.append(g)
+
+    (cars_list, dur_list, dist) = tabu.initTabu(localSearch_list, 3)
+    print "-->Tabu"
+    print "cars_list:", cars_list
+    print "dur_list:", dur_list
+    print "dist:", dist
+    updateDataOutput(dataOut, 'tabu', cars_list, dur_list, dist, node_dict['0'].getDur())
+
     #return dict(status="OK", data="Sono tanto stupido")
     return dataOut
 

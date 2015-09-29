@@ -11,3 +11,6 @@ if __name__ == "__main__":
         k1,k2 = k.split(',')
         if k1 == key:
             print test_dict[k]
+
+    lista = [1,2,3]
+    print lista.index(4)
