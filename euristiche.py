@@ -198,7 +198,6 @@ class Euristiche(object):
     	while not swap_done:
 	        # Ricerca mossa valida e scambio
 	        # Restore euristiche passate inizialmente nel caso di mosse non ammissibili
-	        target_tmp = target
 	        grasp_tmp = grasp
 	        # boolean controllo di aver trovato una mossa possibile (una differenza)
 	        found = False
@@ -208,12 +207,12 @@ class Euristiche(object):
 	                    grasp_tmp.cars_list[x][y] = value_tmp_grasp
 	                    swap_done = True
 	                    break
-	                if not found and target_tmp.cars_list[x][y] != grasp_tmp.cars_list[x][y]:
-	                	if not ((grasp_tmp.cars_list[x][y],target_tmp.cars_list[x][y]) in tabu_list):
+	                if not found and target.cars_list[x][y] != grasp_tmp.cars_list[x][y]:
+	                	if not ((grasp_tmp.cars_list[x][y],target.cars_list[x][y]) in tabu_list):
 		                    found = True
 		                    value_tmp_grasp = grasp_tmp.cars_list[x][y]
-		                    value_tmp_target = target_tmp.cars_list[x][y]
-		                    grasp_tmp.cars_list[x][y] = target_tmp.cars_list[x][y]
+		                    value_tmp_target = target.cars_list[x][y]
+		                    grasp_tmp.cars_list[x][y] = target.cars_list[x][y]
 	            if swap_done:
 	                break
 
@@ -231,7 +230,7 @@ class Euristiche(object):
 	        if x == maxRig and y == maxCol
 	        	break
 
-        if swap_done and self.controllo_stop(target_tmp, grasp_tmp, iteration):
+        if swap_done and self.controllo_stop(target, grasp_tmp, iteration):
         	return (grasp_tmp.cars_list, grasp_tmp.dur_list, grasp_tmp.dist)
         else
     		return self.tabu(target_tmp, grasp_tmp, tabu_list, iteration += 1)
