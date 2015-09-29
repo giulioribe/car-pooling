@@ -253,9 +253,9 @@ class Euristiche(object):
        		dur_tmp_list = list()
        		for i in range(len(car)):
        			if i != len(car):
-       				dur_tmp_list.append(arc_dict[car[i]][car[i+1]].getDist())
+       				dur_tmp_list.append(arc_dict[car[i]][car[i+1]].getDur())
        			else:
-       				dur_tmp_list.append(arc_dict[car[i]][0].getDist())
+       				dur_tmp_list.append(arc_dict[car[i]][0].getDur())
        		lista_durate.append(dur_tmp_list)
 
        	eur.cars_list = lista_macchine
@@ -275,10 +275,21 @@ class Euristiche(object):
         # controllo notWith, max_dur
         # teoricamente avendo già riordinato non dovremmo aver problemi di archi orientati sbagliati
         for car in eur.cars_list:
-        	for id in car:
-	        	if not (self.checkNotWith(eur.cars_list, eur.cars_list.index(car), self.node_dict, id) and
-	                        self.minDuration(dur, self.arc_dict[][].getDur(), mindur)):
-	        		return False
+	        dur = 0
+	        mindur = self.node_dict[car[0]].max_dur
+        	for i in range(len(car)):
+        		if mindur > self.node_dict[car[i]].max_dur
+        			mindur = self.node_dict[car[i]].max_dur
+        		if i != len(car):
+		        	if not (self.checkNotWith(eur.cars_list, eur.cars_list.index(car), self.node_dict, id) and
+		                        self.minDuration(dur, self.arc_dict[i][i+1].getDur(), mindur)):
+		        		return False
+		        	dur += self.arc_dict[i][i+1].getDur()
+		        else:
+		        	if not (self.checkNotWith(eur.cars_list, eur.cars_list.index(car), self.node_dict, id) and
+		                        self.minDuration(dur, self.arc_dict[i][0].getDur(), mindur)):
+		        		return False
+		        	dur += self.arc_dict[i][0].getDur()
         return True
 
     def controllo_stop(self, target, grasp, iteration):
