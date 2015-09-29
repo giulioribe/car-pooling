@@ -2,7 +2,7 @@ import json
 import requests
 import collections
 import random
-from operator import attrgetter
+from operator import itemgetter, attrgetter
 
 class Euristiche(object):
     """docstring for Euristiche"""
@@ -176,9 +176,9 @@ class Euristiche(object):
         target = sorted(localSearch_list, key=attrgetter('dist')).pop(0)
         for i in range(k):
             if i == 0:
-                (cars_list, dur_list, dist) = self.tabu(target, localSearch_list[i])
+                (cars_list, dur_list, dist) = self.tabu(target, localSearch_list[i], list(), 0)
             else:
-                (cars_list_tmp, dur_list_tmp, dist_tmp) = self.tabu(target, localSearch_list[i])
+                (cars_list_tmp, dur_list_tmp, dist_tmp) = self.tabu(target, localSearch_list[i], list(), 0)
                 if dist_tmp < dist:
                     cars_list = cars_list_tmp
                     dur_list = dur_list_tmp
@@ -189,27 +189,103 @@ class Euristiche(object):
         self.dist = dist
         return (cars_list, dur_list, dist)
 
-    def tabu(self, target, grasp):
+    def tabu(self, target, grasp, tabu_list, iteration):
+    	# Creo matrici di supporto
         maxRig = max(len(target.cars_list), len(grasp.cars_list))
         maxCol = 5
-        found = False
+        # boolean controllo di aver eseguito correttamente lo swap
         swap_done = False
-        for x in maxRig:
-            for y in maxCol:
-                if found and grasp.cars_list[x][y] == value_tmp_target:
-                    grasp.cars_list[x][y] = value_tmp_grasp
-                    swap_done = True
-                    break
-                if not found and target.cars_list[x][y] != grasp.cars_list[x][y]:
-                    found = True
-                    value_tmp_grasp = grasp.cars_list[x][y]
-                    value_tmp_target = target.cars_list[x][y]
-                    grasp.cars_list[x][y] = target.cars_list[x][y]
-            if swap_done:
-                break
+    	while not swap_done:
+	        # Ricerca mossa valida e scambio
+	        # Restore euristiche passate inizialmente nel caso di mosse non ammissibili
+	        target_tmp = target
+	        grasp_tmp = grasp
+	        # boolean controllo di aver trovato una mossa possibile (una differenza)
+	        found = False
+	        for x in maxRig:
+	            for y in maxCol:
+	                if found and grasp_tmp.cars_list[x][y] == value_tmp_target:
+	                    grasp_tmp.cars_list[x][y] = value_tmp_grasp
+	                    swap_done = True
+	                    break
+	                if not found and target_tmp.cars_list[x][y] != grasp_tmp.cars_list[x][y]:
+	                	if not ((grasp_tmp.cars_list[x][y],target_tmp.cars_list[x][y]) in tabu_list):
+		                    found = True
+		                    value_tmp_grasp = grasp_tmp.cars_list[x][y]
+		                    value_tmp_target = target_tmp.cars_list[x][y]
+		                    grasp_tmp.cars_list[x][y] = target_tmp.cars_list[x][y]
+	            if swap_done:
+	                break
 
-        # riordine delle macchine
-        # verifica ammissibilità: notwith, durata
-        # calcolo del costo che nel caso non ammissibile è 0
-        # aggiunta mossa ad una lista che devo passare già di base (init)
-        # teorico check dello stop
+	        # riordine delle macchine ricalcolando anche le partenze
+	        grasp_tmp = self.reorder(grasp_tmp)
+	        # verifica ammissibilità: notwith, durata
+	        if not self.ammissibile(grasp_tmp):
+	        	swap_done = False
+	        else:
+		        # aggiunta mossa a tabu_list
+		        tabu_list.append((value_tmp_target, value_tmp_grasp))
+		        # esco dal while perchè trovata la mossa che va bene
+
+	        # condizione di uscita se non trovo mosse valide
+	        if x == maxRig and y == maxCol
+	        	break
+
+        if swap_done and self.controllo_stop(target_tmp, grasp_tmp, iteration):
+        	return (grasp_tmp.cars_list, grasp_tmp.dur_list, grasp_tmp.dist)
+        else
+    		return self.tabu(target_tmp, grasp_tmp, tabu_list, iteration += 1)
+
+
+
+    def reorder(self, eur):
+        # prendo ogni macchina e devo riordinarla
+        lista_durate = eur.dur_list
+        lista_macchine = eur.cars_list
+
+        for car in eur.cars_list:
+        	car_tmp_list = list()
+        	for id in car:
+        		car_tmp_list.append((id, self.arc_dict[id][0].getDist()))
+       		sorted(car_tmp_list, key=itemgetter(1), reverse=True)
+       		lista_macchine.append([x for x,_ in car_tmp_list])
+       		# devo ricalcolare anche le partenze
+       		dur_tmp_list = list()
+       		for i in range(len(car)):
+       			if i != len(car):
+       				dur_tmp_list.append(arc_dict[car[i]][car[i+1]].getDist())
+       			else:
+       				dur_tmp_list.append(arc_dict[car[i]][0].getDist())
+       		lista_durate.append(dur_tmp_list)
+
+       	eur.cars_list = lista_macchine
+       	eur.dur_list = lista_durate
+        # calcolo del costo
+        eur = self.update_cost(eur)
+        return eur
+
+
+    def update_cost(self, eur):
+    	# ricalcolo del costo dell'euristica e update del valore
+        eur.dist = sum(map(sum, eur.dist_list))
+        return eur
+
+
+    def ammissibile(self, eur):
+        # controllo notWith, max_dur
+        # teoricamente avendo già riordinato non dovremmo aver problemi di archi orientati sbagliati
+        for car in eur.cars_list:
+        	for id in car:
+	        	if not (self.checkNotWith(eur.cars_list, eur.cars_list.index(car), self.node_dict, id) and
+	                        self.minDuration(dur, self.arc_dict[][].getDur(), mindur)):
+	        		return False
+        return True
+
+    def controllo_stop(self, target, grasp, iteration):
+    	# se la grasp è diventata identica alla target
+    	# se ho già fatto #nodi / 2 iterazioni mi fermo
+    	# anche perchè in teoria non dovremmo arrivare esattamente alla target ma ad una euristica simile
+        if target.cars_list == grasp.cars_list or (iteration > (len(node_dict) / 2)):
+        	return True
+        else:
+        	return False
