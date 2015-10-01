@@ -1,0 +1,130 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.nego.carpooling.Settings">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_awesome_toolbar"
+        android:layout_height="?android:attr/actionBarSize"
+        android:layout_width="match_parent"
+        android:theme="@style/style_actionBar"
+        android:background="@color/primary"
+        android:elevation="2dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/my_awesome_toolbar"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"/>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.6"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="3dp"
+                app:cardElevation="4dp"
+                android:id="@+id/server_grid"
+                android:background="@color/back_card"
+                app:cardBackgroundColor="@color/back_card"
+                app:cardPreventCornerOverlap="true"
+                android:layout_marginTop="32dp">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="16dp">
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_action_explore"
+                        android:id="@+id/server_img"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_centerVertical="true" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/white"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="Modifica Indirizzo Server"
+                        android:id="@+id/title_server"
+                        android:layout_toEndOf="@+id/server_img"
+                        android:layout_toRightOf="@+id/server_img" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white_dark"
+                        android:id="@+id/subtitle_server"
+                        android:layout_below="@+id/title_server"
+                        android:layout_toEndOf="@+id/server_img"
+                        android:layout_toRightOf="@+id/server_img"/>
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="3dp"
+                app:cardElevation="4dp"
+                android:id="@+id/version_grid"
+                android:background="@color/back_card"
+                app:cardBackgroundColor="@color/back_card"
+                app:cardPreventCornerOverlap="true"
+                android:layout_marginTop="16dp">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="16dp">
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_action_auto"
+                        android:id="@+id/img_app"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_centerVertical="true" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/white"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="@string/app_name"
+                        android:id="@+id/title_version"
+                        android:layout_toEndOf="@+id/img_app"
+                        android:layout_toRightOf="@+id/img_app" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white_dark"
+                        android:id="@+id/text_version"
+                        android:layout_below="@+id/title_version"
+                        android:layout_toEndOf="@+id/img_app"
+                        android:layout_toRightOf="@+id/img_app"/>
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"/>
+    </LinearLayout>
+
+</RelativeLayout>
