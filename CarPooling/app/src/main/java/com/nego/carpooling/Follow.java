@@ -131,13 +131,9 @@ public class Follow extends AppCompatActivity {
             }
         }
 
-        /**
-         * Uses the logging framework to display the output of the fetch
-         * operation in the log fragment.
-         */
         @Override
         protected void onPostExecute(String result) {
-            JSONObject jsonObject = null;
+            JSONObject jsonObject;
             try {
                 Log.i("result", result);
                 jsonObject = new JSONObject(result);
@@ -148,7 +144,6 @@ public class Follow extends AppCompatActivity {
         }
     }
 
-    /** Initiates the fetch operation. */
     private String loadFromNetwork(String jsonString) throws IOException {
         InputStream stream = null;
         String str ="";
