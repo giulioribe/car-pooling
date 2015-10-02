@@ -26,20 +26,21 @@ function getUrlParameter(sParam) {
 
 var map;
 function initMap() {
+  console.log(getUrlParameter('dataD'))
   var dataD = getUrlParameter('dataD').split('_');
   console.log('dataD[0]', dataD[0])
   console.log('dataD[1]', dataD[1])
   map = new google.maps.Map(document.getElementById('map'), {
     //sarà centrata sul nodo di destinazione
-    center: {lat: parseInt(dataD[0]), lng: parseInt(dataD[1])},
-    zoom: 8
+    center: {lat: parseFloat(dataD[0]), lng: parseFloat(dataD[1])},
+    zoom: 13
   });
 
   var dataD = getUrlParameter('dataD').split('_');
   var marker = new google.maps.Marker({
     map: map,
     animation: google.maps.Animation.DROP,
-    position: {lat: parseInt(dataD[0]), lng: parseInt(dataD[1])},
+    position: {lat: parseFloat(dataD[0]), lng: parseFloat(dataD[1])},
     title: 'Destinazione',
     label: 'D'
   });
@@ -51,7 +52,7 @@ function initMap() {
     var markers = new google.maps.Marker({
       map: map,
       animation: google.maps.Animation.DROP,
-      position: {lat: parseInt(mach_tmp[2]), lng: parseInt(mach_tmp[3])},
+      position: {lat: parseFloat(mach_tmp[2]), lng: parseFloat(mach_tmp[3])},
       title: mach_tmp[1],
       label: mach_tmp[0]
     });
