@@ -42,10 +42,11 @@ class Euristiche(object):
 
 
     def minDuration(self, dur, newdur, mindur):
-        if newdur == 0 or dur == 0:
-            return True
-        elif (dur+newdur) > mindur:
-            return False
+        if mindur != 0:
+            if newdur == 0 or dur == 0:
+                return True
+            elif (dur+newdur) > mindur:
+                    return False
         return True
 
 
@@ -199,10 +200,10 @@ class Euristiche(object):
         sorted_ls = sorted(localSearch_list, key=attrgetter('dist'))
         target = sorted_ls.pop(0)
         tabu_list = list()
-        print "prima if", k
+        #print "prima if", k
         if k > len(sorted_ls):
             k = len(sorted_ls)
-        print "dopo if", k
+        #print "dopo if", k
         for i in range(k):
             tabu_list.append(self.tabu(target, sorted_ls[i], list(), 0))
         best_tabu = sorted(tabu_list, key=itemgetter(2)).pop(0)
@@ -248,15 +249,15 @@ class Euristiche(object):
                     break
             tmp_c_l = list()
             k = 0
-            print "prima trip", grasp_tmp.cars_list
+            #print "prima trip", grasp_tmp.cars_list
             for trip in grasp_tmp.cars_list:
-                if trip.count(-1) != 5:
+                if trip.count(-1) != len(trip):
                     tmp_c_l.append(list())
                     for e in trip:
                         if e > 0:
                             tmp_c_l[k].append(e)
                     k += 1
-            print "dopo  trip", tmp_c_l
+            #print "dopo  trip", tmp_c_l
 
             grasp_tmp2 = Euristiche(grasp_tmp.node_dict, grasp_tmp.node_dict)
             grasp_tmp2.setCars(tmp_c_l)
@@ -267,7 +268,7 @@ class Euristiche(object):
             # verifica ammissibilita': notwith, durata
             if not self.ammissibile(grasp_tmp2):
                 swap_done = False
-            else:
+            elif found:
                 # aggiunta mossa a tabu_list
                 tabu_list.append((value_tmp_target, value_tmp_grasp))
                 # esco dal while perche' trovata la mossa che va bene

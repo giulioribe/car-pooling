@@ -1,5 +1,5 @@
 {
-    "time_to_arrive": 1443780052952, 
+    "time_to_arrive": 1443805233021, 
     "place_to_arrive": "Via della Fornace, 1, 44123 Ferrara FE, Italia", 
     "users": [
         {
@@ -39,17 +39,24 @@
         }, 
         {
             "other_address": "", 
-            "max_duration": 1800000, 
-            "not_with": "5", 
+            "max_duration": 0, 
+            "not_with": "", 
             "id": "6", 
-            "address": "Via Venezia, 18, 44123 Ferrara FE, Italia"
+            "address": "Via Venezia, 1, 44123 Ferrara FE, Italia"
         }, 
         {
             "other_address": "", 
-            "max_duration": 1200000, 
-            "not_with": "1", 
+            "max_duration": 0, 
+            "not_with": "", 
             "id": "7", 
             "address": "Via Darsena, 25, 44122 Ferrara FE, Italia"
+        }, 
+        {
+            "other_address": "", 
+            "max_duration": 0, 
+            "not_with": "", 
+            "id": "8", 
+            "address": "Via Otello Putinati, 130, 44123 Ferrara FE, Italia"
         }
     ]
 }
