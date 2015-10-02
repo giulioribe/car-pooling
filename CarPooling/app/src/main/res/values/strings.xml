@@ -22,4 +22,6 @@
     <string name="action_share">Condividi</string>
     <string name="text_version">v.</string>
     <string name="title_activity_edit_p">Modifica Persona</string>
+    <string name="action_maps">Open Map</string>
+    <string name="title_activity_maps">Maps</string>
 </resources>

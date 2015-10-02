@@ -17,6 +17,7 @@ public class Costants {
     public static final String PREFERENCES_COSTANT = "com.nego.carpooling.preferences_costant";
     public static final String ACTION_ADD_PERSON = "com.nego.carpooling.intent.action.ADD_ITEM";
     public static final String ACTION_EDIT_PERSON = "com.nego.carpooling.intent.action.EDIT_ITEM";
+    public static final String EXTRA_MAP_DATA = "com.nego.carpooling.intent.extra.MAP_DATA";
 
     public static final int CODE_REQUEST_IMG = 1;
     public static final int CODE_REQUEST_CONTACT = 2;

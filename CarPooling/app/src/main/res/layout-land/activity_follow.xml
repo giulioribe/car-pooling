@@ -41,7 +41,6 @@
                     android:id="@+id/loader"/>
             </LinearLayout>
         </ScrollView>
-
     </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -1,6 +1,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" tools:context="com.nego.carpooling.ChoosePeople">
+    <item android:id="@+id/action_maps" android:title="@string/action_maps" android:icon="@drawable/ic_action_map"
+        android:orderInCategory="105" app:showAsAction="always" />
     <item android:id="@+id/action_settings" android:title="@string/action_settings" android:icon="@drawable/ic_action_settings"
         android:orderInCategory="110" app:showAsAction="always" />
 

@@ -8,17 +8,20 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.location.Address;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.internal.view.ContextThemeWrapper;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.transition.Explode;
 import android.transition.Fade;
+import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,13 +29,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.nego.carpooling.Adapter.PersonImageAdapter;
 
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -159,6 +168,7 @@ public class Preferences extends AppCompatActivity {
                 dialog_arrivo.show();
             }
         });
+
     }
 
     @Override
@@ -178,6 +188,32 @@ public class Preferences extends AppCompatActivity {
 
         if (id == R.id.action_settings) {
             startActivity(new Intent(this, Settings.class));
+        }
+
+        if (id == R.id.action_maps) {
+            try {
+                String getData = "";
+                String dataDivider = "_";
+                String elementDivider = "|";
+                boolean first = true;
+                for (Person p : persons) {
+                    if (!first) {
+                        getData += elementDivider;
+                    }
+                    first = false;
+                    Address l = Utils.getLocationFromAddress(this, p.getAddress());
+                    getData += p.getId() + dataDivider + Uri.encode(p.getName()) + dataDivider + l.getLatitude() + dataDivider + l.getLongitude();
+                }
+                Address arrive = Utils.getLocationFromAddress(this, location);
+
+                Intent i = new Intent(Preferences.this, Maps.class);
+                i.putExtra(Costants.EXTRA_MAP_DATA, "http://giulioribe.github.io/car-pooling/maps.html?dataM=" + getData + "&dataD=" + arrive.getLatitude() + dataDivider + arrive.getLongitude());
+
+                startActivity(i);
+            } catch (Exception e) {
+                Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+                Log.i("errore_map_get_address", e.toString());
+            }
         }
 
         return super.onOptionsItemSelected(item);

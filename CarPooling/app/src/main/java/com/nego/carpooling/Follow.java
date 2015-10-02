@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.location.Address;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -20,6 +21,9 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -97,7 +101,7 @@ public class Follow extends AppCompatActivity {
             new DownloadTask().execute(toSend);
 
         } catch (Exception e) {
-
+            Log.i("creazione json", e.toString());
         }
     }
 
@@ -209,6 +213,7 @@ public class Follow extends AppCompatActivity {
 
     private String destinations = "";
     private String toSend = "";
+    private String getData = "";
 
     public void setResult(JSONObject jsonObj) {
         try {
@@ -224,6 +229,9 @@ public class Follow extends AppCompatActivity {
             String[] names = jsonArrayName.split(",");
 
             for (int e = 0; e < jsonArrayResults.length(); e++) {
+                getData = "";
+                boolean first = true;
+
                 toSend = "";
                 if (e != 0)
                     toSend += "\n";
@@ -234,6 +242,10 @@ public class Follow extends AppCompatActivity {
                 JSONArray cars = js.getJSONArray(Costants.JSON_RESPONSE_CARS);
                 String cost = js.getString(Costants.JSON_RESPONSE_COSTO);
                 for (int k = 0; k < cars.length(); k++) {
+                    if (!first) {
+                        getData += "|";
+                    }
+                    first = false;
                     String car_id = (cars.getJSONObject(k)).getString(Costants.JSON_RESPONSE_ID);
                     String car_partenze = (cars.getJSONObject(k)).getString(Costants.JSON_RESPONSE_PARTENZE);
 
@@ -243,12 +255,14 @@ public class Follow extends AppCompatActivity {
                         String id = ids[i];
                         String orario = partenze_s[i];
                         String name = "";
+                        String address = "";
                         for (Person p : persons) {
                             if (id.equals("" + p.getId())) {
                                 if (i != 0)
                                     destinations += ",";
                                 destinations += Uri.encode(p.getAddress());
                                 name = p.getName();
+                                address = p.getAddress();
                                 break;
                             }
                         }
@@ -256,6 +270,9 @@ public class Follow extends AppCompatActivity {
                         View layout = LayoutInflater.from(this).inflate(R.layout.layout_euristiche, null);
                         ((TextView) layout.findViewById(R.id.name)).setText(name);
                         ((TextView) layout.findViewById(R.id.partenza)).setText(Utils.getHour(this, Long.parseLong(orario)));
+
+                        Address l = Utils.getLocationFromAddress(Follow.this, address);
+                        getData = k + "_" + id + "_" + Uri.encode(name) + "_" + l.getLatitude() + "_" + l.getLongitude();
 
                         toSend += name;
 
@@ -286,10 +303,12 @@ public class Follow extends AppCompatActivity {
                 card_layout.findViewById(R.id.action_maps).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Uri gmmIntentUri = Uri.parse("google.navigation:q=" + destinations);
-                        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                        mapIntent.setPackage("com.google.android.apps.maps");
-                        startActivity(mapIntent);
+                        Address arrive = Utils.getLocationFromAddress(Follow.this, location);
+
+                        Intent i = new Intent(Follow.this, Maps.class);
+                        i.putExtra(Costants.EXTRA_MAP_DATA, "http://giulioribe.github.io/car-pooling/directions.html?dataM=" + getData + "&dataD=" + arrive.getLatitude() + "_" + arrive.getLongitude());
+
+                        startActivity(i);
                     }
                 });
                 container.addView(card_layout);

@@ -57,6 +57,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.nego.carpooling.ChoosePeople" />
         </activity>
+        <activity
+            android:name=".Maps"
+            android:label="@string/title_activity_maps" >
+        </activity>
     </application>
 
 </manifest>
