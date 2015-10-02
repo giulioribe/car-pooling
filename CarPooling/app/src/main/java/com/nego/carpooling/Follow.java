@@ -127,7 +127,7 @@ public class Follow extends AppCompatActivity {
             try {
                 return loadFromNetwork(params[0].toString());
             } catch (IOException e) {
-                return "Connection Error";
+                return "Connection Error: " + e.toString();
             }
         }
 
@@ -168,8 +168,8 @@ public class Follow extends AppCompatActivity {
         URL url = new URL(SP.getString(Costants.PREFERENCE_LAST_SERVER, ""));
         //URL url = new URL("http://tommasoberlose.altervista.org/old/carpooling.php");
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setReadTimeout(10000);
-        conn.setConnectTimeout(15000);
+        conn.setReadTimeout(60000);
+        conn.setConnectTimeout(60000);
         conn.setRequestMethod("POST");
         conn.setDoInput(true);
         conn.setDoOutput(true);
