@@ -155,19 +155,22 @@ def printArc(arc_dict):
 @service.json
 def home():
     ### TEST
+    """
     with open('requestTest.json', 'r') as data_file:
         dati_dict = json.load(data_file)
     node_dict = createNode(dati_dict)
     with open('googleMapsTest.json', 'r') as data_file:
         google_dict = json.load(data_file)
+    """
     ### END TEST
-    #with open('request.json', 'w') as outfile:
-    #    json.dump(request.vars, outfile, indent=4)
-    #node_dict = createNode(request.vars)
+    #print request.vars
+    with open('request.json', 'w') as outfile:
+        json.dump(request.vars, outfile, indent=4)
+    node_dict = createNode(request.vars)
 
     printNode(node_dict)
 
-    #google_dict = googleMapsRequest(node_dict)
+    google_dict = googleMapsRequest(node_dict)
     arc_dict = createArc(google_dict, node_dict)
 
     print "----------------------------"

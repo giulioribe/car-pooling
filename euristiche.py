@@ -196,13 +196,15 @@ class Euristiche(object):
 
 
     def initTabu(self, localSearch_list, k):
-        print "Sono in initTabu"
-        target = sorted(localSearch_list, key=attrgetter('dist')).pop(0)
+        sorted_ls = sorted(localSearch_list, key=attrgetter('dist'))
+        target = sorted_ls.pop(0)
         tabu_list = list()
+        print "prima if", k
+        if k > len(sorted_ls):
+            k = len(sorted_ls)
+        print "dopo if", k
         for i in range(k):
-            #tabu_tmp = self.tabu(target, localSearch_list[i], list(), 0)
-            tabu_list.append(self.tabu(target, localSearch_list[i], list(), 0))
-            print "initTabu -------------> ", tabu_list[0][0]
+            tabu_list.append(self.tabu(target, sorted_ls[i], list(), 0))
         best_tabu = sorted(tabu_list, key=itemgetter(2)).pop(0)
         self.setCars(best_tabu[0])
         self.setDur(best_tabu[1])
@@ -211,15 +213,12 @@ class Euristiche(object):
 
 
     def tabu(self, target, grasp, tabu_list, iteration):
-        print "Sono in Tabu"
-        print "grasp", grasp.cars_list
         # Creo matrici di supporto
         maxRig = max(len(target.cars_list), len(grasp.cars_list))
         maxCol = 5
         # boolean controllo di aver eseguito correttamente lo swap
         swap_done = False
         while not swap_done:
-            print "Sono nel ciclo while Tabu", iteration
             # Ricerca mossa valida e scambio
             # Restore euristiche passate inizialmente nel caso di mosse non ammissibili
             grasp_tmp = grasp
@@ -245,29 +244,24 @@ class Euristiche(object):
                             value_tmp_grasp = grasp_tmp.cars_list[x][y]
                             value_tmp_target = target.cars_list[x][y]
                             grasp_tmp.cars_list[x][y] = target.cars_list[x][y]
-
                 if swap_done:
                     break
             tmp_c_l = list()
-            print "sono stronzo1", grasp_tmp.cars_list
             k = 0
+            print "prima trip", grasp_tmp.cars_list
             for trip in grasp_tmp.cars_list:
-                if sum(map(int, trip)) > 0:
+                if trip.count(-1) != 5:
                     tmp_c_l.append(list())
                     for e in trip:
                         if e > 0:
                             tmp_c_l[k].append(e)
                     k += 1
-                    #grasp_tmp.cars_list[k] = tmp_c_l
-
+            print "dopo  trip", tmp_c_l
 
             grasp_tmp2 = Euristiche(grasp_tmp.node_dict, grasp_tmp.node_dict)
             grasp_tmp2.setCars(tmp_c_l)
             grasp_tmp2.setDur(grasp_tmp.getDur())
             grasp_tmp2.setDist(grasp_tmp.getDist())
-
-
-            print "sono stronzo2", grasp_tmp2.cars_list
             # riordine delle macchine ricalcolando anche le partenze
             grasp_tmp2 = self.reorder(grasp_tmp2)
             # verifica ammissibilita': notwith, durata
@@ -277,7 +271,6 @@ class Euristiche(object):
                 # aggiunta mossa a tabu_list
                 tabu_list.append((value_tmp_target, value_tmp_grasp))
                 # esco dal while perche' trovata la mossa che va bene
-
             # condizione di uscita se non trovo mosse valide
             if x == maxRig and y == maxCol:
                 break
@@ -291,7 +284,6 @@ class Euristiche(object):
     def reorder(self, eur):
         # prendo ogni macchina e devo riordinarla
         lista_macchine = list()
-        print "dentro reorder", eur.cars_list
         for car in eur.cars_list:
             car_tmp_list = list()
             for id in car:
