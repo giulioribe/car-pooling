@@ -250,12 +250,15 @@ class Euristiche(object):
                     break
             tmp_c_l = list()
             print "sono stronzo1", grasp_tmp.cars_list
-            for k, trip in enumerate(grasp_tmp.cars_list):
-                tmp_c_l.append(list())
-                for e in trip:
-                    if e > 0:
-                        tmp_c_l[k].append(e)
-                #grasp_tmp.cars_list[k] = tmp_c_l
+            k = 0
+            for trip in grasp_tmp.cars_list:
+                if sum(map(int, trip)) > 0:
+                    tmp_c_l.append(list())
+                    for e in trip:
+                        if e > 0:
+                            tmp_c_l[k].append(e)
+                    k += 1
+                    #grasp_tmp.cars_list[k] = tmp_c_l
 
 
             grasp_tmp2 = Euristiche(grasp_tmp.node_dict, grasp_tmp.node_dict)
