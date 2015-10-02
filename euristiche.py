@@ -4,6 +4,7 @@ import collections
 import random
 from operator import itemgetter, attrgetter
 
+
 class Euristiche(object):
     """docstring for Euristiche"""
     def __init__(self, node_dict, arc_dict):
@@ -14,6 +15,24 @@ class Euristiche(object):
         self.dur_list = list()
         self.dist = int()
 
+    def setCars(self, cars_list):
+        self.cars_list = cars_list
+
+    def setDur(self, dur_list):
+        self.dur_list = dur_list
+
+    def setDist(self, dist):
+        self.dist = dist
+
+    def getCars(self):
+        return self.cars_list
+
+    def getDur(self):
+        return self.dur_list
+
+    def getDist(self):
+        return self.dist
+
     def checkNotWith(self, cars_list, nauto, node_dict, newper):
         for car in cars_list[nauto]:
             if (newper in node_dict[car].getNotWith() or
@@ -21,12 +40,14 @@ class Euristiche(object):
                 return False
         return True
 
+
     def minDuration(self, dur, newdur, mindur):
         if newdur == 0 or dur == 0:
             return True
         elif (dur+newdur) > mindur:
             return False
         return True
+
 
     def greedy(self):
         """
@@ -90,10 +111,11 @@ class Euristiche(object):
             dist_list[i].append(self.arc_dict[car[-1]][0].getDist())
         # per ogni lista all'interno di dist_list sommo tutte le distanze
         dist = sum(map(sum, dist_list))
-        self.cars_list = cars_list
-        self.dur_list = dur_list
-        self.dist = dist
+        self.setCars(cars_list)
+        self.setDur(dur_list)
+        self.setDist(dist)
         return (cars_list, dur_list, dist)
+
 
     def grasp(self):
         """
@@ -143,8 +165,8 @@ class Euristiche(object):
                         self.checkNotWith(cars_list, nauto, self.node_dict, arc.getId_f()) and
                         self.minDuration(dur, arc.getDur(), mindur)):
                     arc_list_pope.append(arc)
-                    # devo fare il break solo quando ne ho trovati tre
-                if len(arc_list_pope) > 3:
+                # devo fare il break solo quando ne ho trovati tre
+                if len(arc_list_pope) >= 3:
                     break
 
             # prendo un elemento a random tra quelli possibili appena estratti
@@ -167,135 +189,168 @@ class Euristiche(object):
             dist_list[i].append(self.arc_dict[car[-1]][0].getDist())
         # per ogni lista all'interno di dist_list sommo tutte le distanze
         dist = sum(map(sum, dist_list))
-        self.cars_list = cars_list
-        self.dur_list = dur_list
-        self.dist = dist
+        self.setCars(cars_list)
+        self.setDur(dur_list)
+        self.setDist(dist)
         return (cars_list, dur_list, dist)
+
 
     def initTabu(self, localSearch_list, k):
+        print "Sono in initTabu"
         target = sorted(localSearch_list, key=attrgetter('dist')).pop(0)
+        tabu_list = list()
         for i in range(k):
-            if i == 0:
-                (cars_list, dur_list, dist) = self.tabu(target, localSearch_list[i], list(), 0)
-            else:
-                (cars_list_tmp, dur_list_tmp, dist_tmp) = self.tabu(target, localSearch_list[i], list(), 0)
-                if dist_tmp < dist:
-                    cars_list = cars_list_tmp
-                    dur_list = dur_list_tmp
-                    dist = dist_tmp
+            #tabu_tmp = self.tabu(target, localSearch_list[i], list(), 0)
+            tabu_list.append(self.tabu(target, localSearch_list[i], list(), 0))
+            print "initTabu -------------> ", tabu_list[0][0]
+        best_tabu = sorted(tabu_list, key=itemgetter(2)).pop(0)
+        self.setCars(best_tabu[0])
+        self.setDur(best_tabu[1])
+        self.setDist(best_tabu[2])
+        return best_tabu
 
-        self.cars_list = cars_list
-        self.dur_list = dur_list
-        self.dist = dist
-        return (cars_list, dur_list, dist)
 
     def tabu(self, target, grasp, tabu_list, iteration):
-    	# Creo matrici di supporto
+        print "Sono in Tabu"
+        print "grasp", grasp.cars_list
+        # Creo matrici di supporto
         maxRig = max(len(target.cars_list), len(grasp.cars_list))
         maxCol = 5
         # boolean controllo di aver eseguito correttamente lo swap
         swap_done = False
-    	while not swap_done:
-	        # Ricerca mossa valida e scambio
-	        # Restore euristiche passate inizialmente nel caso di mosse non ammissibili
-	        grasp_tmp = grasp
-	        # boolean controllo di aver trovato una mossa possibile (una differenza)
-	        found = False
-	        for x in maxRig:
-	            for y in maxCol:
-	                if found and grasp_tmp.cars_list[x][y] == value_tmp_target:
-	                    grasp_tmp.cars_list[x][y] = value_tmp_grasp
-	                    swap_done = True
-	                    break
-	                if not found and target.cars_list[x][y] != grasp_tmp.cars_list[x][y]:
-	                	if not ((grasp_tmp.cars_list[x][y],target.cars_list[x][y]) in tabu_list):
-		                    found = True
-		                    value_tmp_grasp = grasp_tmp.cars_list[x][y]
-		                    value_tmp_target = target.cars_list[x][y]
-		                    grasp_tmp.cars_list[x][y] = target.cars_list[x][y]
-	            if swap_done:
-	                break
+        while not swap_done:
+            print "Sono nel ciclo while Tabu", iteration
+            # Ricerca mossa valida e scambio
+            # Restore euristiche passate inizialmente nel caso di mosse non ammissibili
+            grasp_tmp = grasp
+            # boolean controllo di aver trovato una mossa possibile (una differenza)
+            found = False
+            for x in range(maxRig):
+                if x >= len(grasp_tmp.cars_list):
+                    grasp_tmp.cars_list.append(list())
+                if x >= len(target.cars_list):
+                    target.cars_list.append(list())
+                for y in range(maxCol):
+                    if y >= len(grasp_tmp.cars_list[x]):
+                        grasp_tmp.cars_list[x].append(-1)
+                    if y >= len(target.cars_list[x]):
+                        target.cars_list[x].append(-1)
+                    if found and grasp_tmp.cars_list[x][y] == value_tmp_target:
+                        grasp_tmp.cars_list[x][y] = value_tmp_grasp
+                        swap_done = True
+                        break
+                    if not found and target.cars_list[x][y] != grasp_tmp.cars_list[x][y]:
+                        if not ((grasp_tmp.cars_list[x][y],target.cars_list[x][y]) in tabu_list):
+                            found = True
+                            value_tmp_grasp = grasp_tmp.cars_list[x][y]
+                            value_tmp_target = target.cars_list[x][y]
+                            grasp_tmp.cars_list[x][y] = target.cars_list[x][y]
 
-	        # riordine delle macchine ricalcolando anche le partenze
-	        grasp_tmp = self.reorder(grasp_tmp)
-	        # verifica ammissibilità: notwith, durata
-	        if not self.ammissibile(grasp_tmp):
-	        	swap_done = False
-	        else:
-		        # aggiunta mossa a tabu_list
-		        tabu_list.append((value_tmp_target, value_tmp_grasp))
-		        # esco dal while perchè trovata la mossa che va bene
+                if swap_done:
+                    break
+            tmp_c_l = list()
+            print "sono stronzo1", grasp_tmp.cars_list
+            for k, trip in enumerate(grasp_tmp.cars_list):
+                tmp_c_l.append(list())
+                for e in trip:
+                    if e > 0:
+                        tmp_c_l[k].append(e)
+                #grasp_tmp.cars_list[k] = tmp_c_l
 
-	        # condizione di uscita se non trovo mosse valide
-	        if x == maxRig and y == maxCol
-	        	break
 
-        if swap_done and self.controllo_stop(target, grasp_tmp, iteration):
-        	return (grasp_tmp.cars_list, grasp_tmp.dur_list, grasp_tmp.dist)
-        else
-    		return self.tabu(target_tmp, grasp_tmp, tabu_list, iteration += 1)
+            grasp_tmp2 = Euristiche(grasp_tmp.node_dict, grasp_tmp.node_dict)
+            grasp_tmp2.setCars(tmp_c_l)
+            grasp_tmp2.setDur(grasp_tmp.getDur())
+            grasp_tmp2.setDist(grasp_tmp.getDist())
 
+
+            print "sono stronzo2", grasp_tmp2.cars_list
+            # riordine delle macchine ricalcolando anche le partenze
+            grasp_tmp2 = self.reorder(grasp_tmp2)
+            # verifica ammissibilita': notwith, durata
+            if not self.ammissibile(grasp_tmp2):
+                swap_done = False
+            else:
+                # aggiunta mossa a tabu_list
+                tabu_list.append((value_tmp_target, value_tmp_grasp))
+                # esco dal while perche' trovata la mossa che va bene
+
+            # condizione di uscita se non trovo mosse valide
+            if x == maxRig and y == maxCol:
+                break
+            if swap_done or self.controllo_stop(target, grasp_tmp, iteration):
+                return (grasp_tmp2.getCars(), grasp_tmp2.getDur(), grasp_tmp2.getDist())
+            else:
+                iteration += 1
+                return self.tabu(target, grasp_tmp2, tabu_list, iteration)
 
 
     def reorder(self, eur):
         # prendo ogni macchina e devo riordinarla
-        lista_durate = eur.dur_list
-        lista_macchine = eur.cars_list
-
+        lista_macchine = list()
+        print "dentro reorder", eur.cars_list
         for car in eur.cars_list:
-        	car_tmp_list = list()
-        	for id in car:
-        		car_tmp_list.append((id, self.arc_dict[id][0].getDist()))
-       		sorted(car_tmp_list, key=itemgetter(1), reverse=True)
-       		lista_macchine.append([x for x,_ in car_tmp_list])
-       		# devo ricalcolare anche le partenze
-       		dur_tmp_list = list()
-       		for i in range(len(car)):
-       			if i != len(car):
-       				dur_tmp_list.append(arc_dict[car[i]][car[i+1]].getDur())
-       			else:
-       				dur_tmp_list.append(arc_dict[car[i]][0].getDur())
-       		lista_durate.append(dur_tmp_list)
+            car_tmp_list = list()
+            for id in car:
+                car_tmp_list.append((id, self.arc_dict[id][0].getDist()))
+            # riordiniamo dal piu' distante al piu' vicinio
+            car_tmp_list = sorted(car_tmp_list, key=itemgetter(1), reverse=True)
+            lista_macchine.append([x for x,_ in car_tmp_list])
+            # devo ricalcolare anche le partenze
+        lista_durate = list()
+        lista_dist = list()
+        for z, car in enumerate(lista_macchine):
+            lista_dist.append(list())
+            lista_durate.append(list())
+            for i in range(len(car)):
+                if i != len(car)-1:
+                    for y in range(len(self.arc_dict[car[i]])):
+                        if self.arc_dict[car[i]][y].getId_f() == car[i+1]:
+                            lista_durate[z].append(self.arc_dict[car[i]][y].getDur())
+                            lista_dist[z].append(self.arc_dict[car[i]][y].getDist())
+                            break
+                else:
+                    lista_durate[z].append(self.arc_dict[car[i]][0].getDur())
+                    lista_dist[z].append(self.arc_dict[car[i]][0].getDist())
 
-       	eur.cars_list = lista_macchine
-       	eur.dur_list = lista_durate
+        eur.cars_list = lista_macchine
+        eur.dur_list = lista_durate
         # calcolo del costo
-        eur = self.update_cost(eur)
-        return eur
-
-
-    def update_cost(self, eur):
-    	# ricalcolo del costo dell'euristica e update del valore
-        eur.dist = sum(map(sum, eur.dist_list))
+        eur.dist = sum(map(sum, lista_dist))
         return eur
 
 
     def ammissibile(self, eur):
         # controllo notWith, max_dur
-        # teoricamente avendo già riordinato non dovremmo aver problemi di archi orientati sbagliati
+        # teoricamente avendo gia' riordinato non dovremmo aver problemi di archi orientati sbagliati
         for car in eur.cars_list:
-	        dur = 0
-	        mindur = self.node_dict[car[0]].max_dur
-        	for i in range(len(car)):
-        		if mindur > self.node_dict[car[i]].max_dur
-        			mindur = self.node_dict[car[i]].max_dur
-        		if i != len(car):
-		        	if not (self.checkNotWith(eur.cars_list, eur.cars_list.index(car), self.node_dict, id) and
-		                        self.minDuration(dur, self.arc_dict[i][i+1].getDur(), mindur)):
-		        		return False
-		        	dur += self.arc_dict[i][i+1].getDur()
-		        else:
-		        	if not (self.checkNotWith(eur.cars_list, eur.cars_list.index(car), self.node_dict, id) and
-		                        self.minDuration(dur, self.arc_dict[i][0].getDur(), mindur)):
-		        		return False
-		        	dur += self.arc_dict[i][0].getDur()
+            dur = 0
+            mindur = self.node_dict[car[0]].getDur()
+            for i in range(len(car)):
+                if mindur > self.node_dict[car[i]].getDur():
+                    mindur = self.node_dict[car[i]].getDur()
+                if i != len(car)-1:
+                    for y in range(len(self.arc_dict[car[i]])):
+                        if self.arc_dict[car[i]][y].getId_f() == car[i+1]:
+                            if not (self.checkNotWith(eur.cars_list, eur.cars_list.index(car), self.node_dict, car[i+1]) and
+                                        self.minDuration(dur, self.arc_dict[car[i]][y].getDur(), mindur)):
+                                return False
+                            dur += self.arc_dict[car[i]][y].getDur()
+                            break
+                else:
+                    if not (self.checkNotWith(eur.cars_list, eur.cars_list.index(car), self.node_dict, '0') and
+                                self.minDuration(dur, self.arc_dict[car[i]][0].getDur(), mindur)):
+                        return False
+                    dur += self.arc_dict[car[i]][0].getDur()
         return True
 
     def controllo_stop(self, target, grasp, iteration):
-    	# se la grasp è diventata identica alla target
-    	# se ho già fatto #nodi / 2 iterazioni mi fermo
-    	# anche perchè in teoria non dovremmo arrivare esattamente alla target ma ad una euristica simile
-        if target.cars_list == grasp.cars_list or (iteration > (len(node_dict) / 2)):
-        	return True
+        # se la grasp e' diventata identica alla target
+        # se ho gia' fatto #nodi / 2 iterazioni mi fermo
+        # anche perche' in teoria non dovremmo arrivare esattamente alla
+        # target ma ad una euristica simile
+        if (target.cars_list == grasp.cars_list or
+                (iteration > (len(self.node_dict) / 2))):
+            return True
         else:
-        	return False
+            return False

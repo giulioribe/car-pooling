@@ -154,16 +154,20 @@ def printArc(arc_dict):
 @app.expose("/")
 @service.json
 def home():
-    #with open('dati.json', 'r') as data_file:
-    #    dati_dict = json.load(data_file)
-    #node_dict = createNode(dati_dict)
-    with open('dati2.json', 'w') as outfile:
-        json.dump(request.vars, outfile, indent=4)
-    node_dict = createNode(request.vars)
+    ### TEST
+    with open('requestTest.json', 'r') as data_file:
+        dati_dict = json.load(data_file)
+    node_dict = createNode(dati_dict)
+    with open('googleMapsTest.json', 'r') as data_file:
+        google_dict = json.load(data_file)
+    ### END TEST
+    #with open('request.json', 'w') as outfile:
+    #    json.dump(request.vars, outfile, indent=4)
+    #node_dict = createNode(request.vars)
 
     printNode(node_dict)
 
-    google_dict = googleMapsRequest(node_dict)
+    #google_dict = googleMapsRequest(node_dict)
     arc_dict = createArc(google_dict, node_dict)
 
     print "----------------------------"
@@ -177,6 +181,7 @@ def home():
     print "dist:", dist
 
     dataOut = initDataOuttput()
+
     updateDataOutput(dataOut, 'greedy', cars_list, dur_list, dist, node_dict['0'].getDur())
 
     grasp = Euristiche(node_dict, arc_dict)
@@ -202,6 +207,9 @@ def home():
     print "dur_list:", dur_list
     print "dist:", dist
     updateDataOutput(dataOut, 'tabu', cars_list, dur_list, dist, node_dict['0'].getDur())
+
+    with open('response.json', 'w') as outfile:
+        json.dump(dataOut, outfile, indent=4)
 
     #return dict(status="OK", data="Sono tanto stupido")
     return dataOut

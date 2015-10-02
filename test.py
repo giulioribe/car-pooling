@@ -12,5 +12,5 @@ if __name__ == "__main__":
         if k1 == key:
             print test_dict[k]
 
-    lista = [1,2,3]
-    print lista.index(4)
+    lista = [[1,2,3], [4,5]]
+    print lista.index([4,5])
