@@ -27,6 +27,8 @@ var getUrlParameter = function getUrlParameter(sParam) {
 var map;
 function initMap() {
   var dataD = GetURLParameter('dataD').split('_');
+  console.log('dataD[0]', dataD[0])
+  console.log('dataD[1]', dataD[1])
   map = new google.maps.Map(document.getElementById('map'), {
     //sarà centrata sul nodo di destinazione
     center: {lat: dataD[0], lng: dataD[1]},
