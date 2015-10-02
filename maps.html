@@ -26,17 +26,17 @@ function getUrlParameter(sParam) {
 
 var map;
 function initMap() {
-  console.log(getUrlParameter('dataD'))
   var dataD = getUrlParameter('dataD').split('_');
-  console.log('dataD[0]', dataD[0])
-  console.log('dataD[1]', dataD[1])
+
   map = new google.maps.Map(document.getElementById('map'), {
     //sarà centrata sul nodo di destinazione
     center: {lat: parseFloat(dataD[0]), lng: parseFloat(dataD[1])},
-    zoom: 13
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
+    zoom: 11
   });
 
   var dataD = getUrlParameter('dataD').split('_');
+
   var marker = new google.maps.Marker({
     map: map,
     animation: google.maps.Animation.DROP,
@@ -44,28 +44,33 @@ function initMap() {
     title: 'Destinazione',
     label: 'D'
   });
+  var infowindow = new google.maps.InfoWindow();
+  marker.addListener('click', function() {
+    infowindow.setContent('Destinazione');
+    infowindow.open(map, marker);
+  });
 
   var dataM = getUrlParameter('dataM');
-  machineParam = dataM.split('|');
+  var machineParam = dataM.split('|');
+
+  var markers = [];
   for (i = 0; i < machineParam.length; i++) {
     var mach_tmp = machineParam[i].split('_');
-    var markers = new google.maps.Marker({
+    markers[i] = new google.maps.Marker({
       map: map,
       animation: google.maps.Animation.DROP,
       position: {lat: parseFloat(mach_tmp[2]), lng: parseFloat(mach_tmp[3])},
       title: mach_tmp[1],
       label: mach_tmp[0]
     });
-  }
-  /*
-  var infowindow = new google.maps.InfoWindow({
-    content: contentString
-  });
 
-  marker.addListener('click', function() {
-    infowindow.open(map, marker);
-  });
-*/
+    google.maps.event.addListener(markers[i], 'click', (function(markers, mach_tmp, i) {
+      return function() {
+        infowindow.setContent(mach_tmp[1]);
+        infowindow.open(map, markers[i]);
+      }
+    })(markers, mach_tmp, i));
+  }
 }
 
 // Adds a marker to the map.
