@@ -36,7 +36,7 @@ function initMap() {
   });
 
   var dataD = getUrlParameter('dataD').split('_');
-  marker = new google.maps.Marker({
+  var marker = new google.maps.Marker({
     map: map,
     animation: google.maps.Animation.DROP,
     position: {lat: parseInt(dataD[0]), lng: parseInt(dataD[1])},
@@ -48,14 +48,23 @@ function initMap() {
   machineParam = dataM.split('|');
   for (i = 0; i < machineParam.length; i++) {
     var mach_tmp = machineParam[i].split('_');
-    marker = new google.maps.Marker({
+    var markers = new google.maps.Marker({
       map: map,
       animation: google.maps.Animation.DROP,
       position: {lat: parseInt(mach_tmp[2]), lng: parseInt(mach_tmp[3])},
       title: mach_tmp[1],
       label: mach_tmp[0]
-  });
+    });
   }
+  /*
+  var infowindow = new google.maps.InfoWindow({
+    content: contentString
+  });
+
+  marker.addListener('click', function() {
+    infowindow.open(map, marker);
+  });
+*/
 }
 
 // Adds a marker to the map.
