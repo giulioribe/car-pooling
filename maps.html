@@ -31,7 +31,7 @@ function initMap() {
   console.log('dataD[1]', dataD[1])
   map = new google.maps.Map(document.getElementById('map'), {
     //sarà centrata sul nodo di destinazione
-    center: {lat: dataD[0], lng: dataD[1]},
+    center: {lat: parseInt(dataD[0]), lng: parseInt(dataD[1])},
     zoom: 8
   });
 
@@ -39,19 +39,19 @@ function initMap() {
   marker = new google.maps.Marker({
     map: map,
     animation: google.maps.Animation.DROP,
-    position: {lat: dataD[0], lng: dataD[1]},
+    position: {lat: parseInt(dataD[0]), lng: parseInt(dataD[1])},
     title: 'Destinazione',
     label: 'D'
   });
 
-  var dataM = GetURLParameter('dataM');
+  var dataM = getUrlParameter('dataM');
   machineParam = dataM.split('|');
   for (i = 0; i < machineParam.length; i++) {
     var mach_tmp = machineParam[i].split('_');
     marker = new google.maps.Marker({
       map: map,
       animation: google.maps.Animation.DROP,
-      position: {lat: mach_tmp[2], lng: mach_tmp[3]},
+      position: {lat: parseInt(mach_tmp[2]), lng: parseInt(mach_tmp[3])},
       title: mach_tmp[1],
       label: mach_tmp[0]
   });
