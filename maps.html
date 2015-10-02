@@ -10,7 +10,7 @@
     <div id="map"></div>
     <script type="text/javascript">
 
-var getUrlParameter = function getUrlParameter(sParam) {
+function getUrlParameter(sParam) {
     var sPageURL = decodeURIComponent(window.location.search.substring(1)),
         sURLVariables = sPageURL.split('&'),
         sParameterName,
@@ -26,7 +26,7 @@ var getUrlParameter = function getUrlParameter(sParam) {
 
 var map;
 function initMap() {
-  var dataD = GetURLParameter('dataD').split('_');
+  var dataD = getUrlParameter('dataD').split('_');
   console.log('dataD[0]', dataD[0])
   console.log('dataD[1]', dataD[1])
   map = new google.maps.Map(document.getElementById('map'), {
@@ -35,7 +35,7 @@ function initMap() {
     zoom: 8
   });
 
-  var dataD = GetURLParameter('dataD').split('_');
+  var dataD = getUrlParameter('dataD').split('_');
   marker = new google.maps.Marker({
     map: map,
     animation: google.maps.Animation.DROP,
