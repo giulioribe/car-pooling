@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style type="text/css">
+      html, body { height: 100%; margin: 0; padding: 0; }
+      #map { height: 100%; }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script type="text/javascript">
+
+var getUrlParameter = function getUrlParameter(sParam) {
+    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : sParameterName[1];
+        }
+    }
+};
+
+var map;
+function initMap() {
+  var dataD = GetURLParameter('dataD').split('_');
+  map = new google.maps.Map(document.getElementById('map'), {
+    //sarà centrata sul nodo di destinazione
+    center: {lat: dataD[0], lng: dataD[1]},
+    zoom: 8
+  });
+
+  var dataD = GetURLParameter('dataD').split('_');
+  marker = new google.maps.Marker({
+    map: map,
+    animation: google.maps.Animation.DROP,
+    position: {lat: dataD[0], lng: dataD[1]},
+    title: 'Destinazione',
+    label: 'D'
+  });
+
+  var dataM = GetURLParameter('dataM');
+  machineParam = dataM.split('|');
+  for (i = 0; i < machineParam.length; i++) {
+    var mach_tmp = machineParam[i].split('_');
+    marker = new google.maps.Marker({
+      map: map,
+      animation: google.maps.Animation.DROP,
+      position: {lat: mach_tmp[2], lng: mach_tmp[3]},
+      title: mach_tmp[1],
+      label: mach_tmp[0]
+  });
+  }
+}
+
+// Adds a marker to the map.
+function addMarker(location, map) {
+  // Add the marker at the clicked location, and add the next-available label
+  // from the array of alphabetical characters.
+  var marker = new google.maps.Marker({
+    position: location,
+    label: 'id',
+    map: map,
+    animation: google.maps.Animation.DROP,
+    title: 'id'
+  });
+
+  var infowindow = new google.maps.InfoWindow({
+    content: contentString
+  });
+
+  marker.addListener('click', function() {
+    infowindow.open(map, marker);
+  });
+}
+
+
+
+    </script>
+    <script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB27xz94JVRPsuX4qJMMiZpGVoQiQITFb8&callback=initMap">
+    </script>
+  </body>
+</html>
