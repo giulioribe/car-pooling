@@ -27,7 +27,6 @@ function getUrlParameter(sParam) {
 var map;
 function initMap() {
   var dataD = getUrlParameter('dataD').split('_');
-
   map = new google.maps.Map(document.getElementById('map'), {
     //sarà centrata sul nodo di destinazione
     center: {lat: parseFloat(dataD[0]), lng: parseFloat(dataD[1])},
@@ -36,7 +35,6 @@ function initMap() {
   });
 
   var dataD = getUrlParameter('dataD').split('_');
-
   var marker = new google.maps.Marker({
     map: map,
     animation: google.maps.Animation.DROP,
@@ -44,6 +42,7 @@ function initMap() {
     title: 'Destinazione',
     label: 'D'
   });
+
   var infowindow = new google.maps.InfoWindow();
   marker.addListener('click', function() {
     infowindow.setContent('Destinazione');
@@ -52,7 +51,6 @@ function initMap() {
 
   var dataM = getUrlParameter('dataM');
   var machineParam = dataM.split('|');
-
   var markers = [];
   for (i = 0; i < machineParam.length; i++) {
     var mach_tmp = machineParam[i].split('_');
@@ -71,30 +69,8 @@ function initMap() {
       }
     })(markers, mach_tmp, i));
   }
+
 }
-
-// Adds a marker to the map.
-function addMarker(location, map) {
-  // Add the marker at the clicked location, and add the next-available label
-  // from the array of alphabetical characters.
-  var marker = new google.maps.Marker({
-    position: location,
-    label: 'id',
-    map: map,
-    animation: google.maps.Animation.DROP,
-    title: 'id'
-  });
-
-  var infowindow = new google.maps.InfoWindow({
-    content: contentString
-  });
-
-  marker.addListener('click', function() {
-    infowindow.open(map, marker);
-  });
-}
-
-
 
     </script>
     <script async defer
