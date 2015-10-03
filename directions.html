@@ -24,15 +24,24 @@ function getUrlParameter(sParam) {
     }
 };
 
+function escapeRegExp(string) {
+    return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+}
+
+function replaceAll(string, find, replace) {
+  return string.replace(new RegExp(escapeRegExp(find), 'g'), replace);
+}
+
 var dest = [];
 function initMap() {
   dest = getUrlParameter('dataD').split('_');
+  dest[2] = replaceAll(dest[2], '\+', ' ');
   var directionsService = new google.maps.DirectionsService;
   var directionsDisplay = new google.maps.DirectionsRenderer;
   var map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: parseFloat(dest[0]), lng: parseFloat(dest[1])},
     mapTypeId: google.maps.MapTypeId.ROADMAP,
-    zoom: 11
+    zoom: 17
   });
   directionsDisplay.setMap(map);
   calculateAndDisplayRoute(directionsService, directionsDisplay);
@@ -45,10 +54,14 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay) {
   var punti = []
   for (var i = 0; i < dataM.length; i++) {
       punti[i] = dataM[i].split('_');
-    waypts.push({
-      location: punti[2],
-      stopover: true
-    });
+      punti[i][2] = replaceAll(punti[i][2], '+', ' ')
+    console.log(punti[i][2])
+    if (i > 0) {
+      waypts.push({
+        location: punti[i][2],
+        stopover: true
+      });
+    }
   }
 
   directionsService.route({
