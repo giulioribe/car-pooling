@@ -24,16 +24,17 @@ function getUrlParameter(sParam) {
     }
 };
 
+var dest;
 function initMap() {
-  var dest = getUrlParameter('dataD');
+  dest = getUrlParameter('dataD');
   var directionsService = new google.maps.DirectionsService;
   var directionsDisplay = new google.maps.DirectionsRenderer;
   var map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 11,
-    center: {lat: parseFloat(dest[0]), lng: parseFloat(dest[1])}
+    center: {lat: parseFloat(dest[0]), lng: parseFloat(dest[1])},
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
+    zoom: 11
   });
   directionsDisplay.setMap(map);
-
   calculateAndDisplayRoute(directionsService, directionsDisplay);
 }
 
@@ -52,7 +53,7 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay) {
 
   directionsService.route({
     origin: punti[0][2],
-    destination: dest,
+    destination: dest[3],
     waypoints: waypts,
     optimizeWaypoints: true,
     travelMode: google.maps.TravelMode.DRIVING
