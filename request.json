@@ -1,62 +1,62 @@
 {
-    "time_to_arrive": 1443805233021, 
-    "place_to_arrive": "Via della Fornace, 1, 44123 Ferrara FE, Italia", 
+    "time_to_arrive": 32400000, 
+    "place_to_arrive": "Via Sagarat, Ferrara", 
     "users": [
         {
+            "max_duration": 1983000, 
             "other_address": "", 
-            "max_duration": 0, 
-            "not_with": "", 
-            "id": "1", 
-            "address": "Via Otello Putinati, 122, 44123 Ferrara FE, Italia"
+            "address": "Via Alessandro Volta 1, 45020 Castelguglielmo RO, Italia", 
+            "not_with": "45", 
+            "id": "5"
         }, 
         {
+            "max_duration": 7200000, 
             "other_address": "", 
-            "max_duration": 0, 
+            "address": "Via Giuseppe Verdi 1, 45024 Fiesso Umbertiano RO, Italia", 
             "not_with": "", 
-            "id": "2", 
-            "address": "Corso Porta Po, 30, 44121 Ferrara FE, Italia"
+            "id": "10"
         }, 
         {
+            "max_duration": 7200000, 
             "other_address": "", 
-            "max_duration": 0, 
+            "address": "Via Venezia 1, 44100 Pontelagoscuro FE, Italia", 
             "not_with": "", 
-            "id": "3", 
-            "address": "Via Giuseppe Saragat, 1, 44122 Ferrara FE, Italia"
+            "id": "15"
         }, 
         {
+            "max_duration": 7200000, 
             "other_address": "", 
-            "max_duration": 0, 
+            "address": "Via della Fornace 1, 44123 Ferrara FE, Italia", 
             "not_with": "", 
-            "id": "4", 
-            "address": "Via Alessandro Volta, 71, 45020 Castelguglielmo RO, Italia"
+            "id": "20"
         }, 
         {
+            "max_duration": 7200000, 
             "other_address": "", 
-            "max_duration": 0, 
+            "address": "Via Darsena 1, Ferrara FE, Italia", 
             "not_with": "", 
-            "id": "5", 
-            "address": "Via Giuseppe Verdi, 5, 45030 Occhiobello RO, Italia"
+            "id": "25"
         }, 
         {
+            "max_duration": 7200000, 
             "other_address": "", 
-            "max_duration": 0, 
+            "address": "Via Palestro 1, 44121 Ferrara FE, Italia", 
             "not_with": "", 
-            "id": "6", 
-            "address": "Via Venezia, 1, 44123 Ferrara FE, Italia"
+            "id": "35"
         }, 
         {
+            "max_duration": 7200000, 
             "other_address": "", 
-            "max_duration": 0, 
+            "address": "Via Orlando Furioso 1, Ferrara FE, Italia", 
             "not_with": "", 
-            "id": "7", 
-            "address": "Via Darsena, 25, 44122 Ferrara FE, Italia"
+            "id": "40"
         }, 
         {
+            "max_duration": 99997200000, 
             "other_address": "", 
-            "max_duration": 0, 
+            "address": "Venezia, Italia", 
             "not_with": "", 
-            "id": "8", 
-            "address": "Via Otello Putinati, 130, 44123 Ferrara FE, Italia"
+            "id": "45"
         }
     ]
 }
