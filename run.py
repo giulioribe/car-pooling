@@ -162,7 +162,6 @@ def home():
         with open('googleMapsTest.json', 'r') as data_file:
             google_dict = json.load(data_file)
     else:
-        print request.vars
         with open('request.json', 'w') as outfile:
             json.dump(request.vars, outfile, indent=4)
         node_dict = createNode(request.vars)
