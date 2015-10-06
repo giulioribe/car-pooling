@@ -51,13 +51,13 @@
         </div>
     </nav>
 
-    <section data-ng-controller="chooseCtrl" data-ng-init="names=['Jani','Hege','Kai']">
+    <section data-ng-controller="chooseCtrl">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2">
 
                 	<div style="float: left; margin: 16px; ">
-						<div class="demo-card-wide mdl-card mdl-shadow--2dp" style="min-height: 140px">
+						<div class="demo-card-wide mdl-card mdl-shadow--2dp" style="min-height: 160px">
 						  <div class="mdl-card__title">
 						    <h2 class="mdl-card__title-text">Add People</h2>
 						  </div>
@@ -66,18 +66,53 @@
 						    Mauris sagittis pellentesque lacus eleifend lacinia...
 						  </div>
 						</div>
-						<button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored" style="transform: translate(-50%, -50%) translate(0px, 0px); float: right; z-index: 5000">
+						<button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored" style="transform: translate(-50%, -50%) translate(0px, 0px); float: right; z-index: 5000">
 						  <i class="material-icons mdl-color-text--white">add</i>
 						</button>
 					</div>
 
-					<div class="demo-card-wide mdl-card mdl-shadow--2dp" style="float: left; margin: 16px" data-ng-repeat="x in names">
+					<div class="demo-card-wide mdl-card mdl-shadow--2dp" style="float: left; margin: 16px; ">
 					  <div class="mdl-card__title">
-					    <h2 class="mdl-card__title-text">{{x}}</h2>
+					    <h2 class="mdl-card__title-text">Add People</h2>
 					  </div>
-					  <div class="mdl-card__supporting-text text-left">
-					    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-					    Mauris sagittis pellentesque lacus eleifend lacinia...
+					  <div class="mdl-card__supporting-text" style="padding-top: 0px; width: 100%">
+					    <!-- Simple Textfield -->
+						<form action="#">
+						  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+						    <input class="mdl-textfield__input" type="text" id="address" />
+						    <label class="mdl-textfield__label" for="address" style="margin-bottom: 0px">Indirizzo Principale</label>
+						  </div>
+						  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin-top: -20px">
+						    <input class="mdl-textfield__input" type="text" id="sample1" />
+						    <label class="mdl-textfield__label" for="sample1" style="margin-bottom: 0px">Text...</label>
+						  </div>
+						</form>
+
+					  </div>
+					</div>
+
+					<div class="demo-card-wide mdl-card mdl-shadow--2dp" style="float: left; margin: 16px" data-ng-repeat="user in userList">
+					  <div class="mdl-card__title">
+					    <h2 class="mdl-card__title-text">{{user.name}}</h2>
+					  </div>
+					  <div class="mdl-card__supporting-text" style="padding-top: 0px; width: 100%">
+					    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+						    <input class="mdl-textfield__input" type="text" readonly="" value="{{user.address}}" id="address" />
+						    <label class="mdl-textfield__label" for="address" style="margin-bottom: 0px; color: #aaaaaa">Indirizzo Principale</label>
+						  </div>
+
+
+					    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+						    <input class="mdl-textfield__input" type="text" readonly="" value="{{user.maxDur}}" id="maxDur" />
+						    <label class="mdl-textfield__label" for="maxDur" style="margin-bottom: 0px; color: #aaaaaa">Tempo Massimo di Viaggio</label>
+						  </div>
+
+
+					    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+						    <input class="mdl-textfield__input" type="text" readonly="" value="{{user.notWith}}" id="notWith" />
+						    <label class="mdl-textfield__label" for="notWith" style="margin-bottom: 0px; color: #aaaaaa">Preferisco non viaggiare con...</label>
+						  </div>
+
 					  </div>
 					  <div class="mdl-card__menu" style="color: #aaa">
 					    <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">

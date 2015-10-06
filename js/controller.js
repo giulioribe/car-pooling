@@ -1,5 +1,14 @@
 app.controller('chooseCtrl', function($scope) {
-    $scope.userList = [];
+    $scope.userList = [
+        {
+            name: "Tommaso", 
+            address: "Via Otello Putinati 122, Ferrara",
+            alternative_address: "",
+            max_dur: 0,
+            not_with: "",
+            selected: false}
+    ];
+    /*
     $scope.hideUpload = false;
 
     $scope.hideUpload = function() {
@@ -15,7 +24,7 @@ app.controller('chooseCtrl', function($scope) {
         not_with: $scope.notWith,
         selected: false
         }
-    */
+    
 
     $scope.userAdd = function() {
         var user = {
@@ -41,5 +50,5 @@ app.controller('chooseCtrl', function($scope) {
 
     $scope.userRemove = function() {
         $scope.userList.push({todoText:$scope.todoInput, done:false});
-    };
+    };*/
 });
