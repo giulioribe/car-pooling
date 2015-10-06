@@ -35,8 +35,8 @@ function replaceAll(string, find, replace) {
 
 function initMap() {
   //dest = [];
-  dest = getUrlParameter('dataD').split('_');
-  des = replaceAll(dest, '+', ' ');
+  dest_tmp = getUrlParameter('dataD').split('_');
+  dest = replaceAll(dest_tmp[0], '+', ' ');
   var directionsService = new google.maps.DirectionsService;
   var directionsDisplay = new google.maps.DirectionsRenderer;
   var map = new google.maps.Map(document.getElementById('map'), {
