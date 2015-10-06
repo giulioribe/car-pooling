@@ -165,18 +165,16 @@ def viewMarkers(node_dict):
     webbrowser.open_new(resp.url)
     return geocode_results
 
-def viewRoute(node_dict, geocode_results, cars_list):
+def viewDirection(node_dict, geocode_results, cars_list):
     url = 'http://giulioribe.github.io/car-pooling/directions.html?'
     params = dict(
         dataM='',
-        dataD=geocode_results['0'][0] + '_' + geocode_results['0'][1] + '_' + \
-            node_dict['0'].getAddr()
+        dataD=node_dict['0'].getAddr()
     )
     for cars in cars_list:
         for car in cars:
             if car != '0':
-                params['dataM'] += node_dict[car].getId() + '_' + \
-                    node_dict[car].getAddr() + '|'
+                params['dataM'] += node_dict[car].getAddr() + '|'
         params['dataM'] = params['dataM'][:-1]
         resp = requests.get(url=url, params=params)
         webbrowser.open_new(resp.url)
@@ -232,7 +230,7 @@ def home():
 
     updateDataOutput(dataOut, 'greedy', cars_list, dur_list, dist, node_dict['0'].getDur())
 
-    viewRoute(node_dict, geocode_results, cars_list)
+    viewDirection(node_dict, geocode_results, cars_list)
 
     grasp = Euristiche(node_dict, arc_dict)
     (cars_list, dur_list, dist) = grasp.grasp()
@@ -242,7 +240,7 @@ def home():
     print "dist:", dist
     updateDataOutput(dataOut, 'grasp', cars_list, dur_list, dist, node_dict['0'].getDur())
 
-    #viewRoute(node_dict, geocode_results, cars_list)
+    #viewDirection(node_dict, geocode_results, cars_list)
 
     tabu = Euristiche(node_dict, arc_dict)
     localSearch_list = list()
@@ -260,7 +258,7 @@ def home():
     print "dist:", dist
     updateDataOutput(dataOut, 'tabu', cars_list, dur_list, dist, node_dict['0'].getDur())
 
-    #viewRoute(node_dict, geocode_results, cars_list)
+    #viewDirection(node_dict, geocode_results, cars_list)
 
     with open('response.json', 'w') as outfile:
         json.dump(dataOut, outfile, indent=4)
