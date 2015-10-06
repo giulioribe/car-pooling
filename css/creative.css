@@ -185,7 +185,7 @@ header {
     -o-background-size: cover;
 }
 
-header .header-content {
+header .header-content, .page-content {
     position: relative;
     width: 100%;
     padding: 100px 15px;
