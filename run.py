@@ -174,7 +174,8 @@ def viewDirection(node_dict, geocode_results, cars_list):
     for cars in cars_list:
         for car in cars:
             if car != '0':
-                params['dataM'] += node_dict[car].getAddr() + '|'
+                params['dataM'] += node_dict[car].getId() + '_' + \
+                    node_dict[car].getId() + '_' + node_dict[car].getAddr() + '|'
         params['dataM'] = params['dataM'][:-1]
         resp = requests.get(url=url, params=params)
         webbrowser.open_new(resp.url)
