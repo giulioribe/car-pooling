@@ -1,0 +1,86 @@
+[
+    {
+        "geometry": {
+            "location_type": "GEOMETRIC_CENTER", 
+            "bounds": {
+                "northeast": {
+                    "lat": 44.836529, 
+                    "lng": 11.5983955
+                }, 
+                "southwest": {
+                    "lat": 44.82882170000001, 
+                    "lng": 11.5959567
+                }
+            }, 
+            "viewport": {
+                "northeast": {
+                    "lat": 44.836529, 
+                    "lng": 11.5985250802915
+                }, 
+                "southwest": {
+                    "lat": 44.82882170000001, 
+                    "lng": 11.5958271197085
+                }
+            }, 
+            "location": {
+                "lat": 44.8326754, 
+                "lng": 11.5971761
+            }
+        }, 
+        "formatted_address": "Via Giuseppe Saragat, Ferrara FE, Italy", 
+        "place_id": "ChIJaSSWUNhNfkcRHxsGyxW8Hss", 
+        "address_components": [
+            {
+                "long_name": "Via Giuseppe Saragat", 
+                "types": [
+                    "route"
+                ], 
+                "short_name": "Via Giuseppe Saragat"
+            }, 
+            {
+                "long_name": "Ferrara", 
+                "types": [
+                    "locality", 
+                    "political"
+                ], 
+                "short_name": "Ferrara"
+            }, 
+            {
+                "long_name": "Ferrara", 
+                "types": [
+                    "administrative_area_level_3", 
+                    "political"
+                ], 
+                "short_name": "Ferrara"
+            }, 
+            {
+                "long_name": "Provincia di Ferrara", 
+                "types": [
+                    "administrative_area_level_2", 
+                    "political"
+                ], 
+                "short_name": "FE"
+            }, 
+            {
+                "long_name": "Emilia-Romagna", 
+                "types": [
+                    "administrative_area_level_1", 
+                    "political"
+                ], 
+                "short_name": "Emilia-Romagna"
+            }, 
+            {
+                "long_name": "Italy", 
+                "types": [
+                    "country", 
+                    "political"
+                ], 
+                "short_name": "IT"
+            }
+        ], 
+        "partial_match": true, 
+        "types": [
+            "route"
+        ]
+    }
+]

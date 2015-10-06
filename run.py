@@ -4,6 +4,8 @@ import collections
 import random
 import math
 import sys
+import webbrowser
+import googlemaps
 from operator import attrgetter
 from euristiche import Euristiche
 from node import Node
@@ -137,6 +139,49 @@ def googleMapsRequest(node_dict):
         json.dump(google_dict, outfile, indent=4)
     return google_dict
 
+def viewMarkers(node_dict):
+    gmaps = googlemaps.Client(key=key_googleMaps)
+    geocode_results = dict()
+    for key in node_dict:
+        result = gmaps.geocode(node_dict[key].getAddr())
+        lat = str(result[0]['geometry']['location']['lat'])
+        lng = str(result[0]['geometry']['location']['lng'])
+        geocode_results[key] = (lat,lng)
+    url = 'http://giulioribe.github.io/car-pooling/maps.html?'
+    params = dict(
+        dataM='',
+        dataD=''
+    )
+    for key in geocode_results:
+        if key == '0':
+            params['dataD'] += geocode_results[key][0] + '_' + \
+                geocode_results[key][1]
+        else:
+            params['dataM'] += node_dict[key].getId() + '_' + \
+                node_dict[key].getId() + '_' + geocode_results[key][0] + \
+                '_' + geocode_results[key][1] + '|'
+    params['dataM'] = params['dataM'][:-1]
+    resp = requests.get(url=url, params=params)
+    webbrowser.open_new(resp.url)
+    return geocode_results
+
+def viewRoute(node_dict, geocode_results, cars_list):
+    url = 'http://giulioribe.github.io/car-pooling/directions.html?'
+    params = dict(
+        dataM='',
+        dataD=geocode_results['0'][0] + '_' + geocode_results['0'][1] + '_' + \
+            node_dict['0'].getAddr()
+    )
+    for cars in cars_list:
+        for car in cars:
+            if car != '0':
+                params['dataM'] += node_dict[car].getId() + '_' + \
+                    node_dict[car].getAddr() + '|'
+        params['dataM'] = params['dataM'][:-1]
+        resp = requests.get(url=url, params=params)
+        webbrowser.open_new(resp.url)
+        params['dataM'] = ''
+
 def printNode(node_dict):
     for node in node_dict:
         print (node_dict[node].getId(),
@@ -169,8 +214,10 @@ def home():
         with open('googleMaps.json', 'w') as outfile:
             json.dump(google_dict, outfile, indent=4)
     printNode(node_dict)
-    arc_dict = createArc(google_dict, node_dict)
 
+    geocode_results = viewMarkers(node_dict)
+
+    arc_dict = createArc(google_dict, node_dict)
     print "----------------------------"
     printArc((arc_dict))
     print "----------------------------"
@@ -185,6 +232,8 @@ def home():
 
     updateDataOutput(dataOut, 'greedy', cars_list, dur_list, dist, node_dict['0'].getDur())
 
+    viewRoute(node_dict, geocode_results, cars_list)
+
     grasp = Euristiche(node_dict, arc_dict)
     (cars_list, dur_list, dist) = grasp.grasp()
     print "-->Grasp"
@@ -192,6 +241,8 @@ def home():
     print "dur_list:", dur_list
     print "dist:", dist
     updateDataOutput(dataOut, 'grasp', cars_list, dur_list, dist, node_dict['0'].getDur())
+
+    #viewRoute(node_dict, geocode_results, cars_list)
 
     tabu = Euristiche(node_dict, arc_dict)
     localSearch_list = list()
@@ -208,6 +259,8 @@ def home():
     print "dur_list:", dur_list
     print "dist:", dist
     updateDataOutput(dataOut, 'tabu', cars_list, dur_list, dist, node_dict['0'].getDur())
+
+    #viewRoute(node_dict, geocode_results, cars_list)
 
     with open('response.json', 'w') as outfile:
         json.dump(dataOut, outfile, indent=4)
