@@ -212,7 +212,6 @@ public class Follow extends AppCompatActivity {
         return responseStrBuilder.toString();
     }
 
-    private String destinations = "";
     private String toSend = "";
     private String getData = "";
 
@@ -237,12 +236,12 @@ public class Follow extends AppCompatActivity {
                     toSend += "\n";
                 View card_layout = LayoutInflater.from(this).inflate(R.layout.card_layout, null);
                 JSONObject js = jsonArrayResults.getJSONObject(names[e]);
-                destinations = "";
 
                 JSONArray cars = js.getJSONArray(Costants.JSON_RESPONSE_CARS);
                 String cost = js.getString(Costants.JSON_RESPONSE_COSTO);
                 for (int k = 0; k < cars.length(); k++) {
                     getData = "";
+                    boolean prime = true;
 
                     String car_id = (cars.getJSONObject(k)).getString(Costants.JSON_RESPONSE_ID);
                     String car_partenze = (cars.getJSONObject(k)).getString(Costants.JSON_RESPONSE_PARTENZE);
@@ -250,6 +249,11 @@ public class Follow extends AppCompatActivity {
                     String[] ids = car_id.split(",");
                     String[] partenze_s = car_partenze.split(",");
                     for (int i = 0; i < ids.length; i++) {
+                        if (!prime) {
+                            getData += "|";
+                        }
+                        prime = false;
+
                         String id = ids[i];
                         String orario = partenze_s[i];
                         String name = "";
@@ -266,7 +270,7 @@ public class Follow extends AppCompatActivity {
                         ((TextView) layout.findViewById(R.id.name)).setText(name);
                         ((TextView) layout.findViewById(R.id.partenza)).setText(Utils.getHour(this, Long.parseLong(orario)));
 
-                        getData = id + "_" + Uri.encode(name) + "_" + Uri.encode(address);
+                        getData += id + "_" + Uri.encode(name) + "_" + Uri.encode(address);
 
                         toSend += name;
 
@@ -280,12 +284,12 @@ public class Follow extends AppCompatActivity {
                             layout.findViewById(R.id.action_view_route).setOnClickListener(null);
                         } else {
                             layout.findViewById(R.id.show_route_container).setVisibility(View.VISIBLE);
-                            ((TextView)layout.findViewById(R.id.action_view_route)).setText("http://giulioribe.github.io/car-pooling/directions.html?dataM=" + getData + "&dataD=" + Uri.encode(location));
+                            final String toPut = getData;
                             layout.findViewById(R.id.action_view_route).setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     Intent i = new Intent(Follow.this, Maps.class);
-                                    i.putExtra(Costants.EXTRA_MAP_DATA, "http://giulioribe.github.io/car-pooling/directions.html?dataM=" + getData + "&dataD=" + Uri.encode(location));
+                                    i.putExtra(Costants.EXTRA_MAP_DATA, "http://giulioribe.github.io/car-pooling/directions.html?dataM=" + toPut + "&dataD=" + Uri.encode(location));
 
                                     startActivity(i);
                                 }
