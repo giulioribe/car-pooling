@@ -144,6 +144,7 @@ public class Follow extends AppCompatActivity {
                 setResult(jsonObject);
             } catch (Exception e) {
                 Log.i("error_json", e.toString());
+                Toast.makeText(Follow.this, result, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -229,7 +230,6 @@ public class Follow extends AppCompatActivity {
             String[] names = jsonArrayName.split(",");
 
             for (int e = 0; e < jsonArrayResults.length(); e++) {
-                getData = "";
                 boolean first = true;
 
                 toSend = "";
@@ -242,10 +242,8 @@ public class Follow extends AppCompatActivity {
                 JSONArray cars = js.getJSONArray(Costants.JSON_RESPONSE_CARS);
                 String cost = js.getString(Costants.JSON_RESPONSE_COSTO);
                 for (int k = 0; k < cars.length(); k++) {
-                    if (!first) {
-                        getData += "|";
-                    }
-                    first = false;
+                    getData = "";
+
                     String car_id = (cars.getJSONObject(k)).getString(Costants.JSON_RESPONSE_ID);
                     String car_partenze = (cars.getJSONObject(k)).getString(Costants.JSON_RESPONSE_PARTENZE);
 
@@ -258,9 +256,6 @@ public class Follow extends AppCompatActivity {
                         String address = "";
                         for (Person p : persons) {
                             if (id.equals("" + p.getId())) {
-                                if (i != 0)
-                                    destinations += ",";
-                                destinations += Uri.encode(p.getAddress());
                                 name = p.getName();
                                 address = p.getAddress();
                                 break;
@@ -271,8 +266,7 @@ public class Follow extends AppCompatActivity {
                         ((TextView) layout.findViewById(R.id.name)).setText(name);
                         ((TextView) layout.findViewById(R.id.partenza)).setText(Utils.getHour(this, Long.parseLong(orario)));
 
-                        Address l = Utils.getLocationFromAddress(Follow.this, address);
-                        getData = k + "_" + id + "_" + Uri.encode(name) + "_" + l.getLatitude() + "_" + l.getLongitude();
+                        getData = id + "_" + Uri.encode(name) + "_" + Uri.encode(address);
 
                         toSend += name;
 
@@ -280,6 +274,22 @@ public class Follow extends AppCompatActivity {
                             layout.findViewById(R.id.auto).setVisibility(View.INVISIBLE);
                         } else {
                             layout.findViewById(R.id.auto).setVisibility(View.VISIBLE);
+                        }
+                        if (i != (ids.length - 1)) {
+                            layout.findViewById(R.id.show_route_container).setVisibility(View.GONE);
+                            layout.findViewById(R.id.action_view_route).setOnClickListener(null);
+                        } else {
+                            layout.findViewById(R.id.show_route_container).setVisibility(View.VISIBLE);
+                            ((TextView)layout.findViewById(R.id.action_view_route)).setText("http://giulioribe.github.io/car-pooling/directions.html?dataM=" + getData + "&dataD=" + Uri.encode(location));
+                            layout.findViewById(R.id.action_view_route).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent i = new Intent(Follow.this, Maps.class);
+                                    i.putExtra(Costants.EXTRA_MAP_DATA, "http://giulioribe.github.io/car-pooling/directions.html?dataM=" + getData + "&dataD=" + Uri.encode(location));
+
+                                    startActivity(i);
+                                }
+                            });
                         }
                         toSend += "\n" + Utils.getHour(this, Long.parseLong(orario));
                         ((LinearLayout) card_layout.findViewById(R.id.card_container)).addView(layout);
@@ -298,17 +308,6 @@ public class Follow extends AppCompatActivity {
                             startActivity(sendIntent);
                         } catch (Exception ex) {
                         }
-                    }
-                });
-                card_layout.findViewById(R.id.action_maps).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Address arrive = Utils.getLocationFromAddress(Follow.this, location);
-
-                        Intent i = new Intent(Follow.this, Maps.class);
-                        i.putExtra(Costants.EXTRA_MAP_DATA, "http://giulioribe.github.io/car-pooling/directions.html?dataM=" + getData + "&dataD=" + arrive.getLatitude() + "_" + arrive.getLongitude());
-
-                        startActivity(i);
                     }
                 });
                 container.addView(card_layout);
