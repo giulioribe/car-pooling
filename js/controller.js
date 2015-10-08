@@ -6,15 +6,16 @@ carPoolingApp.controller('chooseCtrl', function($scope, $http) {
         "alternative_address": "",
         "max_dur": "0",
         "not_with": "",
-        "selected": "false"}];
-
+        "selected": "false"}
+        ];
+/*
     $http.get("http://www.w3schools.com/angular/customers.php")
     .success(function(response) {$scope.userList = response.records;});
     
     $scope.addPerson = true;
-    if ($scope.userList.length() == 0)
+    if ($scope.userList.length() == 0) 
         $scope.addPerson = false;
-
+*/
     $scope.toggleAddPerson = function() {
         $scope.addPerson = !$scope.addPerson;
     };
