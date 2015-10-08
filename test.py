@@ -17,8 +17,13 @@ if __name__ == "__main__":
 
     lista = [[1,2,3], [4,5]]
     print lista.index([4,5])
-
+    """
     url = 'http://localhost:8000/'
     with open('requestTest.json', 'r') as inputfile:
         data = json.load(inputfile)
         resp = requests.post(url, data=json.dumps(data), headers = {'content-type': 'application/json'})
+    """
+
+    a = 5
+    a -= 2
+    print a

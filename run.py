@@ -6,6 +6,7 @@ import math
 import sys
 import webbrowser
 import googlemaps
+import copy
 from operator import attrgetter
 from euristiche import Euristiche
 from node import Node
@@ -29,7 +30,7 @@ def createNode(dati_dict):
 
     #for i, user in enumerate(dati_dict['users']):
     for user in dati_dict['users']:
-        node_dict[user['id']] = Node(
+        node_dict[str(user['id'])] = Node(
             ### TODO: id controllare se il JSON restituisce  int o str
             id=user['id'],
             dur=user['max_duration'],
@@ -49,8 +50,8 @@ def createArc(google_dict, node_dict):
     #for i in range(len(google_dict['origin_addresses'])):
     for i, key in enumerate(node_dict.keys()):
         if key != '0':
-            arc_dict[key] = list()
-            arc_dict[key].append(Arc(
+            arc_dict[key] = dict()
+            arc_dict[key]['0'] = Arc(
                 ### TODO: id controllare se il JSON restituisce  int o str
                 id_i=key,
                 # id_f=0 perche' il nodo di destionazione e' 0
@@ -61,7 +62,6 @@ def createArc(google_dict, node_dict):
                 # perche' recupero tutti i valori verso la destinazione
                 dur=int(google_dict['rows'][i-1]['elements'][0]['duration']['value']*1000),
                 dist=google_dict['rows'][i-1]['elements'][0]['distance']['value'])
-            )
     keys_list = node_dict.keys()
     for i in range(len(google_dict['origin_addresses'])):
         # il ciclo parte da 1 perche' nella prima posizione c'e' la
@@ -70,9 +70,9 @@ def createArc(google_dict, node_dict):
             dur = google_dict['rows'][i]['elements'][y]['duration']['value']
             dist = google_dict['rows'][i]['elements'][y]['distance']['value']
             if dur > 0 and dist > 0:
-                if (arc_dict[keys_list[i+1]][0].getDur() >
-                        arc_dict[keys_list[y]][0].getDur()):
-                    arc_dict[keys_list[i+1]].append(Arc(
+                if (arc_dict[keys_list[i+1]]['0'].getDur() >
+                        arc_dict[keys_list[y]]['0'].getDur()):
+                    arc_dict[keys_list[i+1]][keys_list[y]] = Arc(
                         ### TODO: id controllare se il JSON restituisce  int o str
                         id_i=keys_list[i+1],
                         # id_f=0 perche' il nodo di destionazione e' 0
@@ -82,7 +82,6 @@ def createArc(google_dict, node_dict):
                         # la destinazione
                         dur=int(dur*1000),
                         dist=dist)
-                    )
     return arc_dict
 
 def updateAddress(node_dict, google_dict):
@@ -191,10 +190,10 @@ def printNode(node_dict):
 def printArc(arc_dict):
     for arc in arc_dict:
         for a in arc_dict[arc]:
-            print (a.getId_i(),
-                a.getId_f(),
-                a.getDur(),
-                a.getDist())
+            print (arc_dict[arc][a].getId_i(),
+                arc_dict[arc][a].getId_f(),
+                arc_dict[arc][a].getDur(),
+                arc_dict[arc][a].getDist())
 
 @app.expose("/")
 @service.json
@@ -214,7 +213,7 @@ def home():
             json.dump(google_dict, outfile, indent=4)
     printNode(node_dict)
 
-    geocode_results = viewMarkers(node_dict)
+    #geocode_results = viewMarkers(node_dict)
 
     arc_dict = createArc(google_dict, node_dict)
     print "----------------------------"
@@ -226,12 +225,16 @@ def home():
     print "cars_list:", cars_list
     print "dur_list:", dur_list
     print "dist:", dist
+    print "Amm", greedy.ammissibileMinDur(greedy)
+
+    cars_greedy_list = copy.deepcopy(greedy.getCars())
+    print "cars_greedy_list", cars_greedy_list
 
     dataOut = initDataOuttput()
 
     updateDataOutput(dataOut, 'greedy', cars_list, dur_list, dist, node_dict['0'].getDur())
 
-    viewDirection(node_dict, geocode_results, cars_list)
+    #viewDirection(node_dict, geocode_results, cars_list)
 
     grasp = Euristiche(node_dict, arc_dict)
     (cars_list, dur_list, dist) = grasp.grasp()
@@ -245,13 +248,12 @@ def home():
 
     tabu = Euristiche(node_dict, arc_dict)
     localSearch_list = list()
-    localSearch_list.append(greedy)
+    localSearch_list.append(copy.deepcopy(greedy))
     for i in range(math.factorial(len(node_dict)/2)):
         g = Euristiche(node_dict, arc_dict)
         g.grasp()
         if not (g in localSearch_list):
             localSearch_list.append(g)
-
     (cars_list, dur_list, dist) = tabu.initTabu(localSearch_list, 3)
     print "-->Tabu"
     print "cars_list:", cars_list
@@ -260,6 +262,20 @@ def home():
     updateDataOutput(dataOut, 'tabu', cars_list, dur_list, dist, node_dict['0'].getDur())
 
     #viewDirection(node_dict, geocode_results, cars_list)
+
+    tabu2 = Euristiche(node_dict, arc_dict)
+    print "cars_greedy_list", cars_greedy_list
+    arcToDest_dict = dict()
+    for key in tabu2.getArc():
+        arcToDest_dict[key] = arc_dict[key]['0']
+    penality = sorted(arcToDest_dict.values(), key=attrgetter('dist'),
+                    reverse=True)[0].getDist()
+    print "penality", penality/4
+    (cars_list, dur_list, dist) = tabu2.tabu2(greedy, greedy, 0, 0, list(), penality/4)
+    print "-->Tabu2"
+    print "cars_list:", cars_list
+    print "dur_list:", dur_list
+    print "dist:", dist
 
     with open('response.json', 'w') as outfile:
         json.dump(dataOut, outfile, indent=4)
