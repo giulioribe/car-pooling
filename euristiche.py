@@ -59,13 +59,18 @@ class Euristiche(object):
 
     # minduration(car, arc_dict[car[-1]]['0'])
     def minDuration(self, car, dur):
+    	# scorro ogni elemento
         for i in range(len(car)):
-            if i != len(car):
-                sumdur = 0
-                for k in range(i+1,len(car)):
-                    sumdur += self.arc_dict[car[i]][car[k]].getDur()
-                if (sumdur + dur) > self.node_dict[car[i]].getDur():
-                    return False
+            sumdur = 0
+            # per ogni elemento riparto da se stesso e scorro la lista dei passeggeri
+            for k in range(i,len(car)):
+            	# se non sono in fondo allora sommo il costo del passaggio da una persona all'altra
+            	if k != len(car):
+	                sumdur += self.arc_dict[car[k]][car[k+1]].getDur() # e' getDur per avere la durata dell'arco?
+	            # se sono in fondo, e in ogni caso ad ogni iterazione, controllo l'ammissibilia'
+	            if (sumdur + dur) > self.node_dict[car[i]].getDur():
+	                return False
+
         return True
 
 
