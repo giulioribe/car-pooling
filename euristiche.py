@@ -57,6 +57,7 @@ class Euristiche(object):
                 return False
         return True
 
+
     # minduration(car, arc_dict[car[-1]]['0'])
     def minDuration(self, car, dur):
         # scorro ogni elemento
@@ -67,10 +68,28 @@ class Euristiche(object):
                 # se non sono in fondo allora sommo il costo del passaggio da una persona all'altra
                 if k != len(car)-1:
                     sumdur += self.arc_dict[car[k]][car[k+1]].getDur() # e' getDur per avere la durata dell'arco?
-                # se sono in fondo, e in ogni caso ad ogni iterazione, controllo l'ammissibilia'
-                if (sumdur + dur) > self.node_dict[car[i]].getDur():
-                    return False
+                if self.node_dict[car[i]].getDur() != 0:
+                    # se sono in fondo, e in ogni caso ad ogni iterazione, controllo l'ammissibilia'
+                    if (sumdur + dur) > self.node_dict[car[i]].getDur():
+                        return False
+        return True
 
+
+    def minDurationGreedy(self, car, nodeNew):
+        # scorro ogni elemento
+        for i in range(len(car)):
+            sumdur = 0
+            # per ogni elemento riparto da se stesso e scorro la lista dei passeggeri
+            for k in range(i,len(car)):
+                # se non sono in fondo allora sommo il costo del passaggio da una persona all'altra
+                if k != len(car)-1:
+                    sumdur += self.arc_dict[car[k]][car[k+1]].getDur() # e' getDur per avere la durata dell'arco?
+                # se sono in fondo, e in ogni caso ad ogni iterazione, controllo l'ammissibilia'
+                else:
+                    sumdur += self.arc_dict[car[k]][nodeNew.getId()].getDur() + self.arc_dict[nodeNew.getId()]['0'].getDur()
+                if self.node_dict[car[i]].getDur() != 0:
+                    if sumdur > self.node_dict[car[i]].getDur():
+                        return False
         return True
 
 
@@ -126,19 +145,19 @@ class Euristiche(object):
             #for arc in sorted(arc_list, key=attrgetter('dist')):
             for arc in sorted(arc_start.values(), key=attrgetter('dist')):
 
-
+                """
                 if self.arc_dict[car]['0'].getDist() >= arc.getDist():
                     print "0"
                 if self.checkNotWith(cars_list, nauto, arc.getId_f()):
                     print '1'
                 if self.minDuration(cars_list[nauto], arc.getDur()):
                     print '2'
-
+                """
 
                 if (arc.getId_f() in arcToDest_dict and
                         self.arc_dict[car]['0'].getDist() >= arc.getDist() and
                         self.checkNotWith(cars_list, nauto, arc.getId_f()) and
-                        self.minDuration(cars_list[nauto], arc.getDur())):
+                        self.minDurationGreedy(cars_list[nauto], self.node_dict[arc.getId_f()])):
                     car = arc.getId_f()
                     dur += arc.getDur()
                     dur_list[nauto].append(arc.getDur())
@@ -210,7 +229,7 @@ class Euristiche(object):
                 if (arc.getId_f() in arcToDest_dict and
                         self.arc_dict[car]['0'].getDist() >= arc.getDist() and
                         self.checkNotWith(cars_list, nauto, arc.getId_f()) and
-                        self.minDuration(cars_list[nauto], arc.getDur())):
+                        self.minDurationGreedy(cars_list[nauto], self.node_dict[arc.getId_f()])):
                     arc_list_pope.append(arc)
                 # devo fare il break solo quando ne ho trovati tre
                 if len(arc_list_pope) >= 3:
@@ -533,13 +552,9 @@ class Euristiche(object):
     """
     def ammissibileMinDur(self, eur):
         for car in eur.cars_list:
-            for i in range(len(car)):
-                if i != len(car)-1:
-                    if not self.minDuration(car, self.arc_dict[car[i]][car[i+1]].getDur()):
-                        return False
-                else:
-                    if not self.minDuration(car, self.arc_dict[car[i]]['0'].getDur()):
-                        return False
+            if not self.minDuration(car, self.arc_dict[car[-1]]['0'].getDur()):
+                print "Auto stronza", car
+                return False
         return True
 
 

@@ -235,7 +235,7 @@ def home():
 
     updateDataOutput(dataOut, 'greedy', cars_list, dur_list, dist, node_dict['0'].getDur())
 
-    #viewDirection(node_dict, geocode_results, cars_list)
+    # viewDirection(node_dict, geocode_results, cars_list)
 
     grasp = Euristiche(node_dict, arc_dict)
     (cars_list, dur_list, dist) = grasp.grasp()
@@ -243,6 +243,7 @@ def home():
     print "cars_list:", cars_list
     print "dur_list:", dur_list
     print "dist:", dist
+    print "Amm", grasp.ammissibileMinDur(grasp)
     updateDataOutput(dataOut, 'grasp', cars_list, dur_list, dist, node_dict['0'].getDur())
 
     #viewDirection(node_dict, geocode_results, cars_list)
@@ -278,12 +279,14 @@ def home():
     print "dur_list:", dur_list
     print "dist:", dist
 
+    updateDataOutput(dataOut, 'tabu2', cars_list, dur_list, dist, node_dict['0'].getDur())
+
     with open('response.json', 'w') as outfile:
         json.dump(dataOut, outfile, indent=4)
 
     #return dict(status="OK", data="Sono tanto stupido")
-    return dataOut
 
+    return dataOut
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
