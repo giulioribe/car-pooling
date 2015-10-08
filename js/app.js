@@ -1,1 +1,1 @@
-var app = angular.module('carPoolingApp', []); 
+var carPoolingApp = angular.module('carPoolingApp', []); 

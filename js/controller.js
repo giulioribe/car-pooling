@@ -1,18 +1,22 @@
-app.controller('chooseCtrl', function($scope) {
-    $scope.userList = [
-        {
-            name: "Tommaso", 
-            address: "Via Otello Putinati 122, Ferrara",
-            alternative_address: "",
-            max_dur: 0,
-            not_with: "",
-            selected: false}
-    ];
-    /*
-    $scope.hideUpload = false;
+carPoolingApp.controller('chooseCtrl', function($scope, $http) {
 
-    $scope.hideUpload = function() {
-        $scope.hideUpload = true;
+    $scope.userList = [{
+        "name": "Tommaso Berlose", 
+        "address": "Via Otello Putinati 122, Ferrara",
+        "alternative_address": "",
+        "max_dur": "0",
+        "not_with": "",
+        "selected": "false"}];
+
+    $http.get("http://www.w3schools.com/angular/customers.php")
+    .success(function(response) {$scope.userList = response.records;});
+    
+    $scope.addPerson = true;
+    if ($scope.userList.length() == 0)
+        $scope.addPerson = false;
+
+    $scope.toggleAddPerson = function() {
+        $scope.addPerson = !$scope.addPerson;
     };
 
     /*

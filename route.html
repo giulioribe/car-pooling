@@ -40,58 +40,135 @@
 
 </head>
 
-<body id="page-top" style="background: #efefef;" data-ng-app="carPoolingApp">
-
+<body id="page-top" style="background: #efefef;" data-ng-app="carPoolingApp" data-ng-controller="chooseCtrl">
+<!--
     <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
         <div class="container-fluid bg-primary">
-            <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
                 <a class="navbar-brand" href="index.html">Car Pooling</a>
             </div>
         </div>
     </nav>
+-->
 
-    <section data-ng-controller="chooseCtrl">
+<!-- Uses a header that contracts as the page scrolls down. -->
+<style>
+.demo-layout-waterfall .mdl-layout__header-row .mdl-navigation__link:last-of-type  {
+  padding-right: 0;
+}
+</style>
+
+<div class="demo-layout-waterfall mdl-layout mdl-js-layout">
+  <header class="mdl-layout__header mdl-layout__header--waterfall" style="background: transparent">
+    <!-- Top row, always visible -->
+    <div class="mdl-layout__header-row bg-primary">
+      <!-- Title -->
+      <span class="mdl-layout-title">Car Pooling</span>
+      <div class="mdl-layout-spacer"></div>
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable
+                  mdl-textfield--floating-label mdl-textfield--align-right">
+        <label class="mdl-button mdl-js-button mdl-button--icon"
+               for="waterfall-exp" style="margin-bottom: 0px">
+          <i class="material-icons">search</i>
+        </label>
+        <div class="mdl-textfield__expandable-holder">
+          <input class="mdl-textfield__input" type="text" name="sample"
+                 id="waterfall-exp" />
+        </div>
+      </div>
+    </div><!-- Bottom row, not visible on scroll -->
+    <div class="mdl-layout__header-row bg-primary">
+      <div class="mdl-layout-spacer"></div>
+      <!-- Navigation -->
+      <nav class="mdl-navigation">
+        <a class="mdl-navigation__link" data-ng-click="toggleAddPerson()"><i class="material-icons">person_add</i></a>
+        <a class="mdl-navigation__link" href="">Link</a>
+        <a class="mdl-navigation__link" href="">Link</a>
+        <a class="mdl-navigation__link" href="">Link</a>
+      </nav>
+    </div>
+  </header>
+  <div class="mdl-layout__drawer">
+    <span class="mdl-layout-title">Car Pooling</span>
+    <nav class="mdl-navigation">
+        <a class="mdl-navigation__link" data-ng-click="toggleAddPerson()"><i class="material-icons">person_add</i></a>
+      <a class="mdl-navigation__link" href="">Link</a>
+      <a class="mdl-navigation__link" href="">Link</a>
+      <a class="mdl-navigation__link" href="">Link</a>
+    </nav>
+  </div>
+  <main class="mdl-layout__content">
+    <div class="page-content" style="padding: 50px 10px">
+
+
         <div class="container">
             <div class="row">
-                <div class="col-lg-8 col-lg-offset-2">
-
-                	<div style="float: left; margin: 16px; ">
-						<div class="demo-card-wide mdl-card mdl-shadow--2dp" style="min-height: 160px">
+                <div class="col-lg-12">
+						<div class="demo-card-wide mdl-card mdl-shadow--2dp" style="float: left; margin: 16px; min-height: 160px">
 						  <div class="mdl-card__title">
-						    <h2 class="mdl-card__title-text">Add People</h2>
+						    <h2 class="mdl-card__title-text">Manage Information</h2>
 						  </div>
-						  <div class="mdl-card__supporting-text" style="padding-top: 0px; width: 100%">
-						    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-						    Mauris sagittis pellentesque lacus eleifend lacinia...
+						  <div class="mdl-card__supporting-text text-left" style="padding-top: 0px; width: 100%">
+						    Esegui l'upload o il download delle informazioni che preferisci così da lavorare più velocemente..
+						  </div>
+						  <div class="mdl-card__actions mdl-card--border text-center">
+						  <!-- Download json
+						  	<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+						      <i class="material-icons">file_download</i>Download
+						    </a>
+						    -->
+						  	<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+						      <i class="material-icons">file_upload</i>Upload
+						    </a>		
 						  </div>
 						</div>
-						<button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored" style="transform: translate(-50%, -50%) translate(0px, 0px); float: right; z-index: 5000">
-						  <i class="material-icons mdl-color-text--white">add</i>
-						</button>
-					</div>
 
-					<div class="demo-card-wide mdl-card mdl-shadow--2dp" style="float: left; margin: 16px; ">
+					<div class="demo-card-wide mdl-card mdl-shadow--2dp" style="float: left; margin: 16px;" data-ng-show="addPerson">
 					  <div class="mdl-card__title">
 					    <h2 class="mdl-card__title-text">Add People</h2>
 					  </div>
 					  <div class="mdl-card__supporting-text" style="padding-top: 0px; width: 100%">
 					    <!-- Simple Textfield -->
 						<form action="#">
+						<!-- Nome e Cognome -->
 						  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+						    <input class="mdl-textfield__input" type="text" id="name" />
+						    <label class="mdl-textfield__label" for="name" style="margin-bottom: 0px">Nome e Cognome</label>
+						  </div>
+						<!-- Indirizzo Principale -->
+						  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin-top: -15px">
 						    <input class="mdl-textfield__input" type="text" id="address" />
 						    <label class="mdl-textfield__label" for="address" style="margin-bottom: 0px">Indirizzo Principale</label>
 						  </div>
-						  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin-top: -20px">
+						  <!-- Indirizzi Secondari  -->
+						  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin-top: -15px">
+						    <input class="mdl-textfield__input" type="text" id="sample1" />
+						    <label class="mdl-textfield__label" for="sample1" style="margin-bottom: 0px">Text...</label>
+						  </div>
+						  <!-- Not With -->
+						  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin-top: -15px">
+						    <input class="mdl-textfield__input" type="text" id="sample1" />
+						    <label class="mdl-textfield__label" for="sample1" style="margin-bottom: 0px">Text...</label>
+						  </div>
+						  <!-- Max Durata -->
+						  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin-top: -15px">
 						    <input class="mdl-textfield__input" type="text" id="sample1" />
 						    <label class="mdl-textfield__label" for="sample1" style="margin-bottom: 0px">Text...</label>
 						  </div>
 						</form>
 
 					  </div>
+					  <div class="mdl-card__actions mdl-card--border text-right">
+					  	<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+					      Annulla
+					    </a>
+					  	<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+					      Aggiungi
+					    </a>
+					  </div>
 					</div>
 
-					<div class="demo-card-wide mdl-card mdl-shadow--2dp" style="float: left; margin: 16px" data-ng-repeat="user in userList">
+					<div class="demo-card-wide mdl-card mdl-shadow--2dp" style="float: left; margin: 16px" data-ng-repeat="user in userList" data-ng-hide="addPerson">
 					  <div class="mdl-card__title">
 					    <h2 class="mdl-card__title-text">{{user.name}}</h2>
 					  </div>
@@ -113,7 +190,7 @@
 						    <label class="mdl-textfield__label" for="notWith" style="margin-bottom: 0px; color: #aaaaaa">Preferisco non viaggiare con...</label>
 						  </div>
 
-					  </div>
+					  </div><!-- buttons 
 					  <div class="mdl-card__menu" style="color: #aaa">
 					    <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
 					      <i class="material-icons">edit</i>
@@ -122,13 +199,15 @@
 					      <i class="material-icons">delete</i>
 					    </button>
 					  </div>
+					  -->
 					</div>
                 </div>
             </div>
         </div>
-    </section>
 
 
+  </main>
+</div>
 
     <!-- jQuery -->
     <script src="js/jquery.js"></script>
