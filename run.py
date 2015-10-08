@@ -248,7 +248,7 @@ def home():
 
     #viewDirection(node_dict, geocode_results, cars_list)
 
-    tabu = Euristiche(node_dict, arc_dict)
+    path = Euristiche(node_dict, arc_dict)
     localSearch_list = list()
     localSearch_list.append(copy.deepcopy(greedy))
     for i in range(math.factorial(len(node_dict)/2)):
@@ -256,12 +256,18 @@ def home():
         g.grasp()
         if not (g in localSearch_list):
             localSearch_list.append(g)
-    (cars_list, dur_list, dist) = tabu.initTabu(localSearch_list, 3)
-    print "-->Tabu"
-    print "cars_list:", cars_list
-    print "dur_list:", dur_list
-    print "dist:", dist
-    updateDataOutput(dataOut, 'tabu', cars_list, dur_list, dist, node_dict['0'].getDur())
+    path_completo = path.initPath(localSearch_list, 3)[0]
+    print "-->Path"
+    print "cars_list:", path_completo[0].cars_list
+    print "dur_list:", path_completo[0].dur_list
+    print "dist:", path_completo[0].dist
+    updateDataOutput(dataOut, 'path', path_completo[0].cars_list, path_completo[0].dur_list, path_completo[0].dist, node_dict['0'].getDur())
+
+    print "-->Path Reverse"
+    print "cars_list:", path_completo[1].cars_list
+    print "dur_list:", path_completo[1].dur_list
+    print "dist:", path_completo[1].dist
+    updateDataOutput(dataOut, 'pathReverse', path_completo[1].cars_list, path_completo[1].dur_list, path_completo[1].dist, node_dict['0'].getDur())
 
     #viewDirection(node_dict, geocode_results, cars_list)
 
