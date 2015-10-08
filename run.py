@@ -50,6 +50,7 @@ def createArc(google_dict, node_dict):
     #for i in range(len(google_dict['origin_addresses'])):
     for i, key in enumerate(node_dict.keys()):
         if key != '0':
+            #arc_dict[key] = collections.OrderedDict()
             arc_dict[key] = dict()
             arc_dict[key]['0'] = Arc(
                 ### TODO: id controllare se il JSON restituisce  int o str
@@ -271,7 +272,7 @@ def home():
     penality = sorted(arcToDest_dict.values(), key=attrgetter('dist'),
                     reverse=True)[0].getDist()
     print "penality", penality/4
-    (cars_list, dur_list, dist) = tabu2.tabu2(greedy, greedy, 0, 0, list(), penality/4)
+    (cars_list, dur_list, dist) = tabu2.tabu2(greedy, greedy, 0, 0, list(), penality/2)
     print "-->Tabu2"
     print "cars_list:", cars_list
     print "dur_list:", dur_list

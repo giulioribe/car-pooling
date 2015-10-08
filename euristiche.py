@@ -119,6 +119,11 @@ class Euristiche(object):
             #print "------------------"
             # ordina la lista di archi in ordine crescente
             #for arc in sorted(arc_list, key=attrgetter('dist')):
+            if self.arc_dict[car]['0'].getDist() >= arc.getDist():
+                print "0"
+            if self.checkNotWith(cars_list, nauto, arc.getId_f()):
+                print '1'
+                        self.minDuration(cars_list[nauto], arc.getDur())):
             for arc in sorted(arc_start.values(), key=attrgetter('dist')):
                 if (arc.getId_f() in arcToDest_dict and
                         self.arc_dict[car]['0'].getDist() >= arc.getDist() and
@@ -326,10 +331,10 @@ class Euristiche(object):
                             totDist = 0
                             if not self.ammissibileNotWith(actual_solution):
                                 totDist -= penality
-                                print "-1"
+                                #print "-1"
                             if not self.ammissibileMinDur(actual_solution):
                                 totDist -= penality
-                                print "-2"
+                                #print "-2"
                             totDist -= self.ammissibileCard(actual_solution)*penality
                             cars_tmp_list = copy.deepcopy(cars)
                             value_tmp = cars_tmp_list[x1][y1]
@@ -338,13 +343,16 @@ class Euristiche(object):
 
                             eur = Euristiche(self.node_dict, self.arc_dict)
                             eur.setCars(cars_tmp_list)
+                            eur = self.reorder(eur)
                             if not self.ammissibileNotWith(eur):
                                 totDist += penality
                             if not self.ammissibileMinDur(eur):
                                 totDist += penality
                             totDist += self.ammissibileCard(eur)*penality
 
-                            eur = self.reorder(eur)
+                            # il reorder va effettuato prima perche' altrimenti
+                            # ho problemi nei vari calcoli dell'ammissibilita'
+                            #eur = self.reorder(eur)
                             eur.setDist(eur.getDist() + totDist)
                             mossa = (cars_tmp_list[x1][y1], cars_tmp_list[x][y], True)
                             delta = eur.getDist() - actual_dist
@@ -368,12 +376,15 @@ class Euristiche(object):
                             cars_tmp_list.pop(x)
                         eur = Euristiche(self.node_dict, self.arc_dict)
                         eur.setCars(cars_tmp_list)
+                        eur = self.reorder(eur)
                         if not self.ammissibileNotWith(eur):
                             totDist += penality
                         if not self.ammissibileMinDur(eur):
                             totDist += penality
                         totDist += self.ammissibileCard(eur)*penality
-                        eur = self.reorder(eur)
+
+                        # il reorder va sempre effettuato prima
+                        #eur = self.reorder(eur)
                         eur.setDist(eur.getDist() + totDist)
                         mossa = (cars[x][y], x, False)
                         delta = eur.getDist() - actual_dist
@@ -419,11 +430,13 @@ class Euristiche(object):
             iteration = 0
         else:
             iteration += 1
+        """
         print "\n"
         print "iteration", iteration
         for i, sol in enumerate(solutions_list):
             print i, "\t", sol[0].getCars(), "\t\t", sol[2]
-        if iteration >= 3 or global_iteration >= 50:
+        """
+        if iteration >= 30 or global_iteration >= 50:
             return (best_delta_solution.getCars(), best_delta_solution.getDur(), best_delta_solution.getDist())
         else:
             return self.tabu2(best_solution, best_delta_solution, iteration, global_iteration, tabu_list, penality)
