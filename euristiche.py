@@ -59,17 +59,17 @@ class Euristiche(object):
 
     # minduration(car, arc_dict[car[-1]]['0'])
     def minDuration(self, car, dur):
-    	# scorro ogni elemento
+        # scorro ogni elemento
         for i in range(len(car)):
             sumdur = 0
             # per ogni elemento riparto da se stesso e scorro la lista dei passeggeri
             for k in range(i,len(car)):
-            	# se non sono in fondo allora sommo il costo del passaggio da una persona all'altra
-            	if k != len(car):
-	                sumdur += self.arc_dict[car[k]][car[k+1]].getDur() # e' getDur per avere la durata dell'arco?
-	            # se sono in fondo, e in ogni caso ad ogni iterazione, controllo l'ammissibilia'
-	            if (sumdur + dur) > self.node_dict[car[i]].getDur():
-	                return False
+                # se non sono in fondo allora sommo il costo del passaggio da una persona all'altra
+                if k != len(car)-1:
+                    sumdur += self.arc_dict[car[k]][car[k+1]].getDur() # e' getDur per avere la durata dell'arco?
+                # se sono in fondo, e in ogni caso ad ogni iterazione, controllo l'ammissibilia'
+                if (sumdur + dur) > self.node_dict[car[i]].getDur():
+                    return False
 
         return True
 
@@ -124,12 +124,17 @@ class Euristiche(object):
             #print "------------------"
             # ordina la lista di archi in ordine crescente
             #for arc in sorted(arc_list, key=attrgetter('dist')):
-            if self.arc_dict[car]['0'].getDist() >= arc.getDist():
-                print "0"
-            if self.checkNotWith(cars_list, nauto, arc.getId_f()):
-                print '1'
-                        self.minDuration(cars_list[nauto], arc.getDur())):
             for arc in sorted(arc_start.values(), key=attrgetter('dist')):
+
+
+                if self.arc_dict[car]['0'].getDist() >= arc.getDist():
+                    print "0"
+                if self.checkNotWith(cars_list, nauto, arc.getId_f()):
+                    print '1'
+                if self.minDuration(cars_list[nauto], arc.getDur()):
+                    print '2'
+
+
                 if (arc.getId_f() in arcToDest_dict and
                         self.arc_dict[car]['0'].getDist() >= arc.getDist() and
                         self.checkNotWith(cars_list, nauto, arc.getId_f()) and
@@ -495,8 +500,6 @@ class Euristiche(object):
 
 
     def ammissibileNotWith(self, eur):
-        # controllo notWith, max_dur
-        # teoricamente avendo gia' riordinato non dovremmo aver problemi di archi orientati sbagliati
         #print "self.node_dict", self.node_dict.keys()
         #print "eur.cars_list", eur.cars_list
         for car in eur.cars_list:
@@ -529,12 +532,9 @@ class Euristiche(object):
         return True
     """
     def ammissibileMinDur(self, eur):
-        # controllo notWith, max_dur
-        # teoricamente avendo gia' riordinato non dovremmo aver problemi di archi orientati sbagliati
         for car in eur.cars_list:
             for i in range(len(car)):
                 if i != len(car)-1:
-                    print "car[i]", car[i], "car[i+1]", car[i+1]
                     if not self.minDuration(car, self.arc_dict[car[i]][car[i+1]].getDur()):
                         return False
                 else:
