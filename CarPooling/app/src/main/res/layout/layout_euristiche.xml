@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,14 +23,33 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@android:color/white"
-                android:id="@+id/name"/>
+                android:id="@+id/name" />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/white_back"
                 android:fontFamily="sans-serif-medium"
-                android:id="@+id/partenza"/>
+                android:id="@+id/partenza" />
         </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/show_route_container"
+        android:orientation="horizontal"
+        android:gravity="right"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceButton"
+            android:text="View Route"
+            android:id="@+id/action_view_route"
+            android:textColor="@color/accent"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp" />
     </LinearLayout>
 </LinearLayout>
