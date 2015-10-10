@@ -63,7 +63,7 @@
     <!-- Top row, always visible -->
     <div class="mdl-layout__header-row bg-primary">
       <!-- Title -->
-      <span class="mdl-layout-title">Car Pooling</span>
+      <a href="index.html" style="color: #fff; text-decoration: none"><span class="mdl-layout-title">Car Pooling</span></a>
       <div class="mdl-layout-spacer"></div>
       <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable
                   mdl-textfield--floating-label mdl-textfield--align-right">
@@ -73,30 +73,12 @@
         </label>
         <div class="mdl-textfield__expandable-holder">
           <input class="mdl-textfield__input" type="text" name="sample"
-                 id="waterfall-exp" />
+                 id="waterfall-exp" ng-model="search" />
         </div>
       </div>
-    </div><!-- Bottom row, not visible on scroll -->
-    <div class="mdl-layout__header-row bg-primary">
-      <div class="mdl-layout-spacer"></div>
-      <!-- Navigation -->
-      <nav class="mdl-navigation">
-        <a class="mdl-navigation__link" data-ng-click="toggleAddPerson()"><i class="material-icons">person_add</i></a>
-        <a class="mdl-navigation__link" href="">Link</a>
-        <a class="mdl-navigation__link" href="">Link</a>
-        <a class="mdl-navigation__link" href="">Link</a>
-      </nav>
     </div>
   </header>
-  <div class="mdl-layout__drawer">
-    <span class="mdl-layout-title">Car Pooling</span>
-    <nav class="mdl-navigation">
-        <a class="mdl-navigation__link" data-ng-click="toggleAddPerson()"><i class="material-icons">person_add</i></a>
-      <a class="mdl-navigation__link" href="">Link</a>
-      <a class="mdl-navigation__link" href="">Link</a>
-      <a class="mdl-navigation__link" href="">Link</a>
-    </nav>
-  </div>
+ 
   <main class="mdl-layout__content">
     <div class="page-content" style="padding: 50px 10px">
 
