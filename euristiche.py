@@ -211,8 +211,9 @@ class Euristiche(object):
                         key=attrgetter('dist'),
                         reverse=True)
                 for e in range(nIteration):
-                    car_pope.append(ordered_arc.pop(e))
-                car = random.choice(car_pope)
+                    if e <= (len(ordered_arc)-1):
+                        car_pope.append(ordered_arc.pop(e))
+                car = (random.choice(car_pope)).getId_i()
                 arcToDest_dict.pop(car)
                 dur = 0
                 mindur = self.node_dict[car].getDur()
@@ -269,12 +270,11 @@ class Euristiche(object):
         target = sorted_ls.pop(0)
         path_list = list()
         path_list_reverse = list()
-        #print "prima if", k
         if k > len(sorted_ls):
             k = len(sorted_ls)
-        #print "dopo if", k
         for i in range(k):
             path_list.append(self.path(target, sorted_ls[i], 0))
+            print "Sono nel ciclo for, iteration", i
             path_list_reverse.append(self.path(sorted_ls[i], target, 0))
         best_path = sorted(path_list, key=itemgetter(2)).pop(0)
         self.setCars(best_path[0])
@@ -292,6 +292,7 @@ class Euristiche(object):
         # Creo matrici di supporto
         maxRig = max(len(target.cars_list), len(grasp.cars_list))
         maxCol = 5
+        path_list = list()
         # boolean controllo di aver eseguito correttamente lo swap
         swap_done = False
         grasp_tmp_pope = list()
@@ -323,8 +324,16 @@ class Euristiche(object):
                                 value_tmp_grasp = grasp_tmp_pope[-1].cars_list[x][y]
                                 value_tmp_target = target.cars_list[x][y]
                                 grasp_tmp_pope[-1].cars_list[x][y] = target.cars_list[x][y]
-                    if swap_done:
+                        # esco dal while perche' trovata la mossa che va bene
+                        # condizione di uscita se non trovo mosse valide
+                        if x == maxRig and y == maxCol:
+                            done_all = True
+                            break
+                    if swap_done or done_all:
                         break
+
+                if done_all:
+                    break
                 tmp_c_l = list()
                 k = 0
                 #print "prima trip", grasp_tmp_pope[-1].cars_list
@@ -346,19 +355,11 @@ class Euristiche(object):
                 elif found:
                     # aggiunta mossa a path_list
                     path_list.append((value_tmp_target, value_tmp_grasp))
-                # esco dal while perche' trovata la mossa che va bene
-                # condizione di uscita se non trovo mosse valide
-                if x == maxRig and y == maxCol:
-                    done_all = True
-                    break
 
         grasp_tmp_pope.pop(-1)
-        grasp_tmp_pope_ordered = sorted(grasp_tmp_pope,
-                        key=attrgetter('dist'),
-                        reverse=True)
+        grasp_tmp_pope_ordered = sorted(grasp_tmp_pope, key=attrgetter('dist'),
+            reverse=True)
         grasp_ok = grasp_tmp_pope_ordered.pop(0)
-
-
 
         if done_all or self.controllo_stop(target, grasp_ok, iteration):
             return (grasp_ok.getCars(), grasp_ok.getDur(), grasp_ok.getDist())
@@ -367,7 +368,7 @@ class Euristiche(object):
             return self.tabu(target, grasp_ok, iteration)
 
 
-    def tabu2(self, best_solution, actual_solution, iteration, global_iteration, tabu_list, penality):
+    def tabu(self, best_solution, actual_solution, iteration, global_iteration, tabu_list, penality):
         global_iteration += 1
         # list di scambi tabu
         solutions_list = list()
@@ -388,6 +389,9 @@ class Euristiche(object):
                                 #print "-2"
                             totDist -= self.ammissibileCard(actual_solution)*penality
                             cars_tmp_list = copy.deepcopy(cars)
+
+                            #print cars_tmp_list
+
                             value_tmp = cars_tmp_list[x1][y1]
                             cars_tmp_list[x1][y1] = cars_tmp_list[x][y]
                             cars_tmp_list[x][y] = value_tmp
@@ -488,28 +492,30 @@ class Euristiche(object):
             print i, "\t", sol[0].getCars(), "\t\t", sol[2]
         """
         if iteration >= 30 or global_iteration >= 50:
-            print "iteration", iteration
+            #print "iteration", iteration
             return (best_delta_solution.getCars(), best_delta_solution.getDur(), best_delta_solution.getDist())
         else:
-            return self.tabu2(best_solution, best_delta_solution, iteration, global_iteration, tabu_list, penality)
+            return self.tabu(best_solution, best_delta_solution, iteration, global_iteration, tabu_list, penality)
 
 
     def reorder(self, eur):
         # prendo ogni macchina e devo riordinarla
         lista_macchine = list()
-        for car in eur.cars_list:
+        for z, car in enumerate(eur.cars_list):
+            lista_macchine.append(list())
             car_tmp_list = list()
             for id in car:
-                car_tmp_list.append(id, self.arc_dict[id]['0'].getDist())
-            # riordiniamo dal piu' distante al piu' vicinio
-            choose_first = sorted(car_tmp_list, key=attrgetter(1), reverse=True).pop(0)[0]
+                car_tmp_list.append((id, self.arc_dict[id]['0'].getDist()))
+            # riordiniamo dal piu' distante al piu' vicinio e ne prendo l'id
+            car_tmp_list = sorted(car_tmp_list, key=itemgetter(1), reverse=True)
+            choose_first = car_tmp_list.pop(0)[0]
             car_tmp_next = list()
-            # TODO: da controllare se con [0] recuperiamo solo l'id
             for id in [i[0] for i in car_tmp_list]:
-                car_tmp_next.append(id, self.arc_dict[choose_first][id].getDist())
-            choose_next = sorted(car_tmp_next, key=attrgetter(1))
-            lista_macchine.append(choose_first)
-            lista_macchine.append([x for x,_ in car_tmp_list])
+                car_tmp_next.append((id, self.arc_dict[choose_first][id].getDist()))
+            choose_next = sorted(car_tmp_next, key=itemgetter(1))
+            lista_macchine[z].append(choose_first)
+            for x,_ in car_tmp_list:
+                lista_macchine[z].append(x)
         # devo ricalcolare anche le partenze
         lista_durate = list()
         lista_dist = list()
