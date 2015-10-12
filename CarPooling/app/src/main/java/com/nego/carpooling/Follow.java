@@ -172,8 +172,8 @@ public class Follow extends AppCompatActivity {
         URL url = new URL(SP.getString(Costants.PREFERENCE_LAST_SERVER, ""));
         //URL url = new URL("http://tommasoberlose.altervista.org/old/carpooling.php");
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setReadTimeout(1000 * 60 * 1);
-        conn.setConnectTimeout(1000 * 60 * 1);
+        conn.setReadTimeout(1000 * 60 * 10);
+        conn.setConnectTimeout(1000 * 60 * 10);
         conn.setRequestMethod("POST");
         conn.setDoInput(true);
         conn.setDoOutput(true);
