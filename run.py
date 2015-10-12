@@ -40,28 +40,12 @@ def createNode(dati_dict):
 def createArc(google_dict, node_dict_o, node_dict_d, arc_dict, equals):
     if equals:
         node_dict_d.insert(0, '0')
+
     print "node_dict_o", node_dict_o
     print "node_dict_d", node_dict_d
     print "google_dict['origin_addresses']", google_dict['origin_addresses']
     print "google_dict['destination_addresses'])", google_dict['destination_addresses']
-    """
-    if equals:
-        for i, key in enumerate(node_dict_o):
-            if key != '0':
-                #arc_dict[key] = collections.OrderedDict()
-                if not (key in arc_dict):
-                    arc_dict[key] = dict()
-                arc_dict[key]['0'] = Arc(
-                    id_i=key,
-                    # id_f=0 perche' il nodo di destionazione e' 0
-                    id_f='0',
-                    # -1 perche' gli indirizzi non hanno il nodo destinazione in
-                    # prima posizione
-                    # prendo il nodo in posizione 0 (destinazione uguale per tutti)
-                    # perche' recupero tutti i valori verso la destinazione
-                    dur=int(google_dict['rows'][i-1]['elements'][0]['duration']['value']*1000),
-                    dist=google_dict['rows'][i-1]['elements'][0]['distance']['value'])
-    """
+
     for i in range(len(google_dict['origin_addresses'])):
         for y in range(len(google_dict['destination_addresses'])):
             dur = google_dict['rows'][i]['elements'][y]['duration']['value']
@@ -152,10 +136,11 @@ def googleMapsRequest(node_dict, arc_dict):
                         google_dict = json.loads(resp.text)
 
                     arc_dict = createArc(google_dict, node_origins_tmp, node_destinations_tmp, arc_dict, x+1 == y)
-                    origins_tmp = list()
                     destinations_tmp = list()
-                    node_origins_tmp = list()
                     node_destinations_tmp = list()
+                    if y == (len(node_dict)-1):
+                        origins_tmp = list()
+                        node_origins_tmp = list()
     return arc_dict
 
 
@@ -214,6 +199,21 @@ def viewDirection(node_dict, geocode_results, cars_list):
         resp = requests.get(url=url, params=params)
         webbrowser.open_new(resp.url)
         params['dataM'] = ''
+
+def saveNode(node_dict):
+    with open('nodeDict.txt', 'w') as outfile:
+        for key in node_dict:
+            outfile.writelines(node_dict)
+    pass
+
+def loadNode(node_dict):
+    pass
+
+def saveArc(arc_dict):
+    pass
+
+def loadArc(arc_dict):
+    pass
 
 def printNode(node_dict):
     for node in node_dict:
@@ -278,6 +278,12 @@ def home():
 
     #viewDirection(node_dict, geocode_results, cars_list)
 
+    arcToDest_dict = dict()
+    for key in arc_dict.keys():
+        arcToDest_dict[key] = arc_dict[key]['0']
+    penality = sorted(arcToDest_dict.values(), key=attrgetter('dist'),
+                    reverse=True)[0].getDist()
+
     path = Euristiche(node_dict, arc_dict)
     localSearch_list = list()
     localSearch_list.append(copy.deepcopy(greedy))
@@ -286,30 +292,23 @@ def home():
         g.grasp()
         if not (g in localSearch_list):
             localSearch_list.append(g)
-    path_completo = path.initPath(localSearch_list, 3)[0]
+    path_completo = path.initPath(localSearch_list, 3, penality/2)
     print "\n-->Path"
-    print "cars_list:", path_completo[0].cars_list
-    print "dur_list:", path_completo[0].dur_list
-    print "dist:", path_completo[0].dist
-    dataOut = updateDataOutput(dataOut, 'path', path_completo[0].cars_list,
-        path_completo[0].dur_list, path_completo[0].dist, node_dict['0'].getDur())
+    print "cars_list:", path_completo[0][0]
+    print "dur_list:", path_completo[0][1]
+    print "dist:", path_completo[0][2]
+    dataOut = updateDataOutput(dataOut, 'path', path_completo[0][0],
+        path_completo[0][1], path_completo[0][2], node_dict['0'].getDur())
     print "\n-->Path Reverse"
-    print "cars_list:", path_completo[1].cars_list
-    print "dur_list:", path_completo[1].dur_list
-    print "dist:", path_completo[1].dist
-    dataOut = updateDataOutput(dataOut, 'pathReverse', path_completo[1].cars_list,
-        path_completo[1].dur_list, path_completo[1].dist, node_dict['0'].getDur())
+    print "cars_list:", path_completo[1][0]
+    print "dur_list:", path_completo[1][1]
+    print "dist:", path_completo[1][2]
+    dataOut = updateDataOutput(dataOut, 'pathReverse', path_completo[1][0],
+        path_completo[1][1], path_completo[1][2], node_dict['0'].getDur())
 
     #viewDirection(node_dict, geocode_results, cars_list)
 
     tabu = Euristiche(node_dict, arc_dict)
-    print "\ncars_greedy_list", cars_greedy_list
-    arcToDest_dict = dict()
-    for key in tabu.getArc():
-        arcToDest_dict[key] = arc_dict[key]['0']
-    penality = sorted(arcToDest_dict.values(), key=attrgetter('dist'),
-                    reverse=True)[0].getDist()
-    print "penality", penality/4
     (cars_list, dur_list, dist) = tabu.tabu(greedy, greedy, 0, 0, list(), penality/2)
     print "\n-->Tabu"
     print "cars_list:", cars_list

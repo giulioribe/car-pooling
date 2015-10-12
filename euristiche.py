@@ -265,7 +265,7 @@ class Euristiche(object):
         return (cars_list, dur_list, dist)
 
 
-    def initPath(self, localSearch_list, k):
+    def initPath(self, localSearch_list, k, penality):
         sorted_ls = sorted(localSearch_list, key=attrgetter('dist'))
         target = sorted_ls.pop(0)
         path_list = list()
@@ -273,99 +273,100 @@ class Euristiche(object):
         if k > len(sorted_ls):
             k = len(sorted_ls)
         for i in range(k):
-            path_list.append(self.path(target, sorted_ls[i], 0))
-            print "Sono nel ciclo for, iteration", i
-            path_list_reverse.append(self.path(sorted_ls[i], target, 0))
+            path_list.append(self.path(target, sorted_ls[i], 0, penality))
+            path_list_reverse.append(self.path(sorted_ls[i], target, 0, penality))
         best_path = sorted(path_list, key=itemgetter(2)).pop(0)
         self.setCars(best_path[0])
         self.setDur(best_path[1])
         self.setDist(best_path[2])
 
-        best_path_revers = sorted(path_list, key=itemgetter(2)).pop(0)
-        self.setCars(best_path_revers[0])
-        self.setDur(best_path_revers[1])
-        self.setDist(best_path_revers[2])
-        return (best_path, best_path_revers)
+        best_path_reverse = sorted(path_list_reverse, key=itemgetter(2)).pop(0)
+        self.setCars(best_path_reverse[0])
+        self.setDur(best_path_reverse[1])
+        self.setDist(best_path_reverse[2])
+
+        return (best_path, best_path_reverse)
 
 
-    def path(self, target, grasp, iteration):
+    def path(self, target, grasp, iteration, penality):
+        #print "Sono in path, iterazione n", iteration
         # Creo matrici di supporto
         maxRig = max(len(target.cars_list), len(grasp.cars_list))
         maxCol = 5
         path_list = list()
         # boolean controllo di aver eseguito correttamente lo swap
-        swap_done = False
         grasp_tmp_pope = list()
-        done_all = False
-        while not done_all:
-            while not swap_done:
-                # Ricerca mossa valida e scambio
-                # Restore euristiche passate inizialmente nel caso di mosse non ammissibili
-                grasp_tmp_pope.append(copy.deepcopy(grasp))
-                # boolean controllo di aver trovato una mossa possibile (una differenza)
-                found = False
-                for x in range(maxRig):
-                    if x >= len(grasp_tmp_pope[-1].cars_list):
-                        grasp_tmp_pope[-1].cars_list.append(list())
-                    if x >= len(target.cars_list):
-                        target.cars_list.append(list())
-                    for y in range(maxCol):
-                        if y >= len(grasp_tmp_pope[-1].cars_list[x]):
-                            grasp_tmp_pope[-1].cars_list[x].append(-1)
-                        if y >= len(target.cars_list[x]):
-                            target.cars_list[x].append(-1)
-                        if found and grasp_tmp_pope[-1].cars_list[x][y] == value_tmp_target:
-                            grasp_tmp_pope[-1].cars_list[x][y] = value_tmp_grasp
-                            swap_done = True
-                            break
-                        if not found and target.cars_list[x][y] != grasp_tmp_pope[-1].cars_list[x][y]:
-                            if not ((grasp_tmp_pope[-1].cars_list[x][y],target.cars_list[x][y]) in path_list):
-                                found = True
-                                value_tmp_grasp = grasp_tmp_pope[-1].cars_list[x][y]
-                                value_tmp_target = target.cars_list[x][y]
-                                grasp_tmp_pope[-1].cars_list[x][y] = target.cars_list[x][y]
-                        # esco dal while perche' trovata la mossa che va bene
-                        # condizione di uscita se non trovo mosse valide
-                        if x == maxRig and y == maxCol:
-                            done_all = True
-                            break
-                    if swap_done or done_all:
+        target_tmp = copy.deepcopy(target)
+        while True:
+            swap_done = False
+            # Ricerca mossa valida e scambio
+            # Restore euristiche passate inizialmente nel caso di mosse non ammissibili
+            grasp_tmp_pope.append(copy.deepcopy(grasp))
+            # boolean controllo di aver trovato una mossa possibile (una differenza)
+            found = False
+            for x in range(maxRig):
+                if x >= len(grasp_tmp_pope[-1].cars_list):
+                    grasp_tmp_pope[-1].cars_list.append(list())
+                if x >= len(target_tmp.cars_list):
+                    target_tmp.cars_list.append(list())
+                for y in range(maxCol):
+                    if y >= len(grasp_tmp_pope[-1].cars_list[x]):
+                        grasp_tmp_pope[-1].cars_list[x].append(-1)
+                    if y >= len(target_tmp.cars_list[x]):
+                        target_tmp.cars_list[x].append(-1)
+                    if found and grasp_tmp_pope[-1].cars_list[x][y] == value_tmp_target:
+                        grasp_tmp_pope[-1].cars_list[x][y] = value_tmp_grasp
+                        swap_done = True
                         break
-
-                if done_all:
+                    if not found and target_tmp.cars_list[x][y] != grasp_tmp_pope[-1].cars_list[x][y]:
+                        if not ((grasp_tmp_pope[-1].cars_list[x][y],target_tmp.cars_list[x][y]) in path_list):
+                            found = True
+                            value_tmp_grasp = grasp_tmp_pope[-1].cars_list[x][y]
+                            value_tmp_target = target_tmp.cars_list[x][y]
+                            grasp_tmp_pope[-1].cars_list[x][y] = target_tmp.cars_list[x][y]
+                    # esco dal while perche' trovata la mossa che va bene
+                    # condizione di uscita se non trovo mosse valide
+                if swap_done:
                     break
-                tmp_c_l = list()
-                k = 0
-                #print "prima trip", grasp_tmp_pope[-1].cars_list
-                for trip in grasp_tmp_pope[-1].cars_list:
-                    if trip.count(-1) != len(trip):
-                        tmp_c_l.append(list())
-                        for e in trip:
-                            if e > 0:
-                                tmp_c_l[k].append(e)
-                        k += 1
-                #print "dopo  trip", tmp_c_l
-                grasp_tmp_pope[-1].setCars(tmp_c_l)
-                # riordine delle macchine ricalcolando anche le partenze
-                grasp_tmp_pope[-1] = copy.deepcopy(self.reorder(grasp_tmp_pope[-1]))
 
-                # verifica ammissibilita': notwith, durata
-                if not self.ammissibile(grasp_tmp_pope[-1]):
-                    swap_done = False
-                elif found:
-                    # aggiunta mossa a path_list
-                    path_list.append((value_tmp_target, value_tmp_grasp))
+            if not swap_done:
+                grasp_tmp_pope.pop(-1)
+                break
+            tmp_c_l = list()
+            k = 0
+            #print "prima trip", grasp_tmp_pope[-1].getCars()
+            for trip in grasp_tmp_pope[-1].cars_list:
+                if trip.count(-1) != len(trip):
+                    tmp_c_l.append(list())
+                    for e in trip:
+                        if e > 0:
+                            tmp_c_l[k].append(e)
+                    k += 1
+            #print "dopo  trip", tmp_c_l
+            grasp_tmp_pope[-1].setCars(tmp_c_l)
+            #print "dopo assegnamento", grasp_tmp_pope[-1].getCars()
+            # riordine delle macchine ricalcolando anche le partenze
+            grasp_tmp_pope[-1] = copy.deepcopy(self.reorder(grasp_tmp_pope[-1]))
+            path_list.append((value_tmp_grasp, value_tmp_target))
+            # verifica ammissibilita': notwith, durata
+            if not self.ammissibile(grasp_tmp_pope[-1]):
+                grasp_tmp_pope[-1].setDist(grasp_tmp_pope[-1].getDist() + penality)
 
-        grasp_tmp_pope.pop(-1)
-        grasp_tmp_pope_ordered = sorted(grasp_tmp_pope, key=attrgetter('dist'),
-            reverse=True)
-        grasp_ok = grasp_tmp_pope_ordered.pop(0)
-
-        if done_all or self.controllo_stop(target, grasp_ok, iteration):
+        if len(grasp_tmp_pope) != 0:
+            grasp_tmp_pope_ordered = sorted(grasp_tmp_pope, key=attrgetter('dist'),
+                reverse=True)
+            grasp_ok = grasp_tmp_pope_ordered.pop(0)
+        else:
+            return (target.getCars(), target.getDur(), target.getDist())
+        if self.controllo_stop(target, grasp_ok, iteration):
             return (grasp_ok.getCars(), grasp_ok.getDur(), grasp_ok.getDist())
         else:
             iteration += 1
-            return self.tabu(target, grasp_ok, iteration)
+            (deep_cars, deep_dur, deep_dist) = self.path(target, grasp_ok, iteration, penality)
+            if deep_dist > grasp_ok.getDist():
+                return (grasp_ok.getCars(), grasp_ok.getDur(), grasp_ok.getDist())
+            else:
+                return (deep_cars, deep_dur, deep_dist)
 
 
     def tabu(self, best_solution, actual_solution, iteration, global_iteration, tabu_list, penality):
@@ -563,32 +564,9 @@ class Euristiche(object):
         return True
 
 
-    """
-    def ammissibileMinDur(self, eur):
-        # controllo notWith, max_dur
-        # teoricamente avendo gia' riordinato non dovremmo aver problemi di archi orientati sbagliati
-        for car in eur.cars_list:
-            dur = 0
-            mindur = 0
-            for i in range(len(car)):
-                if mindur == 0 and self.node_dict[car[i]].getDur() > 0:
-                    mindur = self.node_dict[car[i]].getDur()
-                if  mindur > 0 and self.node_dict[car[i]].getDur() > 0:
-                    mindur = min(mindur, self.node_dict[car[i]].getDur())
-                if i != len(car)-1:
-                    if not self.minDuration(dur, self.arc_dict[car[i]][car[i+1]].getDur(), mindur):
-                        return False
-                    dur += self.arc_dict[car[i]][car[i+1]].getDur()
-                else:
-                    if not self.minDuration(dur, self.arc_dict[car[i]]['0'].getDur(), mindur):
-                        return False
-                    dur += self.arc_dict[car[i]]['0'].getDur()
-        return True
-    """
     def ammissibileMinDur(self, eur):
         for car in eur.cars_list:
             if not self.minDuration(car, self.arc_dict[car[-1]]['0'].getDur()):
-                print "Auto stronza", car
                 return False
         return True
 
