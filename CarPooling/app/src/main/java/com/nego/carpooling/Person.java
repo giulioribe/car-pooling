@@ -18,26 +18,23 @@ public class Person implements Parcelable {
     private long max_dur;
     private String address;
     private ArrayList<String> notWith = new ArrayList<>();
-    private ArrayList<String> pop = new ArrayList<>();
 
-    public Person(int id, String name, long max_dur, String img, String address, ArrayList<String> notWith, ArrayList<String> pop) {
+    public Person(int id, String name, long max_dur, String img, String address, ArrayList<String> notWith) {
         this.id = id;
         this.name = name;
         this.img = img;
         this.max_dur = max_dur;
         this.address = address;
         this.notWith = notWith;
-        this.pop = pop;
     }
 
-    public Person(String name, long max_dur, String img, String address, ArrayList<String> notWith, ArrayList<String> pop) {
+    public Person(String name, long max_dur, String img, String address, ArrayList<String> notWith) {
         this.name = name;
         this.name = name;
         this.img = img;
         this.max_dur = max_dur;
         this.address = address;
         this.notWith = notWith;
-        this.pop = pop;
     }
 
     public Person(Cursor cursor){
@@ -85,20 +82,6 @@ public class Person implements Parcelable {
         return notWith;
     }
 
-    public void setPop(ArrayList<String> pop) {
-        this.pop = pop;
-    }
-    public void setPop(Cursor cursor_pop) {
-        this.pop.clear();
-        while (cursor_pop.moveToNext()) {
-            this.pop.add(cursor_pop.getString(cursor_pop.getColumnIndex(DbAdapter.KEY_ADDRESS)));
-        }
-    }
-
-    public ArrayList<String> getPop() {
-        return pop;
-    }
-
     public void setAddress(String address) {
         this.address = address;
     }
@@ -109,11 +92,6 @@ public class Person implements Parcelable {
 
     public boolean create(DbAdapter dbAdapter) {
         if (dbAdapter.createPerson(this)) {
-            if (!pop.isEmpty()) {
-                for (String p : pop) {
-                    dbAdapter.createPop(p, id);
-                }
-            }
             return true;
         }
         return false;
@@ -121,12 +99,6 @@ public class Person implements Parcelable {
 
     public boolean update(DbAdapter dbAdapter) {
         if (dbAdapter.updatePerson(this)) {
-            dbAdapter.deleteAllPop(id);
-            if (!pop.isEmpty()) {
-                for (String p : pop) {
-                    dbAdapter.createPop(p, id);
-                }
-            }
             return true;
         }
         return false;
@@ -134,7 +106,6 @@ public class Person implements Parcelable {
 
     public boolean delete(DbAdapter dbAdapter) {
         if (dbAdapter.deletePerson(this.getId())) {
-            dbAdapter.deleteAllPop(id);
             return true;
         }
         return false;
@@ -145,7 +116,7 @@ public class Person implements Parcelable {
 
     public static final Parcelable.Creator<Person> CREATOR = new Parcelable.Creator<Person>() {
         public Person createFromParcel(Parcel source) {
-            return new Person(source.readInt(), source.readString(), source.readLong(), source.readString(), source.readString(), Utils.stringToArrayList(source.readString()), Utils.stringToArrayList(source.readString()));
+            return new Person(source.readInt(), source.readString(), source.readLong(), source.readString(), source.readString(), Utils.stringToArrayList(source.readString()));
         }
         public Person[] newArray(int size) {
             return new Person[size];
@@ -165,6 +136,5 @@ public class Person implements Parcelable {
         dest.writeString(img);
         dest.writeString(address);
         dest.writeString(Utils.arrayListToString(notWith));
-        dest.writeString(Utils.arrayListToString(pop));
     }
 }

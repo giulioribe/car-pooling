@@ -176,8 +176,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         Cursor cursor = dbHelper.fetchAllPersons();
         while (cursor.moveToNext()) {
             Person p = new Person(cursor);
-            Cursor cursor_pop = dbHelper.getPopById(p.getId());
-            p.setPop(cursor_pop);
             mDataset.add(new Item(1, p));
         }
         cursor.close();

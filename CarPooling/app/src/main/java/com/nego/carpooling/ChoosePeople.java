@@ -202,8 +202,10 @@ public class ChoosePeople extends AppCompatActivity {
     public void countPeople() {
         if (mAdapter.getSelectedItemCount() > 0) {
             findViewById(R.id.button_layout).setVisibility(View.VISIBLE);
+            button.setText(mAdapter.getSelectedItemCount() + " Selected");
         } else {
             findViewById(R.id.button_layout).setVisibility(View.GONE);
+            button.setText("Continua");
         }
     }
 

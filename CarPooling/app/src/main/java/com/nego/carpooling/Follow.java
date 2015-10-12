@@ -93,7 +93,6 @@ public class Follow extends AppCompatActivity {
                 json_p.put(Costants.JSON_USER_ADDRESS, p.getAddress());
                 json_p.put(Costants.JSON_USER_MAX_DUR, p.getMax_dur() * 60 * 1000);
                 json_p.put(Costants.JSON_USER_NOT_WITH, Utils.arrayListToString(p.getNotWith()));
-                json_p.put(Costants.JSON_USER_POP, Utils.arrayListToString(p.getPop()));
                 users.put(json_p);
             }
 
@@ -173,8 +172,8 @@ public class Follow extends AppCompatActivity {
         URL url = new URL(SP.getString(Costants.PREFERENCE_LAST_SERVER, ""));
         //URL url = new URL("http://tommasoberlose.altervista.org/old/carpooling.php");
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setReadTimeout(60000);
-        conn.setConnectTimeout(60000);
+        conn.setReadTimeout(1000 * 60 * 1);
+        conn.setConnectTimeout(1000 * 60 * 1);
         conn.setRequestMethod("POST");
         conn.setDoInput(true);
         conn.setDoOutput(true);
