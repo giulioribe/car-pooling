@@ -148,7 +148,7 @@ public class EditPerson extends AlertDialog {
                                         if (person == null) {
                                             ArrayList<String> arrayList = new ArrayList<String>();
                                             arrayList.add("");
-                                            PersonService.startAction(mContext, Costants.ACTION_CREATE, new Person(n, 0, p_img, postal_address.getAddressLine(0) + ", " + postal_address.getAddressLine(1) + ", " + postal_address.getAddressLine(2), arrayList, arrayList));
+                                            PersonService.startAction(mContext, Costants.ACTION_CREATE, new Person(n, 0, p_img, postal_address.getAddressLine(0) + ", " + postal_address.getAddressLine(1) + ", " + postal_address.getAddressLine(2), arrayList));
                                         } else {
                                             person.setName(n);
                                             person.setImg(p_img);

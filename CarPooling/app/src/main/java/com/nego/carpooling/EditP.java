@@ -39,7 +39,6 @@ public class EditP extends AppCompatActivity {
     private Person person = null;
     private long max_dur = 0;
     private ArrayList<String> notWith = new ArrayList<>();
-    private ArrayList<String> pop = new ArrayList<>();
 
     private ArrayList<Person> all_persons;
 
@@ -52,8 +51,6 @@ public class EditP extends AppCompatActivity {
     private TextView subtitle_not_with;
     private TextView subtitle_max_dur;
     private EditText address;
-    private LinearLayout container_address;
-    private LinearLayout action_new_address;
 
     private Handler mHandler;
 
@@ -74,10 +71,8 @@ public class EditP extends AppCompatActivity {
         save_button = (ImageView) findViewById(R.id.action_save);
         action_max_dur = (LinearLayout) findViewById(R.id.action_max_dur);
         action_not_with = (LinearLayout) findViewById(R.id.action_not_with);
-        action_new_address = (LinearLayout) findViewById(R.id.action_pop);
         subtitle_max_dur = (TextView) findViewById(R.id.subtitle_max_dur);
         subtitle_not_with = (TextView) findViewById(R.id.subtitle_not_with);
-        container_address = (LinearLayout) findViewById(R.id.new_address_container);
 
         all_persons = Utils.getAllPersons(this);
 
@@ -95,7 +90,6 @@ public class EditP extends AppCompatActivity {
             name.setText(p.getName());
             max_dur = p.getMax_dur();
             notWith = p.getNotWith();
-            pop = p.getPop();
             person = p;
         }
 
@@ -103,7 +97,6 @@ public class EditP extends AppCompatActivity {
         setImg(p_img);
         setMax_dur(max_dur);
         setNotWith(notWith);
-        setPop(pop);
 
         edit_img.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -225,48 +218,6 @@ public class EditP extends AppCompatActivity {
             }
         });
 
-        action_new_address.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final View dialogView = LayoutInflater.from(EditP.this).inflate(R.layout.dialog_pa, null);
-                final Dialog dialog_arrivo = new Dialog(EditP.this, R.style.mDialog);
-                dialogView.findViewById(R.id.action_save).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        final String a = ((EditText) dialogView.findViewById(R.id.address)).getText().toString();
-                        if (a.equals("")) {
-                            Utils.SnackbarC(EditP.this, "Inserisci un indirizzo", dialogView.findViewById(R.id.address));
-                        } else {
-                            ((TextView) dialogView.findViewById(R.id.action_save)).setText("Valutazione indirizzo...");
-                            dialogView.findViewById(R.id.action_save).setEnabled(false);
-                            final Handler mHandler = new Handler();
-
-                            new Thread(new Runnable() {
-                                public void run() {
-                                    final Address postal_address = Utils.getLocationFromAddress(EditP.this, a);
-                                    mHandler.post(new Runnable() {
-                                        public void run() {
-                                            if (postal_address == null) {
-                                                Utils.SnackbarC(EditP.this, "Indirizzo non valido", dialogView.findViewById(R.id.address));
-                                                ((TextView) dialogView.findViewById(R.id.action_save)).setText("save");
-                                                dialogView.findViewById(R.id.action_save).setEnabled(true);
-                                            } else {
-                                                pop.add(postal_address.getAddressLine(0) + ", " + postal_address.getAddressLine(1) + ", " + postal_address.getAddressLine(2));
-                                                setPop(pop);
-                                                dialog_arrivo.dismiss();
-                                            }
-                                        }
-                                    });
-                                }
-                            }).start();
-                        }
-                    }
-                });
-                dialog_arrivo.setContentView(dialogView);
-                dialog_arrivo.show();
-            }
-        });
-
         if (savedInstanceState != null) {
             p_img = savedInstanceState.getString(Costants.KEY_DIALOG_IMG);
             name.setText(savedInstanceState.getString(Costants.KEY_DIALOG_NAME));
@@ -274,7 +225,6 @@ public class EditP extends AppCompatActivity {
             if (p_img != null)
                 setImg(p_img);
             setNotWith(Utils.stringToArrayList(savedInstanceState.getString(Costants.KEY_DIALOG_NOT_WITH)));
-            setPop(Utils.stringToArrayList(savedInstanceState.getString(Costants.KEY_DIALOG_POP)));
             setMax_dur(savedInstanceState.getLong(Costants.KEY_DIALOG_MAX_DUR));
         }
     }
@@ -287,7 +237,6 @@ public class EditP extends AppCompatActivity {
         outState.putString(Costants.KEY_DIALOG_ADDRESS, address.getText().toString());
         outState.putLong(Costants.KEY_DIALOG_MAX_DUR, max_dur);
         outState.putString(Costants.KEY_DIALOG_NOT_WITH, Utils.arrayListToString(notWith));
-        outState.putString(Costants.KEY_DIALOG_POP, Utils.arrayListToString(pop));
     }
 
 
@@ -357,13 +306,12 @@ public class EditP extends AppCompatActivity {
                                         save_button.setEnabled(true);
                                     } else {
                                         if (person == null) {
-                                            PersonService.startAction(EditP.this, Costants.ACTION_CREATE, new Person(n, max_dur, p_img, postal_address.getAddressLine(0) + ", " + postal_address.getAddressLine(1) + ", " + postal_address.getAddressLine(2), notWith, pop));
+                                            PersonService.startAction(EditP.this, Costants.ACTION_CREATE, new Person(n, max_dur, p_img, postal_address.getAddressLine(0) + ", " + postal_address.getAddressLine(1) + ", " + postal_address.getAddressLine(2), notWith));
                                         } else {
                                             person.setName(n);
                                             person.setImg(p_img);
                                             person.setMax_dur(max_dur);
                                             person.setNotWith(notWith);
-                                            person.setPop(pop);
                                             person.setAddress(postal_address.getAddressLine(0) + ", " + postal_address.getAddressLine(1) + ", " + postal_address.getAddressLine(2));
                                             PersonService.startAction(EditP.this, Costants.ACTION_UPDATE, person);
                                         }
@@ -461,67 +409,6 @@ public class EditP extends AppCompatActivity {
             }
         }
         subtitle_not_with.setText(text);
-    }
-
-    public void setPop(ArrayList<String> arrayList) {
-        pop = arrayList;
-        container_address.removeAllViews();
-
-        for (final String s : arrayList) {
-            final View address_layout = LayoutInflater.from(this).inflate(R.layout.new_address, null);
-            ((TextView) address_layout.findViewById(R.id.address)).setText(s);
-            address_layout.findViewById(R.id.action_remove).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    container_address.removeView(address_layout);
-                    pop.remove(s);
-                }
-            });
-            address_layout.findViewById(R.id.address).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    final View dialogView = LayoutInflater.from(EditP.this).inflate(R.layout.dialog_pa, null);
-                    final Dialog dialog_arrivo = new Dialog(EditP.this, R.style.mDialog);
-                    ((TextView) dialogView.findViewById(R.id.address)).setText(s);
-                    dialogView.findViewById(R.id.action_save).setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            final String a = ((EditText) dialogView.findViewById(R.id.address)).getText().toString();
-                            if (a.equals("")) {
-                                Utils.SnackbarC(EditP.this, "Inserisci un indirizzo", dialogView.findViewById(R.id.address));
-                            } else {
-                                ((TextView) dialogView.findViewById(R.id.action_save)).setText("Valutazione indirizzo...");
-                                dialogView.findViewById(R.id.action_save).setEnabled(false);
-                                final Handler mHandler = new Handler();
-
-                                new Thread(new Runnable() {
-                                    public void run() {
-                                        final Address postal_address = Utils.getLocationFromAddress(EditP.this, a);
-                                        mHandler.post(new Runnable() {
-                                            public void run() {
-                                                if (postal_address == null) {
-                                                    Utils.SnackbarC(EditP.this, "Indirizzo non valido", dialogView.findViewById(R.id.address));
-                                                    ((TextView) dialogView.findViewById(R.id.action_save)).setText("save");
-                                                    dialogView.findViewById(R.id.action_save).setEnabled(true);
-                                                } else {
-                                                    pop.remove(s);
-                                                    pop.add(postal_address.getAddressLine(0) + ", " + postal_address.getAddressLine(1) + ", " + postal_address.getAddressLine(2));
-                                                    setPop(pop);
-                                                    dialog_arrivo.dismiss();
-                                                }
-                                            }
-                                        });
-                                    }
-                                }).start();
-                            }
-                        }
-                    });
-                    dialog_arrivo.setContentView(dialogView);
-                    dialog_arrivo.show();
-                }
-            });
-            container_address.addView(address_layout);
-        }
     }
 
     public void setMax_dur(long l) {

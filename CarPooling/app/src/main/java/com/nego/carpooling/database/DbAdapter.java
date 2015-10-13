@@ -21,7 +21,6 @@ public class DbAdapter {
 
     // Database fields
     private static final String DATABASE_TABLE_PEOPLE = "people";
-    private static final String DATABASE_TABLE_POP = "pop";
 
     public static final String KEY_ID = "id";
     public static final String KEY_NAME = "name";
@@ -109,23 +108,5 @@ public class DbAdapter {
         return mCursor;
     }
 
-
-    public boolean createPop(String address, int person) {
-        ContentValues initialValues = createContentValues(address, person);
-        return database.insertOrThrow(DATABASE_TABLE_POP, null, initialValues) > 0;
-    }
-
-    public boolean deleteAllPop(int ID) {
-        return database.delete(DATABASE_TABLE_POP, KEY_PERSON + "==" + ID, null) > 0;
-    }
-
-
-    public Cursor getPopById(int id) {
-        Cursor mCursor = database.query(true, DATABASE_TABLE_POP, new String[]{
-                        KEY_ADDRESS},
-                KEY_PERSON + " == '" + id + "'", null, null, null, null, null);
-
-        return mCursor;
-    }
 
 }
