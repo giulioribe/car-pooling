@@ -1,0 +1,9 @@
+0#32400000#Via Sagarat, Ferrara#
+5#0#Via Alessandro Volta 1, 45020 Castelguglielmo RO, Italia#45
+10#0#Via Giuseppe Verdi 1, 45024 Fiesso Umbertiano RO, Italia#
+15#0#Via Venezia 1, 44100 Pontelagoscuro FE, Italia#
+20#0#Via della Fornace 1, 44123 Ferrara FE, Italia#
+25#0#Via Darsena 1, Ferrara FE, Italia#
+35#0#Via Palestro 1, 44121 Ferrara FE, Italia#
+40#0#Via Orlando Furioso 1, Ferrara FE, Italia#
+45#0#Venezia, Italia#

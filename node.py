@@ -4,7 +4,7 @@ class Node:
     def __init__(self, id, dur, addr, notWith=""):
         #super(Node, self).__init__()
         self.id = id.encode('ascii','ignore')
-        self.dur = dur
+        self.dur = int(dur)
         self.addr = addr.encode('ascii','ignore')
         if notWith:
             self.notWith = list(notWith.split(','))
@@ -21,7 +21,7 @@ class Node:
 
     def setDur(self, dur):
         if dur:
-            self.dur = dur
+            self.dur = int(dur)
 
     def setNotWith(self, notWith):
         if notWith:
@@ -35,7 +35,7 @@ class Node:
         if addr:
             self.addr = addr.encode('ascii','ignore')
         if dur:
-            self.dur = dur
+            self.dur = int(dur)
         if notWith:
             self.notWith = list(notWith.split(','))
         else:

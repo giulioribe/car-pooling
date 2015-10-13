@@ -5,8 +5,8 @@ class Arc(object):
         #super(Arc, self).__init__()
         self.id_i = id_i.encode('ascii','ignore')
         self.id_f = id_f.encode('ascii','ignore')
-        self.dur = dur
-        self.dist = dist
+        self.dur = int(dur)
+        self.dist = int(dist)
 
     def setId_i(self, id_i):
         if id_i:
@@ -18,11 +18,11 @@ class Arc(object):
 
     def setDur(self, dur):
         if dur:
-            self.dur = dur
+            self.dur = int(dur)
 
     def setDist(self, dist):
         if dist:
-            self.dist = dist
+            self.dist = int(dist)
 
     def setArc(self, id_i='', id_f='', dur='', dist=''):
         if id_i:
@@ -30,9 +30,9 @@ class Arc(object):
         if id_f:
             self.id_f = id_f.encode('ascii','ignore')
         if dur:
-            self.dur = dur
+            self.dur = int(dur)
         if dist:
-            self.dist = dist
+            self.dist = int(dist)
 
     def  getId_i(self):
         return self.id_i

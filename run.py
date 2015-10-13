@@ -7,6 +7,8 @@ import sys
 import webbrowser
 import googlemaps
 import copy
+import time
+import os
 from operator import attrgetter
 from euristiche import Euristiche
 from node import Node
@@ -15,9 +17,10 @@ from weppy import App, request
 from weppy.tools import service
 
 app = App(__name__)
-key_googleMaps = 'AIzaSyB27xz94JVRPsuX4qJMMiZpGVoQiQITFb8'
-key_googleMaps2 = 'AIzaSyDEeQ7ybauE3th_3d-GQZQcvGI-UxKOFF8'
+key_googleMaps2 = 'AIzaSyB27xz94JVRPsuX4qJMMiZpGVoQiQITFb8'
+key_googleMaps = 'AIzaSyDEeQ7ybauE3th_3d-GQZQcvGI-UxKOFF8'
 isTest = False
+isBenchmark = False
 
 def createNode(dati_dict):
     node_dict = collections.OrderedDict()
@@ -40,17 +43,18 @@ def createNode(dati_dict):
 def createArc(google_dict, node_dict_o, node_dict_d, arc_dict, equals):
     if equals:
         node_dict_d.insert(0, '0')
-
+    """
     print "node_dict_o", node_dict_o
     print "node_dict_d", node_dict_d
     print "google_dict['origin_addresses']", google_dict['origin_addresses']
     print "google_dict['destination_addresses'])", google_dict['destination_addresses']
-
+    """
     for i in range(len(google_dict['origin_addresses'])):
         for y in range(len(google_dict['destination_addresses'])):
             dur = google_dict['rows'][i]['elements'][y]['duration']['value']
             dist = google_dict['rows'][i]['elements'][y]['distance']['value']
-            if dur > 0 and dist > 0:
+            #print "##########", node_dict_o[i], node_dict_d[y]
+            if node_dict_o[i] != node_dict_d[y]:
                 """
                 # tolto per eliminare ordine archi
                 if (arc_dict[keys_list[i+1]]['0'].getDur() >
@@ -97,7 +101,8 @@ def updateDataOutput(dataOut, eur_type, cars_list, dur_list, dist, timeEnd):
     dataOut['euristiche']['results'][eur_type]['costo'] = str(dist)
     return dataOut
 
-def googleMapsRequest(node_dict, arc_dict):
+def googleMapsRequest(node_dict):
+    arc_dict = collections.OrderedDict()
     url = 'https://maps.googleapis.com/maps/api/distancematrix/json?'
     params = dict(
         origins='',
@@ -115,11 +120,9 @@ def googleMapsRequest(node_dict, arc_dict):
     for x, key in enumerate(node_dict.keys()[1:]):
         origins_tmp.append(node_dict[key])
         node_origins_tmp.append(node_dict[key].getId())
-        for y in range(1,len(node_dict)):
-            # -2 perche' x parte da 0 e il ciclo for non conta la destinazione
-            # TODO questa if non e' meglio inserirla al di fuori del ciclo for
-            # cosi' da evitare un continuo ciclo?
-            if (len(origins_tmp) >= 9) or (x == (len(node_dict)-2)):
+        # -2 perche' x parte da 0 e il ciclo for non conta la destinazione
+        if (len(origins_tmp) >= 9) or (x == (len(node_dict)-2)):
+            for y in range(1,len(node_dict)):
                 # appendo la chiave del j-esimo elemento di node_dict
                 destinations_tmp.append(node_dict[node_dict.items()[y][0]])
                 # appendo l'id del j-esimo nodo
@@ -136,6 +139,9 @@ def googleMapsRequest(node_dict, arc_dict):
                         google_dict = json.loads(resp.text)
 
                     arc_dict = createArc(google_dict, node_origins_tmp, node_destinations_tmp, arc_dict, x+1 == y)
+                    # metto in pausa l'applicazione per dieci secondi per aggirare
+                    # i limiti delle Google Maps Api
+                    time.sleep(10)
                     destinations_tmp = list()
                     node_destinations_tmp = list()
                     if y == (len(node_dict)-1):
@@ -203,17 +209,62 @@ def viewDirection(node_dict, geocode_results, cars_list):
 def saveNode(node_dict):
     with open('nodeDict.txt', 'w') as outfile:
         for key in node_dict:
-            outfile.writelines(node_dict)
-    pass
+            idNode = node_dict[key].getId()
+            maxDur = str(node_dict[key].getDur())
+            addr = node_dict[key].getAddr()
+            notWith = ','.join(node_dict[key].getNotWith())
+            outfile.write(idNode + "#" + maxDur  + "#" + addr + "#" + notWith)
+            outfile.write("\n")
+        outfile.flush()
+        os.fsync(outfile)
+        return True
+    return False
 
-def loadNode(node_dict):
-    pass
+def loadNode(filename):
+    node_dict = collections.OrderedDict()
+    with open('nodeDict.txt', 'r') as inputfile:
+        for line in inputfile:
+            # prima eseguo rstrip, poi split
+            line_tmp = line.rstrip('\n').split('#')
+            print line_tmp
+            # la destionazione ha sempre id=0
+            node_dict[line_tmp[0]] = (Node(
+                id=line_tmp[0],
+                dur=long(line_tmp[1]),
+                addr=line_tmp[2],
+                notWith=line_tmp[3])
+            )
+    return node_dict
 
 def saveArc(arc_dict):
-    pass
+    with open('arcDict.txt', 'w') as outfile:
+        for key1 in arc_dict:
+            for key2 in arc_dict[key1]:
+                id_i = arc_dict[key1][key2].getId_i()
+                id_f = arc_dict[key1][key2].getId_f()
+                dur = str(arc_dict[key1][key2].getDur())
+                dist = str(arc_dict[key1][key2].getDist())
+                outfile.write(id_i + "#" + id_f  + "#" + dur + "#" + dist + '\n')
+        outfile.flush()
+        os.fsync(outfile)
+        return True
+    return False
 
-def loadArc(arc_dict):
-    pass
+def loadArc(filename):
+    arc_dict = collections.OrderedDict()
+    with open('arcDict.txt', 'r') as inputfile:
+        for line in inputfile:
+            # prima eseguo rstrip, poi split
+            line_tmp = line.rstrip('\n').split('#')
+            if not (line_tmp[0] in arc_dict):
+                arc_dict[line_tmp[0]] = dict()
+            arc_dict[line_tmp[0]][line_tmp[1]] = Arc(
+                id_i=line_tmp[0],
+                id_f=line_tmp[1],
+                dur=int(line_tmp[2]),
+                dist=int(line_tmp[3])
+            )
+    return arc_dict
 
 def printNode(node_dict):
     for node in node_dict:
@@ -233,24 +284,37 @@ def printArc(arc_dict):
 @app.expose("/")
 @service.json
 def home():
-    # TODO aumentare il numero di nodi per avere se la greedy fa sempre macchine da 5 persone
     if isTest:
         with open('requestTest.json', 'r') as data_file:
             dati_dict = json.load(data_file)
         node_dict = createNode(dati_dict)
+    elif isBenchmark:
+        node_dict = loadNode('nodeDict.txt')
     else:
         with open('request.json', 'w') as outfile:
             json.dump(request.vars, outfile, indent=4)
         node_dict = createNode(request.vars)
+    if isBenchmark:
+        arc_dict = loadArc('arcDict.txt')
+    else:
+        arc_dict = googleMapsRequest(node_dict)
 
-    arc_dict = collections.OrderedDict()
-    arc_dict = googleMapsRequest(node_dict, arc_dict)
     print "\n-->NODI"
     printNode(node_dict)
+    print "len(node_dict)", len(node_dict)
+    if not isBenchmark:
+        saveNode(node_dict)
 
     #geocode_results = viewMarkers(node_dict)
+
     print "\n-->ARCHI"
     printArc((arc_dict))
+    n_arc = 0
+    for key in arc_dict:
+        n_arc += len(arc_dict[key])
+    print "len(arc_dict)", len(arc_dict), n_arc
+    if not isBenchmark:
+        saveArc(arc_dict)
 
     greedy = Euristiche(node_dict, arc_dict)
     (cars_list, dur_list, dist) = greedy.greedy()
@@ -328,7 +392,11 @@ def home():
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
-        if sys.argv[1] == 'test':
+        if sys.argv[1] == '-t':
             isTest = True
+            print "\nEseguo il programma in modalita' TEST...\n"
+        if sys.argv[1] == '-b':
+            isBenchmark = True
+            print "\nEseguo il programma in modalita' BENCHMARK...\n"
     app.run(host="0.0.0.0")
     #app.run()

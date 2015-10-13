@@ -1,5 +1,5 @@
 {
-    "time_to_arrive": 1444669225015, 
+    "time_to_arrive": 1444669254683, 
     "place_to_arrive": "Via della Fornace, 1, 44123 Ferrara FE, Italia", 
     "users": [
         {
@@ -59,8 +59,50 @@
         {
             "max_duration": 0, 
             "not_with": "", 
-            "id": "10", 
-            "address": "Via Saragat 1, 44100 Ferrara, Italia"
+            "id": "11", 
+            "address": "Via Nazionale 77, 45030 Occhiobello, Italia"
+        }, 
+        {
+            "max_duration": 0, 
+            "not_with": "", 
+            "id": "12", 
+            "address": "Via Bologna 11, 44100 Ferrara, Italia"
+        }, 
+        {
+            "max_duration": 0, 
+            "not_with": "", 
+            "id": "13", 
+            "address": "Via Palestro 22, 44100 Ferrara, Italia"
+        }, 
+        {
+            "max_duration": 0, 
+            "not_with": "", 
+            "id": "14", 
+            "address": "Via Pomposa 48, 44100 Ferrara, Italia"
+        }, 
+        {
+            "max_duration": 0, 
+            "not_with": "", 
+            "id": "15", 
+            "address": "Via Porta Reno 24, 44100 Ferrara, Italia"
+        }, 
+        {
+            "max_duration": 0, 
+            "not_with": "", 
+            "id": "16", 
+            "address": "Via Corso Giovecca 1, 44100 Ferrara, Italia"
+        }, 
+        {
+            "max_duration": 0, 
+            "not_with": "", 
+            "id": "17", 
+            "address": "Via Prinella 3, 44100 Ferrara, Italia"
+        }, 
+        {
+            "max_duration": 0, 
+            "not_with": "", 
+            "id": "18", 
+            "address": "Via Giuseppe Saragat, 1, 44122 Ferrara FE, Italia"
         }
     ]
 }

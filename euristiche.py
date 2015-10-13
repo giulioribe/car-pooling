@@ -289,7 +289,7 @@ class Euristiche(object):
 
 
     def path(self, target, grasp, iteration, penality):
-        #print "Sono in path, iterazione n", iteration
+        print "Sono in path, iterazione n", iteration
         # Creo matrici di supporto
         maxRig = max(len(target.cars_list), len(grasp.cars_list))
         maxCol = 5
@@ -525,6 +525,7 @@ class Euristiche(object):
             lista_durate.append(list())
             for i in range(len(car)):
                 if i != len(car)-1:
+                    #print "car", car, "i", i
                     lista_durate[z].append(self.arc_dict[car[i]][car[i+1]].getDur())
                     lista_dist[z].append(self.arc_dict[car[i]][car[i+1]].getDist())
                 else:
