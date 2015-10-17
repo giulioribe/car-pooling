@@ -1,9 +1,46 @@
-0#32400000#Via Sagarat, Ferrara#
-5#0#Via Alessandro Volta 1, 45020 Castelguglielmo RO, Italia#45
-10#0#Via Giuseppe Verdi 1, 45024 Fiesso Umbertiano RO, Italia#
-15#0#Via Venezia 1, 44100 Pontelagoscuro FE, Italia#
-20#0#Via della Fornace 1, 44123 Ferrara FE, Italia#
-25#0#Via Darsena 1, Ferrara FE, Italia#
-35#0#Via Palestro 1, 44121 Ferrara FE, Italia#
-40#0#Via Orlando Furioso 1, Ferrara FE, Italia#
-45#0#Venezia, Italia#
+0#1445014856603#Via della Fornace, 1, 44123 Ferrara FE, Italia#
+1#18000000#Via Otello Putinati, 122, 44123 Ferrara FE, Italia#8
+2#1200000#Corso Porta Po, 30, 44121 Ferrara FE, Italia#
+3#0#Via Giuseppe Saragat, 1, 44122 Ferrara FE, Italia#
+4#0#Via Alessandro Volta, 71, 45020 Castelguglielmo RO, Italia#
+5#0#Via Giuseppe Verdi, 5, 45030 Occhiobello RO, Italia#4
+6#0#Via Venezia, 1, 44123 Ferrara FE, Italia#
+7#0#Via Darsena, 25, 44122 Ferrara FE, Italia#
+8#0#Via Otello Putinati, 130, 44123 Ferrara FE, Italia#1
+9#0#Via Giuseppe Fabbri 11, 44100 Ferrara, Italia#
+11#0#Via Nazionale 77, 45030 Occhiobello, Italia#
+12#0#Via Bologna 11, 44100 Ferrara, Italia#
+13#0#Via Palestro 22, 44100 Ferrara, Italia#
+14#0#Via Pomposa 48, 44100 Ferrara, Italia#
+15#0#Via Porta Reno 24, 44100 Ferrara, Italia#
+16#0#Via Corso Giovecca 1, 44100 Ferrara, Italia#
+17#0#Via Prinella 3, 44100 Ferrara, Italia#
+18#0#Via Giuseppe Saragat, 1, 44122 Ferrara FE, Italia#
+19#0#Via Mortara 11, 44100 Ferrara, Italia#
+20#0#Via Fossato di Mortara 3, 44100 Ferrara, Italia#
+21#0#Via Modena 51, 44100 Ferrara, Italia#
+22#0#Via Pomposa 18, 44100 Ferrara, Italia#
+23#0#Via Padova 15, 44100 Ferrara, Italia#
+24#0#Via Ragno 1, 44100 Ferrara, Italia#
+25#0#Via Porta Mare 16, 44100 Ferrara, Italia#
+26#0#Via Wagner 15, 44100 Ferrara, Italia#
+27#0#Via Garibaldi 33, 44100 Ferrara, Italia#
+28#0#Via Comacchio 88, 44100 Ferrara, Italia#
+29#0#Via Coppare78, 44100 Ferrara, Italia#
+30#0#Via Krasnodar 54, 44100 Ferrara, Italia#
+31#0#Corso Biagio Rossetti 31, 44100 Ferrara, Italia#
+32#0#Via Arrigo Boito 9, 44100 Ferrara, Italia#
+33#0#Via Comacchio 334, 44100 Ferrara, Italia#
+34#0#Via Arginone 339, 44100 Ferrara, Italia#
+35#0#Via Eridano 10, 44100 Ferrara, Italia#
+36#0#Via Bentivoglio 73, 44100 Ferrara, Italia#
+37#0#Via Ladino 44, 44100 Ferrara, Italia#
+38#0#Via Bologna 643, 44100 Ferrara, Italia#
+39#0#Via Giuseppe Fabbri 516, 44100 Ferrara, Italia#
+40#0#Via della Misericordia 41, 44100 Ferrara, Italia#
+41#0#Via dell'Acero 2, 44100 Ferrara, Italia#
+42#0#Via Anna Banti 19, 44100 Ferrara, Italia#
+43#0#Via Conca 26, 44100 Ferrara, Italia#
+44#0#Via Vallelunga 75, 44100 Ferrara, Italia#
+45#0#Via Copparo 216, 44100 Ferrara, Italia#
+46#0#Via Pomposa 272, 44100 Ferrara, Italia#

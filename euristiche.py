@@ -3,12 +3,13 @@ import requests
 import collections
 import random
 import copy
+import math
 from operator import itemgetter, attrgetter
 
 
 class Euristiche(object):
     """docstring for Euristiche"""
-    def __init__(self, node_dict, arc_dict, cars_list=None, dur_list=None, dist=None):
+    def __init__(self, node_dict, arc_dict, cars_list=None, dur_list=None, dist=None, executionTime=None):
         #super(Euristiche, self).__init__()
         self.node_dict = node_dict
         self.arc_dict = arc_dict
@@ -24,6 +25,10 @@ class Euristiche(object):
             self.dist = dist
         else:
             self.dist = list()
+        if executionTime:
+            self.executionTime = executionTime
+        else:
+            executionTime = 0.0
 
     def setCars(self, cars_list):
         self.cars_list = cars_list
@@ -33,6 +38,9 @@ class Euristiche(object):
 
     def setDist(self, dist):
         self.dist = dist
+
+    def setExecutionTime(self, executionTime):
+        self.executionTime = executionTime
 
     def getNode(self):
         return self.node_dict
@@ -48,6 +56,9 @@ class Euristiche(object):
 
     def getDist(self):
         return self.dist
+
+    def getExecutionTime(self):
+        return self.executionTime
 
 
     def checkNotWith(self, cars_list, nauto, newper):
@@ -265,31 +276,54 @@ class Euristiche(object):
         return (cars_list, dur_list, dist)
 
 
+    def preparePath(self, eur, randimizeDog):
+        localSearch_list = list()
+        localSearch_list.append(eur)
+        iteration = 0
+        print "\nSto preparando le grasp per la path relinking, attendi..."
+        while len(localSearch_list) <= randimizeDog and iteration < 10:
+            g = Euristiche(self.getNode(), self.getArc())
+            g.grasp()
+            if not (g in localSearch_list):
+                localSearch_list.append(g)
+                iteration = 0
+            iteration += 1
+        print "Grasp pronte, go go go..."
+        return localSearch_list
+
+
     def initPath(self, localSearch_list, k, penality):
         sorted_ls = sorted(localSearch_list, key=attrgetter('dist'))
         target = sorted_ls.pop(0)
         path_list = list()
-        path_list_reverse = list()
         if k > len(sorted_ls):
             k = len(sorted_ls)
         for i in range(k):
             path_list.append(self.path(target, sorted_ls[i], 0, penality))
-            path_list_reverse.append(self.path(sorted_ls[i], target, 0, penality))
         best_path = sorted(path_list, key=itemgetter(2)).pop(0)
         self.setCars(best_path[0])
         self.setDur(best_path[1])
         self.setDist(best_path[2])
+        return (best_path[0], best_path[1], best_path[2])
 
+
+    def initPathReverse(self, localSearch_list, k, penality):
+        sorted_ls = sorted(localSearch_list, key=attrgetter('dist'))
+        target = sorted_ls.pop(0)
+        path_list_reverse = list()
+        if k > len(sorted_ls):
+            k = len(sorted_ls)
+        for i in range(k):
+            path_list_reverse.append(self.path(sorted_ls[i], target, 0, penality))
         best_path_reverse = sorted(path_list_reverse, key=itemgetter(2)).pop(0)
         self.setCars(best_path_reverse[0])
         self.setDur(best_path_reverse[1])
         self.setDist(best_path_reverse[2])
-
-        return (best_path, best_path_reverse)
+        return (best_path_reverse[0], best_path_reverse[1], best_path_reverse[2])
 
 
     def path(self, target, grasp, iteration, penality):
-        print "Sono in path, iterazione n", iteration
+        #print "Sono in path, iterazione n", iteration
         # Creo matrici di supporto
         maxRig = max(len(target.cars_list), len(grasp.cars_list))
         maxCol = 5
@@ -494,6 +528,9 @@ class Euristiche(object):
         """
         if iteration >= 30 or global_iteration >= 50:
             #print "iteration", iteration
+            self.setCars(best_delta_solution.getCars())
+            self.setDur(best_delta_solution.getDur())
+            self.setDist(best_delta_solution.getDist())
             return (best_delta_solution.getCars(), best_delta_solution.getDur(), best_delta_solution.getDist())
         else:
             return self.tabu(best_solution, best_delta_solution, iteration, global_iteration, tabu_list, penality)

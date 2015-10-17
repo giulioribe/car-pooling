@@ -15,10 +15,7 @@ from operator import attrgetter
 from euristiche import Euristiche
 from node import Node
 from arc import Arc
-from weppy import App, request
-from weppy.tools import service
 
-app = App(__name__)
 key_googleMaps2 = 'AIzaSyB27xz94JVRPsuX4qJMMiZpGVoQiQITFb8'
 key_googleMaps = 'AIzaSyDEeQ7ybauE3th_3d-GQZQcvGI-UxKOFF8'
 key_googleMaps3 = 'AIzaSyC549poFoVcUz3BsDOJ9XpO7CniNTDC6b4'
@@ -342,9 +339,7 @@ def printInfo(typeEur, eur):
     print "CPU execution time: ", eur.getExecutionTime()
 
 
-@app.expose("/")
-@service.json
-def home():
+def main():
     for i in range(ncycle):
         if isLoop:
             print "\nCiclo numero:", i+1
@@ -372,7 +367,6 @@ def home():
             saveNode(node_dict)
 
         #geocode_results = viewMarkers(node_dict)
-
         if not isLoop:
             print "\n-->ARCHI"
             printArc((arc_dict))
@@ -470,7 +464,7 @@ if __name__ == "__main__":
                 try:
                     ncycle = int(sys.argv[3])
                 except Exception:
-                    ncycle = 100
+                    ncycle = 50
                 print "\nEseguo il programma in modalita' TEST LOOP, numero cicli", (ncycle), "...\n"
             else:
                 print "\nEseguo il programma in modalita' TEST, numero cicli", (ncycle), "...\n"
@@ -485,7 +479,9 @@ if __name__ == "__main__":
                 print "\nEseguo il programma in modalita' BENCHMARK LOOP, numero cicli", (ncycle), "...\n"
             else:
                 print "\nEseguo il programma in modalita' BENCHMARK...\n"
-
-        app.run()
+        main()
     else:
-        app.run(host="0.0.0.0")
+        print "Eseguire il programma con una delle seguenti modalita':"
+        print "'python main.py -t' per la modalita' test"
+        print "'python main.py -b' per la modalita' benchmark"
+        print "'python main.py -b -l n' per la modalita' benchmark in modalita' loop dove n e' il numero di iterazioni"
