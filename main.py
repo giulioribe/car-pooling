@@ -9,6 +9,7 @@ import copy
 import time
 import os
 import time
+from datetime import datetime, timedelta
 import winsound
 from lockfile import LockFile
 from operator import attrgetter
@@ -16,9 +17,9 @@ from euristiche import Euristiche
 from node import Node
 from arc import Arc
 
-key_googleMaps2 = 'AIzaSyB27xz94JVRPsuX4qJMMiZpGVoQiQITFb8'
-key_googleMaps = 'AIzaSyDEeQ7ybauE3th_3d-GQZQcvGI-UxKOFF8'
-key_googleMaps3 = 'AIzaSyC549poFoVcUz3BsDOJ9XpO7CniNTDC6b4'
+key_googleMaps3 = 'AIzaSyB27xz94JVRPsuX4qJMMiZpGVoQiQITFb8'
+key_googleMaps2 = 'AIzaSyDEeQ7ybauE3th_3d-GQZQcvGI-UxKOFF8'
+key_googleMaps = 'AIzaSyC549poFoVcUz3BsDOJ9XpO7CniNTDC6b4'
 isTest = False
 isBenchmark = False
 isLoop = False
@@ -41,6 +42,7 @@ def createNode(dati_dict):
             addr=user['address'],
             notWith=user['not_with'])
     return node_dict
+
 
 def createArc(google_dict, node_dict_o, node_dict_d, arc_dict):
     if node_dict_o == node_dict_d:
@@ -71,9 +73,11 @@ def createArc(google_dict, node_dict_o, node_dict_d, arc_dict):
                     dist=dist)
     return arc_dict
 
+
 def updateAddress(node_dict, google_dict):
     for i, key in enumerate(node_dict):
         node_dict[key].setAddr(google_dict['destination_addresses'][i])
+
 
 def initDataOuttput():
     dataOut = dict()
@@ -81,6 +85,7 @@ def initDataOuttput():
     dataOut['euristiche']['name'] = ''
     dataOut['euristiche']['results'] = dict()
     return dataOut
+
 
 def updateDataOutput(dataOut, eur_type, cars_list, dur_list, dist, timeEnd):
     if dataOut['euristiche']['name']:
@@ -103,9 +108,9 @@ def updateDataOutput(dataOut, eur_type, cars_list, dur_list, dist, timeEnd):
     dataOut['euristiche']['results'][eur_type]['costo'] = str(dist)
     return dataOut
 
+
 def googleMapsRequest(node_dict):
     arc_dict = collections.OrderedDict()
-    timeGoogle = 0
     timesleep = 10
     url = 'https://maps.googleapis.com/maps/api/distancematrix/json?'
     params = dict(
@@ -145,14 +150,13 @@ def googleMapsRequest(node_dict):
                         # metto in pausa l'applicazione per dieci secondi per aggirare
                         # i limiti delle Google Maps Api
                         time.sleep(timesleep)
-                        timeGoogle += timesleep
                     arc_dict = createArc(google_dict, node_origins_tmp, node_destinations_tmp, arc_dict)
                     destinations_tmp = list()
                     node_destinations_tmp = list()
                     if y == (len(node_dict)-1):
                         origins_tmp = list()
                         node_origins_tmp = list()
-    return (arc_dict, timeGoogle)
+    return arc_dict
 
 
 def getGoogleParams(node_dict, nodeOrigins, nodeDestinations):
@@ -195,6 +199,7 @@ def viewMarkers(node_dict):
     webbrowser.open_new(resp.url)
     return geocode_results
 
+
 def viewDirection(node_dict, geocode_results, cars_list):
     url = 'http://giulioribe.github.io/car-pooling/directions.html?'
     params = dict(
@@ -211,6 +216,7 @@ def viewDirection(node_dict, geocode_results, cars_list):
         webbrowser.open_new(resp.url)
         params['dataM'] = ''
 
+
 def saveNode(node_dict):
     with open('nodeDict.txt', 'w') as outfile:
         for key in node_dict:
@@ -225,6 +231,7 @@ def saveNode(node_dict):
         print "Ho salvato i nodi nel file 'nodeDict.txt'"
         return True
     return False
+
 
 def loadNode(filename):
     node_dict = collections.OrderedDict()
@@ -242,6 +249,7 @@ def loadNode(filename):
             )
     return node_dict
 
+
 def saveArc(arc_dict):
     with open('arcDict.txt', 'w') as outfile:
         for key1 in arc_dict:
@@ -256,6 +264,7 @@ def saveArc(arc_dict):
         print "Ho salvato gli archi nel file 'arcDict.txt'"
         return True
     return False
+
 
 def loadArc(filename):
     arc_dict = collections.OrderedDict()
@@ -323,6 +332,7 @@ def printNode(node_dict):
             node_dict[node].getAddr(),
             node_dict[node].getNotWith())
 
+
 def printArc(arc_dict):
     for arc in arc_dict:
         for a in arc_dict[arc]:
@@ -330,6 +340,7 @@ def printArc(arc_dict):
                 arc_dict[arc][a].getId_f(),
                 arc_dict[arc][a].getDur(),
                 arc_dict[arc][a].getDist())
+
 
 def printInfo(typeEur, eur):
     print "\n-->" + typeEur
@@ -339,43 +350,53 @@ def printInfo(typeEur, eur):
     print "CPU execution time: ", eur.getExecutionTime()
 
 
+def initMain():
+    if isTest:
+        with open('requestTest.json', 'r') as data_file:
+            dati_dict = json.load(data_file)
+        node_dict = createNode(dati_dict)
+    elif isBenchmark:
+        node_dict = loadNode('nodeDict.txt')
+    else:
+        with open('request.json', 'w') as outfile:
+            json.dump(request.vars, outfile, indent=4)
+        node_dict = createNode(request.vars)
+    if isBenchmark:
+        arc_dict = loadArc('arcDict.txt')
+    else:
+        arc_dict = googleMapsRequest(node_dict)
+
+    if not isLoop:
+        print "\n-->NODI"
+        printNode(node_dict)
+        print "len(node_dict)", len(node_dict)
+
+        print "\n-->ARCHI"
+        printArc((arc_dict))
+        n_arc = 0
+        for key in arc_dict:
+            n_arc += len(arc_dict[key])
+        print "len(arc_dict)", len(arc_dict), n_arc
+
+    if not isBenchmark and not isTest:
+        saveNode(node_dict)
+        saveArc(arc_dict)
+
+    return (node_dict, arc_dict)
+
+
 def main():
+    calcEndTime = False
+    #(node_dict, arc_dict) = initMain()
+    #geocode_results = viewMarkers(node_dict)
+
+    node_dict = loadNode('nodeDict.txt')
+    arc_dict = googleMapsRequest(node_dict)
+
     for i in range(ncycle):
         if isLoop:
             print "\nCiclo numero:", i+1
         startP = time.clock()
-        if isTest:
-            with open('requestTest.json', 'r') as data_file:
-                dati_dict = json.load(data_file)
-            node_dict = createNode(dati_dict)
-        elif isBenchmark:
-            node_dict = loadNode('nodeDict.txt')
-        else:
-            with open('request.json', 'w') as outfile:
-                json.dump(request.vars, outfile, indent=4)
-            node_dict = createNode(request.vars)
-        if isBenchmark:
-            arc_dict = loadArc('arcDict.txt')
-        else:
-            (arc_dict, timeGoogle) = googleMapsRequest(node_dict)
-
-        if not isLoop:
-            print "\n-->NODI"
-            printNode(node_dict)
-            print "len(node_dict)", len(node_dict)
-        if not isBenchmark and not isTest:
-            saveNode(node_dict)
-
-        #geocode_results = viewMarkers(node_dict)
-        if not isLoop:
-            print "\n-->ARCHI"
-            printArc((arc_dict))
-            n_arc = 0
-            for key in arc_dict:
-                n_arc += len(arc_dict[key])
-            print "len(arc_dict)", len(arc_dict), n_arc
-        if not isBenchmark and not isTest:
-            saveArc(arc_dict)
 
         start_time = time.clock()
         greedy = Euristiche(node_dict, arc_dict)
@@ -446,11 +467,21 @@ def main():
             json.dump(dataOut, outfile, indent=4)
 
         durata = time.clock() - startP
-        if not isBenchmark and not isTest:
-            durata -= timeGoogle
-        saveBenchmark('benchmark.txt', durata, penality, randomizeDog,
-            node_dict, arc_dict, greedy, grasp, path, pathReverse, tabu)
-    winsound.Beep(2500, 2000)
+        if isBenchmark:
+            saveBenchmark('benchmark.txt', durata, penality, randomizeDog,
+                node_dict, arc_dict, greedy, grasp, path, pathReverse, tabu)
+
+        if ncycle > 1 and i < (ncycle-1):
+            # da decidere se e' meglio effettuare il calcolo ogni volta
+            if not calcEndTime:
+                calcEndTime = True
+                totalTime = durata * ncycle
+                endExec = datetime.now() + timedelta(seconds=totalTime)
+            print "\nLa fine dell'esecuzione e' prevista per le", '{:%H:%M:%S}'.format(endExec)
+        elif i == (ncycle-1):
+            print "\n### ESECUZIONE TERMINATA ###"
+
+    winsound.Beep(2500, 1500)
     #return dict(status="OK", data="Sono tanto stupido")
     return dataOut
 
@@ -465,23 +496,32 @@ if __name__ == "__main__":
                     ncycle = int(sys.argv[3])
                 except Exception:
                     ncycle = 50
-                print "\nEseguo il programma in modalita' TEST LOOP, numero cicli", (ncycle), "...\n"
+                print "\nEseguo il programma in modalita' TEST LOOP, numero cicli:", (ncycle), "...\n"
             else:
-                print "\nEseguo il programma in modalita' TEST, numero cicli", (ncycle), "...\n"
-        if sys.argv[1] == '-b':
+                print "\nEseguo il programma in modalita' TEST...\n"
+            main()
+        elif sys.argv[1] == '-b':
             isBenchmark = True
             if len(sys.argv) > 2 and sys.argv[2] == '-l':
                 isLoop = True
                 try:
                     ncycle = int(sys.argv[3])
                 except Exception:
-                    ncycle = 100
+                    ncycle = 50
                 print "\nEseguo il programma in modalita' BENCHMARK LOOP, numero cicli", (ncycle), "...\n"
             else:
                 print "\nEseguo il programma in modalita' BENCHMARK...\n"
-        main()
+            main()
+        else:
+            print "Eseguire il programma con una delle seguenti modalita':"
+            print "'python main.py -t' per la modalita' test"
+            print "'python main.py -t -l n' per la modalita' test in modalita' loop dove n e' il numero di iterazioni"
+            print "'python main.py -b' per la modalita' benchmark"
+            print "'python main.py -b -l n' per la modalita' benchmark in modalita' loop dove n e' il numero di iterazioni"
+
     else:
         print "Eseguire il programma con una delle seguenti modalita':"
         print "'python main.py -t' per la modalita' test"
+        print "'python main.py -t -l n' per la modalita' test in modalita' loop dove n e' il numero di iterazioni"
         print "'python main.py -b' per la modalita' benchmark"
         print "'python main.py -b -l n' per la modalita' benchmark in modalita' loop dove n e' il numero di iterazioni"
