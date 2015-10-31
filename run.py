@@ -20,8 +20,8 @@ from weppy import App, request
 from weppy.tools import service
 
 app = App(__name__)
-key_googleMaps2 = 'AIzaSyB27xz94JVRPsuX4qJMMiZpGVoQiQITFb8'
-key_googleMaps = 'AIzaSyDEeQ7ybauE3th_3d-GQZQcvGI-UxKOFF8'
+key_googleMaps = 'AIzaSyB27xz94JVRPsuX4qJMMiZpGVoQiQITFb8'
+key_googleMaps2 = 'AIzaSyDEeQ7ybauE3th_3d-GQZQcvGI-UxKOFF8'
 key_googleMaps3 = 'AIzaSyC549poFoVcUz3BsDOJ9XpO7CniNTDC6b4'
 isTest = False
 isBenchmark = False
@@ -37,7 +37,6 @@ def createNode(dati_dict):
         addr=dati_dict['place_to_arrive'])
     )
 
-    #for i, user in enumerate(dati_dict['users']):
     for user in dati_dict['users']:
         node_dict[str(user['id'])] = Node(
             id=user['id'],
@@ -50,23 +49,12 @@ def createNode(dati_dict):
 def createArc(google_dict, node_dict_o, node_dict_d, arc_dict):
     if node_dict_o == node_dict_d:
         node_dict_d.insert(0, '0')
-    """
-    print "node_dict_o", node_dict_o
-    print "node_dict_d", node_dict_d
-    print "google_dict['origin_addresses']", google_dict['origin_addresses']
-    print "google_dict['destination_addresses'])", google_dict['destination_addresses']
-    """
     for i in range(len(google_dict['origin_addresses'])):
         for y in range(len(google_dict['destination_addresses'])):
             dur = google_dict['rows'][i]['elements'][y]['duration']['value']
             dist = google_dict['rows'][i]['elements'][y]['distance']['value']
             #print "##########", node_dict_o[i], node_dict_d[y]
             if node_dict_o[i] != node_dict_d[y]:
-                """
-                # tolto per eliminare ordine archi
-                if (arc_dict[keys_list[i+1]]['0'].getDur() >
-                        arc_dict[keys_list[y]]['0'].getDur()):
-                """
                 if not (node_dict_o[i] in arc_dict):
                     arc_dict[node_dict_o[i]] = dict()
                 arc_dict[node_dict_o[i]][node_dict_d[y]] = Arc(
@@ -330,6 +318,7 @@ def printNode(node_dict):
             node_dict[node].getAddr(),
             node_dict[node].getNotWith())
 
+
 def printArc(arc_dict):
     for arc in arc_dict:
         for a in arc_dict[arc]:
@@ -337,6 +326,7 @@ def printArc(arc_dict):
                 arc_dict[arc][a].getId_f(),
                 arc_dict[arc][a].getDur(),
                 arc_dict[arc][a].getDist())
+
 
 def printInfo(typeEur, eur):
     print "\n-->" + typeEur
@@ -379,13 +369,12 @@ def initMain():
 
     return (node_dict, arc_dict)
 
-
-@app.expose("/")
-@service.json
-def home():
-    calcEndTime = False
+def main():
     (node_dict, arc_dict) = initMain()
     #geocode_results = viewMarkers(node_dict)
+    #node_dict = loadNode('nodeDict.txt')
+    #arc_dict = googleMapsRequest(node_dict)
+    calcEndTime = False
     for i in range(ncycle):
         if isLoop:
             print "\nCiclo numero:", i+1
@@ -397,8 +386,6 @@ def home():
         greedy.setExecutionTime(time.clock() - start_time)
         if not isLoop:
             printInfo('Greedy', greedy)
-        cars_greedy_list = copy.deepcopy(greedy.getCars())
-
         dataOut = updateDataOutput(initDataOutput(), 'greedy', cars_list,
             dur_list, dur, node_dict['0'].getMaxDur())
 
@@ -465,9 +452,6 @@ def home():
         dataOut = updateDataOutput(dataOut, 'tabu', cars_list, dur_list, dur,
             node_dict['0'].getMaxDur())
 
-        with open('response.json', 'w') as outfile:
-            json.dump(dataOut, outfile, indent=4)
-
         durata = time.clock() - startP
         if isBenchmark:
             saveBenchmark('benchmark.txt', durata, penality, randomizeDog,
@@ -482,10 +466,14 @@ def home():
             print "\nLa fine dell'esecuzione e' prevista per le", '{:%H:%M:%S}'.format(endExec)
         elif i == (ncycle-1):
             print "\n### ESECUZIONE TERMINATA ###"
-
     winsound.Beep(2500, 1500)
-    #return dict(status="OK", data="Sono tanto stupido")
     return dataOut
+
+@app.expose("/")
+@service.json
+def home():
+    #return dict(status="OK", data="Sono tanto stupido")
+    return main()
 
 
 if __name__ == "__main__":
@@ -497,22 +485,45 @@ if __name__ == "__main__":
                 try:
                     ncycle = int(sys.argv[3])
                 except Exception:
-                    ncycle = 100
-                print "\nEseguo il programma in modalita' TEST LOOP, numero cicli", (ncycle), "...\n"
+                    ncycle = 500
+                print "\nEseguo il programma in modalita' TEST LOOP, numero cicli:", (ncycle), "...\n"
             else:
-                print "\nEseguo il programma in modalita' TEST, numero cicli", (ncycle), "...\n"
-        if sys.argv[1] == '-b':
+                print "\nEseguo il programma in modalita' TEST...\n"
+            main()
+        elif sys.argv[1] == '-b':
             isBenchmark = True
             if len(sys.argv) > 2 and sys.argv[2] == '-l':
                 isLoop = True
                 try:
                     ncycle = int(sys.argv[3])
                 except Exception:
-                    ncycle = 100
+                    ncycle = 500
                 print "\nEseguo il programma in modalita' BENCHMARK LOOP, numero cicli", (ncycle), "...\n"
             else:
                 print "\nEseguo il programma in modalita' BENCHMARK...\n"
+            main()
+        elif sys.argv[1] == '-w':
+            if len(sys.argv) > 2 and sys.argv[2] == '-t':
+                isTest = True
+                print "\nEseguo il programma in modalita' SERVER TEST...\n"
+                app.run()
+            else:
+                print "\nEseguo il programma in modalita' SERVER...\n"
+                app.run(host="0.0.0.0")
+        else:
+            print "Eseguire il programma con una delle seguenti modalita':"
+            print "'python main.py -t' per la modalita' test"
+            print "'python main.py -t -l n' per la modalita' test in modalita' loop dove n e' il numero di iterazioni"
+            print "'python main.py -b' per la modalita' benchmark"
+            print "'python main.py -b -l n' per la modalita' benchmark in modalita' loop dove n e' il numero di iterazioni"
+            print "'python main.py -w' per la modalita' server"
+            print "'python main.py -w -t' per la modalita' server test"
 
-        app.run()
     else:
-        app.run(host="0.0.0.0")
+        print "Eseguire il programma con una delle seguenti modalita':"
+        print "'python main.py -t' per la modalita' test"
+        print "'python main.py -t -l n' per la modalita' test in modalita' loop dove n e' il numero di iterazioni"
+        print "'python main.py -b' per la modalita' benchmark"
+        print "'python main.py -b -l n' per la modalita' benchmark in modalita' loop dove n e' il numero di iterazioni"
+        print "'python main.py -w' per la modalita' server"
+        print "'python main.py -w -t' per la modalita' server test"
