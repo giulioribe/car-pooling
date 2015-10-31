@@ -33,7 +33,7 @@ def createNode(dati_dict):
     # la destionazione ha sempre id=0
     node_dict['0'] = (Node(
         id='0',
-        dur=dati_dict['time_to_arrive'],
+        maxDur=dati_dict['time_to_arrive'],
         addr=dati_dict['place_to_arrive'])
     )
 
@@ -41,7 +41,7 @@ def createNode(dati_dict):
     for user in dati_dict['users']:
         node_dict[str(user['id'])] = Node(
             id=user['id'],
-            dur=user['max_duration'],
+            maxDur=user['max_duration'],
             addr=user['address'],
             notWith=user['not_with'])
     return node_dict
@@ -82,7 +82,7 @@ def updateAddress(node_dict, google_dict):
         node_dict[key].setAddr(google_dict['destination_addresses'][i])
 
 
-def initDataOuttput():
+def initDataOutput():
     dataOut = dict()
     dataOut['euristiche'] = dict()
     dataOut['euristiche']['name'] = ''
@@ -224,7 +224,7 @@ def saveNode(node_dict):
     with open('nodeDict.txt', 'w') as outfile:
         for key in node_dict:
             idNode = node_dict[key].getId()
-            maxDur = str(node_dict[key].getDur())
+            maxDur = str(node_dict[key].getMaxDur())
             addr = node_dict[key].getAddr()
             notWith = ','.join(node_dict[key].getNotWith())
             outfile.write(idNode + "#" + maxDur  + "#" + addr + "#" + notWith)
@@ -246,7 +246,7 @@ def loadNode(filename):
             # la destionazione ha sempre id=0
             node_dict[line_tmp[0]] = (Node(
                 id=line_tmp[0],
-                dur=long(line_tmp[1]),
+                maxDur=long(line_tmp[1]),
                 addr=line_tmp[2],
                 notWith=line_tmp[3])
             )
@@ -296,10 +296,6 @@ def saveBenchmark(filename, durata, maxDist, randomizeDog, node_dict,
     n_arc = 0
     for key in arc_dict:
         n_arc += len(arc_dict[key])
-    """
-    invece di verificare la distanza non e' meglio valutare il tempo di esecuzione
-    visto che la distanza risulta sempre uguale
-    """
     if path.getExecutionTime() > pathReverse.getExecutionTime():
         pathVSpathReverse = '1'
     else:
@@ -307,31 +303,30 @@ def saveBenchmark(filename, durata, maxDist, randomizeDog, node_dict,
     line = floatToStringWithComma(durata) + separetor + str(len(node_dict)) + \
         separetor + str(n_arc) + separetor + str(maxDist) + separetor + \
         floatToStringWithComma(greedy.getExecutionTime()) + separetor + str(len(greedy.getCars())) + \
-        separetor + str(greedy.getDist()) + separetor  + str(randomizeDog) + \
+        separetor + str(greedy.getDur()) + separetor  + str(randomizeDog) + \
         separetor + floatToStringWithComma(grasp.getExecutionTime()) + separetor + \
-        str(len(grasp.getCars())) + separetor + str(grasp.getDist()) + \
+        str(len(grasp.getCars())) + separetor + str(grasp.getDur()) + \
         separetor + floatToStringWithComma(path.getExecutionTime()) + separetor + \
         str(randomizeDog) + separetor + str(len(path.getCars())) + separetor + \
-        str(path.getDist()) + separetor + floatToStringWithComma(pathReverse.getExecutionTime()) + \
+        str(path.getDur()) + separetor + floatToStringWithComma(pathReverse.getExecutionTime()) + \
         separetor + str(randomizeDog) + separetor + \
         str(len(pathReverse.getCars())) + separetor + \
-        str(pathReverse.getDist()) + separetor + pathVSpathReverse + \
+        str(pathReverse.getDur()) + separetor + pathVSpathReverse + \
         separetor + floatToStringWithComma(tabu.getExecutionTime()) + separetor + \
-        str(len(tabu.getCars())) + separetor + str(tabu.getDist()) + '\n'
+        str(len(tabu.getCars())) + separetor + str(tabu.getDur()) + '\n'
 
     with LockFile(filename):
         with open(filename, "a") as file:
             file.write(line)
             file.flush()
             os.fsync(file)
-
     print "\nEsecuzione salvata nel file '" + filename + "'"
 
 
 def printNode(node_dict):
     for node in node_dict:
         print (node_dict[node].getId(),
-            node_dict[node].getDur(),
+            node_dict[node].getMaxDur(),
             node_dict[node].getAddr(),
             node_dict[node].getNotWith())
 
@@ -345,9 +340,9 @@ def printArc(arc_dict):
 
 def printInfo(typeEur, eur):
     print "\n-->" + typeEur
-    print "cars_list:", eur.getCars()
-    print "dur_list:", eur.getDur()
-    print "dist:", eur.getDist()
+    print "Lista ID auto:", eur.getCars()
+    #print "Lista partenze in millisecondi:", eur.getDurList()
+    print "Durata totale di tutte le auto (H:M:S):", timedelta(milliseconds=eur.getDur())
     print "CPU execution time: ", eur.getExecutionTime()
 
 
@@ -370,15 +365,14 @@ def initMain():
     if not isLoop:
         print "\n-->NODI"
         printNode(node_dict)
-        print "len(node_dict)", len(node_dict)
-
+    print "len(node_dict)", len(node_dict)
+    if not isLoop:
         print "\n-->ARCHI"
         printArc((arc_dict))
-        n_arc = 0
-        for key in arc_dict:
-            n_arc += len(arc_dict[key])
-        print "len(arc_dict)", len(arc_dict), n_arc
-
+    n_arc = 0
+    for key in arc_dict:
+        n_arc += len(arc_dict[key])
+    print "len(arc_dict)", len(arc_dict), n_arc
     if not isBenchmark and not isTest:
         saveNode(node_dict)
         saveArc(arc_dict)
@@ -399,68 +393,77 @@ def home():
 
         start_time = time.clock()
         greedy = Euristiche(node_dict, arc_dict)
-        (cars_list, dur_list, dist) = greedy.greedy()
+        (cars_list, dur_list, dur) = greedy.greedy()
         greedy.setExecutionTime(time.clock() - start_time)
         if not isLoop:
             printInfo('Greedy', greedy)
         cars_greedy_list = copy.deepcopy(greedy.getCars())
 
-        dataOut = updateDataOutput(initDataOuttput(), 'greedy', cars_list,
-            dur_list, dist, node_dict['0'].getDur())
+        dataOut = updateDataOutput(initDataOutput(), 'greedy', cars_list,
+            dur_list, dur, node_dict['0'].getMaxDur())
 
         #viewDirection(node_dict, geocode_results, cars_list)
 
         start_time = time.clock()
         grasp = Euristiche(node_dict, arc_dict)
-        (cars_list, dur_list, dist) = grasp.grasp()
+        (cars_list, dur_list, dur) = grasp.grasp()
         grasp.setExecutionTime(time.clock() - start_time)
         if not isLoop:
             printInfo('Grasp', grasp)
-        dataOut = updateDataOutput(dataOut, 'grasp', cars_list, dur_list, dist,
-            node_dict['0'].getDur())
+        dataOut = updateDataOutput(dataOut, 'grasp', cars_list, dur_list, dur,
+            node_dict['0'].getMaxDur())
 
         #viewDirection(node_dict, geocode_results, cars_list)
 
         arcToDest_dict = dict()
         for key in arc_dict.keys():
             arcToDest_dict[key] = arc_dict[key]['0']
-        penality = sorted(arcToDest_dict.values(), key=attrgetter('dist'),
-            reverse=True)[0].getDist()
+        penality = sorted(arcToDest_dict.values(), key=attrgetter('dur'),
+            reverse=True)[0].getDur()
 
         randomizeDog = 5
-        start_time = time.clock()
+
+        tmp_time_path = time.clock()
         path = Euristiche(node_dict, arc_dict)
         localSearch_list_path = path.preparePath(copy.deepcopy(greedy), randomizeDog)
+        tmp_time_path = time.clock() - tmp_time_path
+        # Effettuo subito la copia per non rischiare di usare una lista modificata
+        tmp_time_path_reverse = time.clock()
         localSearch_list_pathReverse = copy.deepcopy(localSearch_list_path)
-
-        (cars_list, dur_list, dist) = path.initPath(localSearch_list_path, randomizeDog, penality/2)
-        path.setExecutionTime(time.clock() - start_time)
+        tmp_time_path_reverse = time.clock() - tmp_time_path_reverse
+        """
+        Il tempo parte da qua e non da 'path = Euristiche(node_dict, arc_dict)'
+        perche' prima effettuo anche la copia per la localSearch_list_pathReverse
+        e quindi le due tempistiche non sarebbero veritiere
+        """
+        start_time = time.clock()
+        (cars_list, dur_list, dur) = path.initPath(localSearch_list_path, randomizeDog, penality/2)
+        path.setExecutionTime((time.clock() - start_time) + tmp_time_path)
         if not isLoop:
             printInfo('Path', path)
-        dataOut = updateDataOutput(dataOut, 'path', cars_list, dur_list, dist,
-            node_dict['0'].getDur())
+        dataOut = updateDataOutput(dataOut, 'path', cars_list, dur_list, dur,
+            node_dict['0'].getMaxDur())
 
-        start_time = time.clock()
         pathReverse = Euristiche(node_dict, arc_dict)
-
-        #localSearch_list_pathReverse = pathReverse.preparePath(copy.deepcopy(greedy), randomizeDog)
-        (cars_list, dur_list, dist) = pathReverse.initPath(localSearch_list_pathReverse, randomizeDog, penality/2)
-        pathReverse.setExecutionTime(time.clock() - start_time)
+        # Stesso discorso di della path
+        start_time = time.clock()
+        (cars_list, dur_list, dur) = pathReverse.initPath(localSearch_list_pathReverse, randomizeDog, penality/2)
+        pathReverse.setExecutionTime((time.clock() - start_time) + tmp_time_path_reverse)
         if not isLoop:
             printInfo('Path Reverse', pathReverse)
-        dataOut = updateDataOutput(dataOut, 'pathReverse', cars_list, dur_list, dist,
-            node_dict['0'].getDur())
+        dataOut = updateDataOutput(dataOut, 'pathReverse', cars_list, dur_list, dur,
+            node_dict['0'].getMaxDur())
 
         #viewDirection(node_dict, geocode_results, cars_list)
 
         start_time = time.clock()
         tabu = Euristiche(node_dict, arc_dict)
-        (cars_list, dur_list, dist) = tabu.tabu(greedy, greedy, 0, 0, list(), penality/2)
+        (cars_list, dur_list, dur) = tabu.tabu(greedy, greedy, 0, 0, list(), penality/2)
         tabu.setExecutionTime(time.clock() - start_time)
         if not isLoop:
             printInfo('Tabu', tabu)
-        dataOut = updateDataOutput(dataOut, 'tabu', cars_list, dur_list, dist,
-            node_dict['0'].getDur())
+        dataOut = updateDataOutput(dataOut, 'tabu', cars_list, dur_list, dur,
+            node_dict['0'].getMaxDur())
 
         with open('response.json', 'w') as outfile:
             json.dump(dataOut, outfile, indent=4)

@@ -9,7 +9,7 @@ from operator import itemgetter, attrgetter
 
 class Euristiche(object):
     """docstring for Euristiche"""
-    def __init__(self, node_dict, arc_dict, cars_list=None, dur_list=None, dist=None, executionTime=None):
+    def __init__(self, node_dict, arc_dict, cars_list=None, dur_list=None, dur=None, executionTime=None):
         #super(Euristiche, self).__init__()
         self.node_dict = node_dict
         self.arc_dict = arc_dict
@@ -21,10 +21,10 @@ class Euristiche(object):
             self.dur_list = dur_list
         else:
             self.dur_list = list()
-        if dist:
-            self.dist = dist
+        if dur:
+            self.dur = dur
         else:
-            self.dist = list()
+            self.dur = list()
         if executionTime:
             self.executionTime = executionTime
         else:
@@ -33,11 +33,11 @@ class Euristiche(object):
     def setCars(self, cars_list):
         self.cars_list = cars_list
 
-    def setDur(self, dur_list):
+    def setDurList(self, dur_list):
         self.dur_list = dur_list
 
-    def setDist(self, dist):
-        self.dist = dist
+    def setDur(self, dur):
+        self.dur = dur
 
     def setExecutionTime(self, executionTime):
         self.executionTime = executionTime
@@ -51,11 +51,11 @@ class Euristiche(object):
     def getCars(self):
         return self.cars_list
 
-    def getDur(self):
+    def getDurList(self):
         return self.dur_list
 
-    def getDist(self):
-        return self.dist
+    def getDur(self):
+        return self.dur
 
     def getExecutionTime(self):
         return self.executionTime
@@ -79,9 +79,9 @@ class Euristiche(object):
                 # se non sono in fondo allora sommo il costo del passaggio da una persona all'altra
                 if k != len(car)-1:
                     sumdur += self.arc_dict[car[k]][car[k+1]].getDur() # e' getDur per avere la durata dell'arco?
-                if self.node_dict[car[i]].getDur() != 0:
+                if self.node_dict[car[i]].getMaxDur() != 0:
                     # se sono in fondo, e in ogni caso ad ogni iterazione, controllo l'ammissibilia'
-                    if (sumdur + dur) > self.node_dict[car[i]].getDur():
+                    if (sumdur + dur) > self.node_dict[car[i]].getMaxDur():
                         return False
         return True
 
@@ -98,8 +98,8 @@ class Euristiche(object):
                 # se sono in fondo, e in ogni caso ad ogni iterazione, controllo l'ammissibilia'
                 else:
                     sumdur += self.arc_dict[car[k]][nodeNew.getId()].getDur() + self.arc_dict[nodeNew.getId()]['0'].getDur()
-                if self.node_dict[car[i]].getDur() != 0:
-                    if sumdur > self.node_dict[car[i]].getDur():
+                if self.node_dict[car[i]].getMaxDur() != 0:
+                    if sumdur > self.node_dict[car[i]].getMaxDur():
                         return False
         return True
 
@@ -129,11 +129,11 @@ class Euristiche(object):
                 # ordino il dizionario e prendo l'arco che ha il nodo iniziale
                 # piu' distante
                 car = sorted(arcToDest_dict.values(),
-                        key=attrgetter('dist'),
+                        key=attrgetter('dur'),
                         reverse=True)[0].getId_i()
                 arcToDest_dict.pop(car)
                 dur = 0
-                mindur = self.node_dict[car].getDur()
+                mindur = self.node_dict[car].getMaxDur()
                 cars_list.append(list())
                 dur_list.append(list())
                 dist_list.append(list())
@@ -143,38 +143,17 @@ class Euristiche(object):
                 find = False
             # prendo la lista di archi dal nodo di partenza
             arc_start = self.arc_dict[car]
-            #arc_list = list()
-            #for key in arc_start.keys():
-            #    arc_list.append(arc_start[key])
-            #for a in arc_list:
-            #    print a.getId_i(), a.getId_f(), a.getDist()
-            #print "------------------"
-            #for a in sorted(arc_list, key=attrgetter('dist')):
-            #    print a.getId_i(), a.getId_f(), a.getDist()
-            #print "------------------"
-            # ordina la lista di archi in ordine crescente
-            #for arc in sorted(arc_list, key=attrgetter('dist')):
-            for arc in sorted(arc_start.values(), key=attrgetter('dist')):
-
-                """
-                if self.arc_dict[car]['0'].getDist() >= arc.getDist():
-                    print "0"
-                if self.checkNotWith(cars_list, nauto, arc.getId_f()):
-                    print '1'
-                if self.minDuration(cars_list[nauto], arc.getDur()):
-                    print '2'
-                """
-
+            for arc in sorted(arc_start.values(), key=attrgetter('dur')):
                 if (arc.getId_f() in arcToDest_dict and
-                        self.arc_dict[car]['0'].getDist() >= arc.getDist() and
+                        self.arc_dict[car]['0'].getDur() >= arc.getDur() and
                         self.checkNotWith(cars_list, nauto, arc.getId_f()) and
                         self.minDurationGreedy(cars_list[nauto], self.node_dict[arc.getId_f()])):
                     car = arc.getId_f()
                     dur += arc.getDur()
                     dur_list[nauto].append(arc.getDur())
                     dist_list[nauto].append(arc.getDist())
-                    if mindur > self.node_dict[car].getDur():
-                        mindur = self.node_dict[car].getDur()
+                    if mindur > self.node_dict[car].getMaxDur():
+                        mindur = self.node_dict[car].getMaxDur()
                     cars_list[nauto].append(car)
                     arcToDest_dict.pop(car)
                     if len(cars_list[nauto]) < 5:
@@ -185,11 +164,11 @@ class Euristiche(object):
             dur_list[i].append(self.arc_dict[car[-1]]['0'].getDur())
             dist_list[i].append(self.arc_dict[car[-1]]['0'].getDist())
         # per ogni lista all'interno di dist_list sommo tutte le distanze
-        dist = sum(map(sum, dist_list))
+        dur = sum(map(sum, dur_list))
         self.setCars(cars_list)
-        self.setDur(dur_list)
-        self.setDist(dist)
-        return (cars_list, dur_list, dist)
+        self.setDurList(dur_list)
+        self.setDur(dur)
+        return (cars_list, dur_list, dur)
 
 
     def grasp(self):
@@ -219,7 +198,7 @@ class Euristiche(object):
                 # piu' distante
                 car_pope = list()
                 ordered_arc = sorted(arcToDest_dict.values(),
-                        key=attrgetter('dist'),
+                        key=attrgetter('dur'),
                         reverse=True)
                 for e in range(nIteration):
                     if e <= (len(ordered_arc)-1):
@@ -227,7 +206,7 @@ class Euristiche(object):
                 car = (random.choice(car_pope)).getId_i()
                 arcToDest_dict.pop(car)
                 dur = 0
-                mindur = self.node_dict[car].getDur()
+                mindur = self.node_dict[car].getMaxDur()
                 cars_list.append(list())
                 dur_list.append(list())
                 dist_list.append(list())
@@ -242,9 +221,9 @@ class Euristiche(object):
             #arc_list_pope = list()
             arc_list_pope = list()
             # ordina la lista di archi in ordine crescente
-            for arc in sorted(arc_start.values(), key=attrgetter('dist')):
+            for arc in sorted(arc_start.values(), key=attrgetter('dur')):
                 if (arc.getId_f() in arcToDest_dict and
-                        self.arc_dict[car]['0'].getDist() >= arc.getDist() and
+                        self.arc_dict[car]['0'].getDur() >= arc.getDur() and
                         self.checkNotWith(cars_list, nauto, arc.getId_f()) and
                         self.minDurationGreedy(cars_list[nauto], self.node_dict[arc.getId_f()])):
                     arc_list_pope.append(arc)
@@ -258,8 +237,8 @@ class Euristiche(object):
                 dur += arc_random.getDur()
                 dur_list[nauto].append(arc_random.getDur())
                 dist_list[nauto].append(arc_random.getDist())
-                if mindur > self.node_dict[car].getDur():
-                    mindur = self.node_dict[car].getDur()
+                if mindur > self.node_dict[car].getMaxDur():
+                    mindur = self.node_dict[car].getMaxDur()
                 cars_list[nauto].append(car)
                 arcToDest_dict.pop(car)
                 if len(cars_list[nauto]) < 5:
@@ -269,11 +248,11 @@ class Euristiche(object):
             dur_list[i].append(self.arc_dict[car[-1]]['0'].getDur())
             dist_list[i].append(self.arc_dict[car[-1]]['0'].getDist())
         # per ogni lista all'interno di dist_list sommo tutte le distanze
-        dist = sum(map(sum, dist_list))
+        dur = sum(map(sum, dur_list))
         self.setCars(cars_list)
-        self.setDur(dur_list)
-        self.setDist(dist)
-        return (cars_list, dur_list, dist)
+        self.setDurList(dur_list)
+        self.setDur(dur)
+        return (cars_list, dur_list, dur)
 
 
     def preparePath(self, eur, randimizeDog):
@@ -293,7 +272,7 @@ class Euristiche(object):
 
 
     def initPath(self, localSearch_list, k, penality):
-        sorted_ls = sorted(localSearch_list, key=attrgetter('dist'))
+        sorted_ls = sorted(localSearch_list, key=attrgetter('dur'))
         target = sorted_ls.pop(0)
         path_list = list()
         if k > len(sorted_ls):
@@ -302,13 +281,13 @@ class Euristiche(object):
             path_list.append(self.path(target, sorted_ls[i], 0, penality))
         best_path = sorted(path_list, key=itemgetter(2)).pop(0)
         self.setCars(best_path[0])
-        self.setDur(best_path[1])
-        self.setDist(best_path[2])
+        self.setDurList(best_path[1])
+        self.setDur(best_path[2])
         return (best_path[0], best_path[1], best_path[2])
 
 
     def initPathReverse(self, localSearch_list, k, penality):
-        sorted_ls = sorted(localSearch_list, key=attrgetter('dist'))
+        sorted_ls = sorted(localSearch_list, key=attrgetter('dur'))
         target = sorted_ls.pop(0)
         path_list_reverse = list()
         if k > len(sorted_ls):
@@ -317,8 +296,8 @@ class Euristiche(object):
             path_list_reverse.append(self.path(sorted_ls[i], target, 0, penality))
         best_path_reverse = sorted(path_list_reverse, key=itemgetter(2)).pop(0)
         self.setCars(best_path_reverse[0])
-        self.setDur(best_path_reverse[1])
-        self.setDist(best_path_reverse[2])
+        self.setDurList(best_path_reverse[1])
+        self.setDur(best_path_reverse[2])
         return (best_path_reverse[0], best_path_reverse[1], best_path_reverse[2])
 
 
@@ -384,23 +363,23 @@ class Euristiche(object):
             path_list.append((value_tmp_grasp, value_tmp_target))
             # verifica ammissibilita': notwith, durata
             if not self.ammissibile(grasp_tmp_pope[-1]):
-                grasp_tmp_pope[-1].setDist(grasp_tmp_pope[-1].getDist() + penality)
+                grasp_tmp_pope[-1].setDur(grasp_tmp_pope[-1].getDur() + penality)
 
         if len(grasp_tmp_pope) != 0:
-            grasp_tmp_pope_ordered = sorted(grasp_tmp_pope, key=attrgetter('dist'),
+            grasp_tmp_pope_ordered = sorted(grasp_tmp_pope, key=attrgetter('dur'),
                 reverse=True)
             grasp_ok = grasp_tmp_pope_ordered.pop(0)
         else:
-            return (target.getCars(), target.getDur(), target.getDist())
+            return (target.getCars(), target.getDurList(), target.getDur())
         if self.controllo_stop(target, grasp_ok, iteration):
-            return (grasp_ok.getCars(), grasp_ok.getDur(), grasp_ok.getDist())
+            return (grasp_ok.getCars(), grasp_ok.getDurList(), grasp_ok.getDur())
         else:
             iteration += 1
-            (deep_cars, deep_dur, deep_dist) = self.path(target, grasp_ok, iteration, penality)
-            if deep_dist > grasp_ok.getDist():
-                return (grasp_ok.getCars(), grasp_ok.getDur(), grasp_ok.getDist())
+            (deep_cars, deep_dur_list, deep_dur) = self.path(target, grasp_ok, iteration, penality)
+            if deep_dur > grasp_ok.getDur():
+                return (grasp_ok.getCars(), grasp_ok.getDurList(), grasp_ok.getDur())
             else:
-                return (deep_cars, deep_dur, deep_dist)
+                return (deep_cars, deep_dur_list, deep_dur)
 
 
     def tabu(self, best_solution, actual_solution, iteration, global_iteration, tabu_list, penality):
@@ -408,21 +387,21 @@ class Euristiche(object):
         # list di scambi tabu
         solutions_list = list()
         cars = actual_solution.getCars()
-        actual_dist = actual_solution.getDist()
+        actual_dur = actual_solution.getDur()
         # swapCar
         for x in range(len(cars)):
             for y in range(len(cars[x])):
                 if x != len(cars):
                     for x1 in range(x+1, len(cars)):
                         for y1 in range(len(cars[x1])):
-                            totDist = 0
+                            totDur = 0
                             if not self.ammissibileNotWith(actual_solution):
-                                totDist -= penality
+                                totDur -= penality
                                 #print "-1"
                             if not self.ammissibileMinDur(actual_solution):
-                                totDist -= penality
+                                totDur -= penality
                                 #print "-2"
-                            totDist -= self.ammissibileCard(actual_solution)*penality
+                            totDur -= self.ammissibileCard(actual_solution)*penality
                             cars_tmp_list = copy.deepcopy(cars)
 
                             #print cars_tmp_list
@@ -435,17 +414,17 @@ class Euristiche(object):
                             eur.setCars(cars_tmp_list)
                             eur = self.reorder(eur)
                             if not self.ammissibileNotWith(eur):
-                                totDist += penality
+                                totDur += penality
                             if not self.ammissibileMinDur(eur):
-                                totDist += penality
-                            totDist += self.ammissibileCard(eur)*penality
+                                totDur += penality
+                            totDur += self.ammissibileCard(eur)*penality
 
                             # il reorder va effettuato prima perche' altrimenti
                             # ho problemi nei vari calcoli dell'ammissibilita'
                             #eur = self.reorder(eur)
-                            eur.setDist(eur.getDist() + totDist)
+                            eur.setDur(eur.getDur() + totDur)
                             mossa = (cars_tmp_list[x1][y1], cars_tmp_list[x][y], True)
-                            delta = eur.getDist() - actual_dist
+                            delta = eur.getDur() - actual_dur
                             solutions_list.append((eur, mossa, delta))
 
         # Stack
@@ -453,12 +432,12 @@ class Euristiche(object):
             for y in range(len(cars[x])):
                 for x1 in range(x, len(cars)):
                     if x != x1:
-                        totDist = 0
+                        totDur = 0
                         if not self.ammissibileNotWith(actual_solution):
-                            totDist -= penality
+                            totDur -= penality
                         if not self.ammissibileMinDur(actual_solution):
-                            totDist -= penality
-                        totDist -= self.ammissibileCard(actual_solution)*penality
+                            totDur -= penality
+                        totDur -= self.ammissibileCard(actual_solution)*penality
                         cars_tmp_list = copy.deepcopy(cars)
                         car_tmp = cars_tmp_list[x].pop(y)
                         cars_tmp_list[x1].append(car_tmp)
@@ -468,41 +447,41 @@ class Euristiche(object):
                         eur.setCars(cars_tmp_list)
                         eur = self.reorder(eur)
                         if not self.ammissibileNotWith(eur):
-                            totDist += penality
+                            totDur += penality
                         if not self.ammissibileMinDur(eur):
-                            totDist += penality
-                        totDist += self.ammissibileCard(eur)*penality
+                            totDur += penality
+                        totDur += self.ammissibileCard(eur)*penality
 
                         # il reorder va sempre effettuato prima
                         #eur = self.reorder(eur)
-                        eur.setDist(eur.getDist() + totDist)
+                        eur.setDur(eur.getDur() + totDur)
                         mossa = (cars[x][y], x, False)
-                        delta = eur.getDist() - actual_dist
+                        delta = eur.getDur() - actual_dur
                         solutions_list.append((eur, mossa, delta))
 
                 # New car
                 cars_tmp_list = copy.deepcopy(cars)
                 if len(cars_tmp_list[x]) > 1:
-                    totDist = 0
+                    totDur = 0
                     if not self.ammissibileNotWith(actual_solution):
-                        totDist -= penality
+                        totDur -= penality
                     if not self.ammissibileMinDur(actual_solution):
-                        totDist -= penality
-                    totDist -= self.ammissibileCard(actual_solution)*penality
+                        totDur -= penality
+                    totDur -= self.ammissibileCard(actual_solution)*penality
                     car_tmp = cars_tmp_list[x].pop(y)
                     cars_tmp_list.append(list())
                     cars_tmp_list[-1].append(car_tmp)
                     eur = Euristiche(self.node_dict, self.arc_dict)
                     eur.setCars(cars_tmp_list)
                     if not self.ammissibileNotWith(eur):
-                        totDist += penality
+                        totDur += penality
                     if not self.ammissibileMinDur(eur):
-                        totDist += penality
-                    totDist += self.ammissibileCard(eur)*penality
+                        totDur += penality
+                    totDur += self.ammissibileCard(eur)*penality
                     eur = self.reorder(eur)
-                    eur.setDist(eur.getDist() + totDist)
+                    eur.setDur(eur.getDur() + totDur)
                     mossa = (cars[x][y], x, False)
-                    delta = eur.getDist() - actual_dist
+                    delta = eur.getDur() - actual_dur
                     solutions_list.append((eur, mossa, delta))
 
 
@@ -515,7 +494,7 @@ class Euristiche(object):
         if solutions_list[0][1] in tabu_list:
             tabu_list.pop(solutions_list[0][1])
             tabu_list.append(solutions_list[0][1])
-        if best_delta_solution.getDist() < best_solution.getDist():
+        if best_delta_solution.getDur() < best_solution.getDur():
             best_solution = best_delta_solution
             iteration = 0
         else:
@@ -529,9 +508,9 @@ class Euristiche(object):
         if iteration >= 30 or global_iteration >= 50:
             #print "iteration", iteration
             self.setCars(best_delta_solution.getCars())
+            self.setDurList(best_delta_solution.getDurList())
             self.setDur(best_delta_solution.getDur())
-            self.setDist(best_delta_solution.getDist())
-            return (best_delta_solution.getCars(), best_delta_solution.getDur(), best_delta_solution.getDist())
+            return (best_delta_solution.getCars(), best_delta_solution.getDurList(), best_delta_solution.getDur())
         else:
             return self.tabu(best_solution, best_delta_solution, iteration, global_iteration, tabu_list, penality)
 
@@ -543,36 +522,36 @@ class Euristiche(object):
             lista_macchine.append(list())
             car_tmp_list = list()
             for id in car:
-                car_tmp_list.append((id, self.arc_dict[id]['0'].getDist()))
+                car_tmp_list.append((id, self.arc_dict[id]['0'].getDur()))
             # riordiniamo dal piu' distante al piu' vicinio e ne prendo l'id
             car_tmp_list = sorted(car_tmp_list, key=itemgetter(1), reverse=True)
             choose_first = car_tmp_list.pop(0)[0]
             car_tmp_next = list()
             for id in [i[0] for i in car_tmp_list]:
-                car_tmp_next.append((id, self.arc_dict[choose_first][id].getDist()))
+                car_tmp_next.append((id, self.arc_dict[choose_first][id].getDur()))
             choose_next = sorted(car_tmp_next, key=itemgetter(1))
             lista_macchine[z].append(choose_first)
             for x,_ in car_tmp_list:
                 lista_macchine[z].append(x)
         # devo ricalcolare anche le partenze
         lista_durate = list()
-        lista_dist = list()
+        lista_dur = list()
         for z, car in enumerate(lista_macchine):
-            lista_dist.append(list())
+            lista_dur.append(list())
             lista_durate.append(list())
             for i in range(len(car)):
                 if i != len(car)-1:
                     #print "car", car, "i", i
                     lista_durate[z].append(self.arc_dict[car[i]][car[i+1]].getDur())
-                    lista_dist[z].append(self.arc_dict[car[i]][car[i+1]].getDist())
+                    lista_dur[z].append(self.arc_dict[car[i]][car[i+1]].getDur())
                 else:
                     lista_durate[z].append(self.arc_dict[car[i]]['0'].getDur())
-                    lista_dist[z].append(self.arc_dict[car[i]]['0'].getDist())
+                    lista_dur[z].append(self.arc_dict[car[i]]['0'].getDur())
 
         eur.setCars(lista_macchine)
-        eur.setDur(lista_durate)
+        eur.setDurList(lista_durate)
         # calcolo del costo
-        eur.setDist(sum(map(sum, lista_dist)))
+        eur.setDur(sum(map(sum, lista_dur)))
         return eur
 
 

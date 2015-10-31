@@ -1,10 +1,10 @@
 
 class Node:
     """docstring for ClassName"""
-    def __init__(self, id, dur, addr, notWith=""):
+    def __init__(self, id, maxDur, addr, notWith=""):
         #super(Node, self).__init__()
         self.id = id.encode('ascii','ignore')
-        self.dur = int(dur)
+        self.maxDur = int(maxDur)
         self.addr = addr.encode('ascii','ignore')
         if notWith:
             self.notWith = list(notWith.split(','))
@@ -19,9 +19,9 @@ class Node:
         if addr:
             self.addr = addr.encode('ascii','ignore')
 
-    def setDur(self, dur):
-        if dur:
-            self.dur = int(dur)
+    def setMaxDur(self, maxDur):
+        if maxDur:
+            self.maxDur = int(maxDur)
 
     def setNotWith(self, notWith):
         if notWith:
@@ -29,13 +29,13 @@ class Node:
         else:
             self.notWith = ''
 
-    def setNode(self, id='', dur='', addr='', notWith=''):
+    def setNode(self, id='', maxDur='', addr='', notWith=''):
         if id:
             self.id = id.encode('ascii','ignore')
         if addr:
             self.addr = addr.encode('ascii','ignore')
-        if dur:
-            self.dur = int(dur)
+        if maxDur:
+            self.maxDur = int(maxDur)
         if notWith:
             self.notWith = list(notWith.split(','))
         else:
@@ -44,8 +44,8 @@ class Node:
     def getId(self):
         return self.id
 
-    def getDur(self):
-        return self.dur
+    def getMaxDur(self):
+        return self.maxDur
 
     def getAddr(self):
         return self.addr
@@ -57,7 +57,7 @@ class Node:
         return {
                 'id':self.id,
                 'addr':self.addr,
-                'dur':self.dur,
+                'maxDur':self.maxDur,
                 'notWith':self.notWith
                 }
 
