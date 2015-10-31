@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/white_back"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Slogan figo azienda"
+                android:text="Alternative transport solutions"
                 android:layout_below="@+id/app_title"
                 android:layout_centerHorizontal="true"
                 android:textSize="22sp"/>
