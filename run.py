@@ -377,6 +377,10 @@ def main():
     calcEndTime = False
     for i in range(ncycle):
         if isLoop:
+            if (i != 0) and ((i % 10) == 0):
+                print "\nSono in pausa per 60 secondi"
+                time.sleep(60)
+                print "Riprendo l'esecuzione"
             print "\nCiclo numero:", i+1
         startP = time.clock()
 
@@ -460,10 +464,10 @@ def main():
         if ncycle > 1 and i < (ncycle-1):
             # da decidere se e' meglio effettuare il calcolo ogni volta
             if not calcEndTime:
-                calcEndTime = True
+                #calcEndTime = True
                 totalTime = durata * ncycle
                 endExec = datetime.now() + timedelta(seconds=totalTime)
-            print "\nLa fine dell'esecuzione e' prevista per le", '{:%H:%M:%S}'.format(endExec)
+            print "\nLa fine dell'esecuzione e' prevista per", endExec#'{:%d:%H:%M:%S}'.format(endExec)
         elif i == (ncycle-1):
             print "\n### ESECUZIONE TERMINATA ###"
     winsound.Beep(2500, 1500)
