@@ -299,7 +299,7 @@ public class Follow extends AppCompatActivity {
                     }
                 }
                 ((TextView) card_layout.findViewById(R.id.title_e)).setText("Euristica " + names[e]);
-                ((TextView) card_layout.findViewById(R.id.costo_e)).setText("Costo: " + cost + "m");
+                ((TextView) card_layout.findViewById(R.id.costo_e)).setText("Costo: " + Utils.getDurationTime(Long.parseLong(cost)));
                 card_layout.findViewById(R.id.action_share).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

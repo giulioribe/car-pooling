@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
 public class Utils {
@@ -216,6 +217,20 @@ public class Utils {
         long hour = minute / 60;
         format = hour + "h " + (minute - 60 * hour) + "m";
         return format;
+    }
+
+    public static String getDurationTime(long l) {
+        long hour = TimeUnit.MILLISECONDS.toHours(l);
+        long minute = TimeUnit.MILLISECONDS.toMinutes(l) -
+                TimeUnit.HOURS.toMinutes(hour);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(l) -
+                TimeUnit.MINUTES.toSeconds(minute) -
+                TimeUnit.HOURS.toSeconds(hour);
+
+        return String.format("%dh %dm %ds",
+                hour,
+                minute,
+                seconds);
     }
 
     public static void setSrc(final Context context, final ImageView view, final int i) {
