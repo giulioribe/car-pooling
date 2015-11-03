@@ -1,0 +1,72 @@
+{
+    "time_to_arrive": 1446487236787, 
+    "place_to_arrive": "Via della Fornace, 1, 44123 Ferrara FE, Italia", 
+    "users": [
+        {
+            "max_duration": 18000000, 
+            "not_with": "8", 
+            "id": "1", 
+            "address": "Via Otello Putinati, 122, 44123 Ferrara FE, Italia"
+        }, 
+        {
+            "max_duration": 1200000, 
+            "not_with": "", 
+            "id": "2", 
+            "address": "Corso Porta Po, 30, 44121 Ferrara FE, Italia"
+        }, 
+        {
+            "max_duration": 0, 
+            "not_with": "", 
+            "id": "3", 
+            "address": "Via Giuseppe Saragat, 1, 44122 Ferrara FE, Italia"
+        }, 
+        {
+            "max_duration": 0, 
+            "not_with": "", 
+            "id": "4", 
+            "address": "Via Alessandro Volta, 71, 45020 Castelguglielmo RO, Italia"
+        }, 
+        {
+            "max_duration": 0, 
+            "not_with": "4", 
+            "id": "5", 
+            "address": "Via Giuseppe Verdi, 5, 45030 Occhiobello RO, Italia"
+        }, 
+        {
+            "max_duration": 0, 
+            "not_with": "", 
+            "id": "7", 
+            "address": "Via Darsena, 25, 44122 Ferrara FE, Italia"
+        }, 
+        {
+            "max_duration": 0, 
+            "not_with": "1", 
+            "id": "8", 
+            "address": "Via Otello Putinati, 130, 44123 Ferrara FE, Italia"
+        }, 
+        {
+            "max_duration": 0, 
+            "not_with": "", 
+            "id": "11", 
+            "address": "Via Nazionale 77, 45030 Occhiobello, Italia"
+        }, 
+        {
+            "max_duration": 0, 
+            "not_with": "", 
+            "id": "12", 
+            "address": "Via Bologna 11, 44100 Ferrara, Italia"
+        }, 
+        {
+            "max_duration": 0, 
+            "not_with": "", 
+            "id": "13", 
+            "address": "Via Palestro 22, 44100 Ferrara, Italia"
+        }, 
+        {
+            "max_duration": 0, 
+            "not_with": "", 
+            "id": "14", 
+            "address": "Via Pomposa 48, 44100 Ferrara, Italia"
+        }
+    ]
+}

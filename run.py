@@ -363,10 +363,11 @@ def initMain():
     for key in arc_dict:
         n_arc += len(arc_dict[key])
     print "len(arc_dict)", len(arc_dict), n_arc
+    """
     if not isBenchmark and not isTest:
         saveNode(node_dict)
         saveArc(arc_dict)
-
+    """
     return (node_dict, arc_dict)
 
 def main():
@@ -377,11 +378,13 @@ def main():
     calcEndTime = False
     for i in range(ncycle):
         if isLoop:
+            """
             if (i != 0) and ((i % 10) == 0):
                 print "\nSono in pausa per 60 secondi"
                 time.sleep(60)
                 print "Riprendo l'esecuzione"
-            print "\nCiclo numero:", i+1
+            """
+            print "\nCiclo numero:", i+1, "di", ncycle
         startP = time.clock()
 
         start_time = time.clock()
@@ -465,9 +468,10 @@ def main():
             # da decidere se e' meglio effettuare il calcolo ogni volta
             if not calcEndTime:
                 #calcEndTime = True
-                totalTime = durata * ncycle
+                totalTime = durata * (ncycle-i)
                 endExec = datetime.now() + timedelta(seconds=totalTime)
-            print "\nLa fine dell'esecuzione e' prevista per", endExec#'{:%d:%H:%M:%S}'.format(endExec)
+            print "\nDurata esecuzione: (H:M:S):", timedelta(seconds=durata)
+            print "La fine dell'esecuzione e' prevista per", endExec#'{:%d:%H:%M:%S}'.format(endExec)
         elif i == (ncycle-1):
             print "\n### ESECUZIONE TERMINATA ###"
     winsound.Beep(2500, 1500)

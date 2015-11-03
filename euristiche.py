@@ -484,16 +484,25 @@ class Euristiche(object):
                     delta = eur.getDur() - actual_dur
                     solutions_list.append((eur, mossa, delta))
 
-
         solutions_list = sorted(solutions_list, key=itemgetter(2))
+        # se la soluzione migliore travata e' data dalla mossa appena fatta la
+        # elimino
         if len(tabu_list) > 0:
             if solutions_list[0][1] == tabu_list[-1]:
                 solutions_list.pop(0)
         best_delta_solution = copy.deepcopy(solutions_list[0][0])
         # Criterio di aspirazione
+        # Se invece la mossa da fare e' vecchia allora va bene perche', se la
+        # soluzione e' la prima della lista, allora sicuramente e' molto migliorativa
+        # rispetto alle altre
         if solutions_list[0][1] in tabu_list:
             tabu_list.pop(solutions_list[0][1])
             tabu_list.append(solutions_list[0][1])
+        # Al massimo teniamo 7 liste
+        """
+        if len(tabu_list) > 7:
+            tabu_list.pop(0)
+        """
         if best_delta_solution.getDur() < best_solution.getDur():
             best_solution = best_delta_solution
             iteration = 0
