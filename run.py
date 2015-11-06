@@ -20,9 +20,9 @@ from weppy import App, request
 from weppy.tools import service
 
 app = App(__name__)
-key_googleMaps = 'AIzaSyB27xz94JVRPsuX4qJMMiZpGVoQiQITFb8'
+key_googleMaps1 = 'AIzaSyB27xz94JVRPsuX4qJMMiZpGVoQiQITFb8'
 key_googleMaps2 = 'AIzaSyDEeQ7ybauE3th_3d-GQZQcvGI-UxKOFF8'
-key_googleMaps3 = 'AIzaSyC549poFoVcUz3BsDOJ9XpO7CniNTDC6b4'
+key_googleMaps = 'AIzaSyC549poFoVcUz3BsDOJ9XpO7CniNTDC6b4'
 isTest = False
 isBenchmark = False
 isLoop = False
