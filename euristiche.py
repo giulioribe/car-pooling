@@ -171,7 +171,7 @@ class Euristiche(object):
         return (cars_list, dur_list, dur)
 
 
-    def grasp(self):
+    def grasp(self, nIteration=3):
         """
         per ogni chiave del dizionario estraggo i nodi e li inserisco in un
         dizionario che contiene solo nodi verso la destinazione
@@ -183,7 +183,6 @@ class Euristiche(object):
         creo una lista di liste dove ogni lista contiene il percorso di una
         macchina
         """
-        nIteration = 3
         # imposto a -1 nauto cosi' nel ciclo while la prima volta che aggiungo un
         # valore = 0
         nauto = -1
