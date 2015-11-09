@@ -209,6 +209,26 @@ public class Utils {
         return arrayList;
     }
 
+
+    public static String arrayListToStringRequest (ArrayList<String> arrayList) {
+        String text = "";
+        String divider = "";
+        boolean first = true;
+
+        if (arrayList != null && arrayList.size() > 0) {
+
+            for (String k : arrayList) {
+                text += divider + k;
+                if (first) {
+                    divider = ",";
+                    first = false;
+                }
+            }
+        }
+
+        return text;
+    }
+
     public static String formatDur(long l) {
         String format = "";
         if (l == 0)

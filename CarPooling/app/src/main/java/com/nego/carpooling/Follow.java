@@ -92,7 +92,7 @@ public class Follow extends AppCompatActivity {
                 json_p.put(Costants.JSON_USER_ID, "" + p.getId());
                 json_p.put(Costants.JSON_USER_ADDRESS, p.getAddress());
                 json_p.put(Costants.JSON_USER_MAX_DUR, p.getMax_dur() * 60 * 1000);
-                json_p.put(Costants.JSON_USER_NOT_WITH, Utils.arrayListToString(p.getNotWith()));
+                json_p.put(Costants.JSON_USER_NOT_WITH, Utils.arrayListToStringRequest(p.getNotWith()));
                 users.put(json_p);
             }
 
