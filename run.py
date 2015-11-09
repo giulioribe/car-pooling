@@ -20,9 +20,9 @@ from weppy import App, request
 from weppy.tools import service
 
 app = App(__name__)
-key_googleMaps1 = 'AIzaSyB27xz94JVRPsuX4qJMMiZpGVoQiQITFb8'
+key_googleMaps = 'AIzaSyB27xz94JVRPsuX4qJMMiZpGVoQiQITFb8'
 key_googleMaps2 = 'AIzaSyDEeQ7ybauE3th_3d-GQZQcvGI-UxKOFF8'
-key_googleMaps = 'AIzaSyC549poFoVcUz3BsDOJ9XpO7CniNTDC6b4'
+key_googleMaps3 = 'AIzaSyC549poFoVcUz3BsDOJ9XpO7CniNTDC6b4'
 isTest = False
 isBenchmark = False
 isLoop = False
@@ -530,18 +530,18 @@ if __name__ == "__main__":
                 app.run(host="0.0.0.0")
         else:
             print "Eseguire il programma con una delle seguenti modalita':"
-            print "'python main.py -t' per la modalita' test"
-            print "'python main.py -t -l n' per la modalita' test in modalita' loop dove n e' il numero di iterazioni"
-            print "'python main.py -b' per la modalita' benchmark"
-            print "'python main.py -b -l n' per la modalita' benchmark in modalita' loop dove n e' il numero di iterazioni"
-            print "'python main.py -w' per la modalita' server"
-            print "'python main.py -w -t' per la modalita' server test"
+            print "'python run.py -t' per la modalita' test"
+            print "'python run.py -t -l n' per la modalita' test in modalita' loop dove n e' il numero di iterazioni"
+            print "'python run.py -b' per la modalita' benchmark"
+            print "'python run.py -b -l n' per la modalita' benchmark in modalita' loop dove n e' il numero di iterazioni"
+            print "'python run.py -w' per la modalita' server"
+            print "'python run.py -w -t' per la modalita' server test"
 
     else:
         print "Eseguire il programma con una delle seguenti modalita':"
-        print "'python main.py -t' per la modalita' test"
-        print "'python main.py -t -l n' per la modalita' test in modalita' loop dove n e' il numero di iterazioni"
-        print "'python main.py -b' per la modalita' benchmark"
-        print "'python main.py -b -l n' per la modalita' benchmark in modalita' loop dove n e' il numero di iterazioni"
-        print "'python main.py -w' per la modalita' server"
-        print "'python main.py -w -t' per la modalita' server test"
+        print "'python run.py -t' per la modalita' test"
+        print "'python run.py -t -l n' per la modalita' test in modalita' loop dove n e' il numero di iterazioni"
+        print "'python run.py -b' per la modalita' benchmark"
+        print "'python run.py -b -l n' per la modalita' benchmark in modalita' loop dove n e' il numero di iterazioni"
+        print "'python run.py -w' per la modalita' server"
+        print "'python run.py -w -t' per la modalita' server test"
