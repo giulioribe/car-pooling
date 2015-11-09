@@ -1,0 +1,872 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+
+        <title>Right Way - Alternative transport solutions</title>
+
+        <meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+        <meta name="author" content="Giulio Riberto, Federica Pelli, Tommaso Berlose">
+
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+        <link rel="stylesheet" href="css/reveal.css">
+        <link rel="stylesheet" href="css/theme/custom.css" id="theme">
+
+        <!-- Code syntax highlighting -->
+        <link rel="stylesheet" href="lib/css/zenburn.css">
+        <link href='https://fonts.googleapis.com/css?family=Roboto:300,300italic,400,400italic,500,500italic' rel='stylesheet' type='text/css'>
+
+        <!-- Printing and PDF exports -->
+        <script>
+            var link = document.createElement( 'link' );
+            link.rel = 'stylesheet';
+            link.type = 'text/css';
+            link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+            document.getElementsByTagName( 'head' )[0].appendChild( link );
+
+            window.addEventListener("mousedown", handleClick, false);
+            window.addEventListener("contextmenu", function(e) { e.preventDefault(); }, false);
+            function handleClick(e) {
+                e.preventDefault();
+                if(e.button === 0) Reveal.next();
+                if(e.button === 2) Reveal.prev();
+            }
+        </script>
+
+        <!--[if lt IE 9]>
+        <script src="lib/js/html5shiv.js"></script>
+        <![endif]-->
+    </head>
+
+    <body>
+
+        <div class="reveal">
+
+            <!-- Any section element inside of this container is displayed as a slide -->
+            <div class="slides">
+                <!-- INTRO -->
+                <section data-background="#db4337">
+                    <h2>Progetto di<BR/>Ricerca Operativa</h2>
+                    <h5>Anno Accademico 2014/15 </h5>
+                </section>
+                <!-- PROGETTO: progetto con applicazioni reali -->
+                <section data-background="#db4337">
+                    <h2>Progetto 16 - Car Pooling</h2>
+                    <h4>Consegna Progetto</h4>
+                    <table><tr><td>
+                    <blockquote style="text-align:left;">
+                        Sono note le origini degli spostamenti casa-lavoro degli studenti del polo.
+                        <br/>Supponendo che tutti abbiano gli stessi orari (vogliano arrivare al polo alla stessa ora a inizio giornata), si organizzino gli itinerari così da <span>minimizzare la somma delle durate</span> dei percorsi delle macchine.
+                        <BR/><BR/>
+                        Tutte le macchine hanno capienza 5 e ciascun utente ha un massimo tempo di viaggio consentito, delle preferenze sui compagni di viaggio, e può essere o autista o passeggero.
+
+                    </blockquote>
+                    </td></tr></table>
+                </section>
+                <section data-background="#db4337">
+                    <h2>Nuove Visioni e Necessità</h2>
+                    <h4>Problematiche e Soluzioni attuali</h4>
+                    <table><tr><td>
+                    <blockquote style="text-align:left;">
+                        Il decreto interministeriale <span>Mobilità Sostenibile nelle Aree Urbane</span> del 27/03/1998, ha introdotto la figura professionale del <span>Mobility Manager</span> di azienda.
+                        <br/><BR/>Egli ha l'obiettivo di ridurre l'uso dell'auto privata adottando strumenti che favoriscono soluzioni di trasporto alternativo a <span>ridotto impatto ambientale</span>.
+                    </blockquote>
+                    <blockquote style="text-align:left;">
+                        Attualmente sono presenti soltanto soluzioni proprietarie sviluppate da enti e aziende di grosse dimensioni (e.g. Software <a target="top" href="http://www.poliedra.polimi.it/attivita/mobilita/servizi-flessibili-di-trasporto/dreams">DREAMS</a> del Politecnico di Milano),
+                        per tale motivo si propone un'implementazione <span>innovativa e open source</span>.
+                    </blockquote>
+                    </td></tr></table>
+                </section>
+
+                <!-- IMPLEMENTAZIONE -->
+                <section>
+                    <section data-background="images/cp_t.png">
+                        <h1>Right Way</h1>
+                        <h4>Alternative transport solutions</h4>
+                    </section>
+                    <section data-background="#db4337">
+                        <h2>User Interface</h2>
+                        <h4 class="todo">Multiplatform with Db Client-side</h4>
+                        <img src="images/flat_dev_car.png">
+                    </section>
+                    <section data-background="#db4337">
+                        <h2>User Interface</h2>
+                        <h4>Features Principali</h4>
+                        <BR/>
+                        <table><tr>
+                            <td class="fragment" style="width: 25%; text-align: center;">
+                                <img src="images/features_1.png" width="200px">
+                                <h5 class="subtitle">Db People</h5>
+                            </td>
+                            <td class="fragment" style="width: 25%; text-align: center;">
+                                <img src="images/features_2.png" width="200px">
+                                <h5 class="subtitle">Place & Time</h5>
+                            </td>
+                            <td class="fragment" style="width: 25%; text-align: center;">
+                                <img src="images/features_3.png" width="200px">
+                                <h5 class="subtitle">Http Request</h5>
+                            </td>
+                            <td class="fragment" style="width: 25%; text-align: center;">
+                                <img src="images/features_4.png" width="200px">
+                                <h5 class="subtitle">Maps Views</h5>
+                            </td>
+                        </tr></table>
+                    </section>
+                    <section data-background="#db4337">
+                        <h2>Python Web Service</h2>
+                        <h4>Safety, Reliable and Concurrent</h5>
+                        <img src="images/flat_python.png">
+                    </section>
+                    <section data-background="#db4337">
+                        <h2>Python Web Service</h2>
+                        <h4>Step Principali</h4>
+                        <BR/>
+                        <table><tr>
+                            <td class="fragment" style="width: 25%; text-align: center;">
+                                <img src="images/features_5.png" width="200px">
+                                <h5 class="subtitle">Maps Api</h5>
+                            </td>
+                            <td class="fragment" style="width: 25%; text-align: center;">
+                                <img src="images/features_6.png" width="200px">
+                                <h5 class="subtitle">Some Magic</h5>
+                            </td>
+                            <td class="fragment" style="width: 25%; text-align: center;">
+                                <img src="images/features_7.png" width="200px">
+                                <h5 class="subtitle">Benchmark</h5>
+                            </td>
+                            <td class="fragment" style="width: 25%; text-align: center;">
+                                <img src="images/features_8.png" width="200px">
+                                <h5 class="subtitle">Json Response</h5>
+                            </td>
+                        </tr></table>
+                    </section>
+                </section>
+                <!-- DEFINIZIONE -->
+                <section data-background="#db4337">
+                    <h2>Definizione Problema</h2>
+                    <h4>Obiettivo, Dati e Vincoli</h4>
+                    <table><tr><td>
+                        <blockquote style="text-align:left;">
+                            Si vuole soddisfare le richieste di un insieme di utenti, ognuno dei quali desidera spostarsi fra due punti di una rete, arrivando tutti ad un’ora prestabilita. Si tratta quindi di determinare un insieme ottimo di percorsi su grafo, nel rispetto dei vincoli dati, in modo da minimizzare la durata totale delle singole auto. (<span>Problema di Ottimizzazione</span>)
+                        </blockquote>
+                        <blockquote style="text-align:left;">
+                            Ogni utente ha un insieme di <span>Dati</span> personali: numero identificativo, nome, indirizzo, massimo tempo di viaggio consentito e preferenze di compagni di viaggio.
+                        </blockquote>
+                        <blockquote style="text-align:left;">
+                            L'ammissibilità delle possibili soluzioni è data da un insieme di <span>Vincoli</span>: la capacità massima di ciascuna macchina, la possibilità di inserire un tempo limite di viaggio, e la preferenza negli abbinamenti dei compagni di viaggio.
+                        </blockquote>
+                    </td></tr></table>
+                </section>
+                <!-- GRAFO -->
+                <section data-background="#db4337">
+                    <h2>Formalizzazione Problema</h2>
+                    <h4>Scelta di Dati Reali</h4>
+                    <table class="noborder">
+                        <tr>
+                        <td>
+                        <pre><code data-trim contenteditable>
+Via Otello Putinati 122
+Corso Porta Po 30
+Via Giuseppe Saragat 1
+Via Giuseppe Fabbri 11
+Via Bologna 11
+Via Palestro 22
+Via Pomposa 48
+Via Porta Reno 24
+Via Corso Giovecca 1
+                    </code></pre>
+                        </td>
+                        <td>
+                            <pre><code data-trim contenteditable>
+Node {
+    int id: 1
+    String name: "Tommaso Berlose"
+    String address: "Via Otello Putinati 122"
+    String img: "" //default, img url not set
+    long maxDur: 0 //default, not set
+    String notWith: "5,6" //other people ids
+}
+// seguono setter e getter
+                    </code></pre>
+                        </td>
+                        </tr>
+                        <tr><td colspan="2">
+                            <blockquote align="left">
+                                Per ogni utente selezionato viene creato un <span>Nodo</span> che contiente tutte le informazioni necessarie.
+                                Queste formano i punti di ancoraggio sulla mappa.
+                            </blockquote>
+                        </td></tr>
+                    </table>
+                </section>
+                <section data-background="images/indirizzi.png">
+                </section>
+                <section data-background="#db4337">
+                    <h2>Formalizzazione Problema</h2>
+                    <h4>Google Maps API Distance Matrix</h4>
+                    <table class="noborder" cellpadding="0" cellspacing="0"><tr><td colspan="2" style="padding-bottom: 0;">
+                    <pre><code data-trim contenteditable>
+https://maps.googleapis.com/maps/api/distancematrix/json?
+origins=Vancouver+BC|Seattle&destinations=San+Francisco|Victoria+BC
+
+                    </code></pre></td></tr><tr><td style="padding-top: 0; padding-bottom: 0;">
+                    <pre style="margin: 0 auto;"><code data-trim contenteditable>
+Arc {
+    int id_i: 1
+    int id_f: 2
+    long dur: 2120 //sec
+    long dist: 14505 // metri
+}
+                    </code></pre></td>
+                    <td style="padding-top: 0; padding-bottom: 0;">
+                    <pre style="margin: 0 auto;"><code data-trim contenteditable>
+Arc {
+    int id_i: 2
+    int id_f: 1
+    long dur: 1560 //sec
+    long dist: 13905 // metri
+}
+                    </code></pre></td></tr><tr><td colspan="2" style="padding-top: 0;">
+                    <blockquote align="left">
+                        Per ogni coppia di nodi viene creato un <span>Arco</span> che contiente tutte le informazioni necessarie.
+                        Ogni arco è bidirezionale con costo differente in base al verso di percorrenza.
+                    </blockquote>
+                    </td></tr></table>
+                </section>
+                <section data-background="images/grafo.png">
+                </section>
+                <section data-background="#db4337">
+                    <h2>Formalizzazione Problema</h2>
+                    <h4>Grafo e Soluzioni</h4>
+                    <table><tr><td>
+                    <blockquote align="left">
+                        Il problema è quindi formalizzato a partire da un grafo <span>completo</span>, <span>fortemente connesso</span>, <span>orientato</span>, con costi differenti su ogni arco in base al verso di percorrenza.
+                    </blockquote>
+                    <blockquote align="left">
+                        Dai dati inseriti, tramite determinati metodi costruttivi, è possibile ottenere una <span>Soluzione</span> del problema che rispetti i vincoli di ammissibilità.<br/>
+                        Si considera soluzione la disposizione di tutti gli utenti in un insieme di vettori ordinati, detti macchine, dove il primo elemento è l'utente Autista e l'ultimo è il nodo Destinazione.
+                    </blockquote>
+                    </td></tr></table>
+                </section>
+                <!-- MODELLO -->
+                <section data-background="#db4337">
+                    <h2>Modello Matematico</h2>
+                    <h4>Classi di Complessità</h4>
+                    <table><tr><td>
+                    <blockquote align="left">
+                        Il problema studiato si dice di <span>classe NP</span> poichè il problema di certificato associato (anche detto test di ammissibilità) è risolvibile in tempo polinomiale.<BR/><br/>
+                        Inoltre, poichè appartiene alla famiglia dei cosidetti problemi di routing e scheduling, si può ricondurre al TSP che è della sottoclasse <span>NP-Hard</span>.
+                    </blockquote>
+                    <blockquote align="left">
+                        Per poter affrontare le istanze reali di un problema NP-Hard si deve necessariamente ricorrere ad <span>approcci di tipo euristico</span> accontentandosi di trovare delle ‘buone’ soluzioni amissibili. Questo perchè metodi esaustivi divengono inutilizzabili non appena il numero dei dati in ingresso aumenta oltre un certo limite.
+                    </blockquote>
+                    </td></tr></table>
+                </section>
+                <!-- COMPLESSITA' -->
+                <section>
+                    <section data-background="#db4337">
+                        <h2>Complessità</h2>
+                        <h4>Numero delle Soluzioni da valutare</h4>
+                        <table>
+                        <tr>
+                        <td>
+                        <blockquote style="float:right;">
+                            <table>
+                            <thead>
+                                <tr>
+                                    <th>Nodi</th>
+                                    <th align="center">V(n)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td align="center">0</td>
+                                    <td align="center">0</td>
+                                </tr>
+                                <tr>
+                                    <td align="center">1</td>
+                                    <td align="center">1</td>
+                                </tr>
+                                <tr>
+                                    <td align="center">2</td>
+                                    <td align="center">3</td>
+                                </tr>
+                                <tr>
+                                    <td align="center">3</td>
+                                    <td align="center">13</td>
+                                <tr>
+                                </tr>
+                                    <td align="center">4</td>
+                                    <td align="center">61</td>
+                                <tr>
+                                </tr>
+                                    <td align="center">5</td>
+                                    <td align="center">321</td>
+                                </tr>
+                            </tbody>
+                            </table>
+                        </blockquote>
+                        </td><td>
+                        <img src="images/complessita.png" height="400px" style="float:left; margin: 20px;">
+                        </td>
+                        </tr></table>
+                    </section>
+                </section>
+                <!-- EURISTICHE - COME PROCEDERE -->
+                <section data-background="#db4337">
+                    <h2>Approccio Euristico</h2>
+                    <h4>Considerazioni Iniziali: Come procedere?</h4>
+                    <table>
+                        <tr>
+                        <td>
+                        <blockquote align="left">
+                            Come primo approccio si sceglie un'euristica di tipo <span>Greedy</span> poichè di facile implementazione e notevole efficienza computazionale.<br/>
+                            Gli algoritmi Greedy determinano la soluzione attraverso una sequenza di decisioni parziali (localmente ottime), senza mai modificarle.<BR/><br/>
+                            Si vuole poi procedere valutando i risultati delle singole euristiche, ottenuti tramite un <span>Benchmark</span> di circa 1000 ripetizioni su 46 elementi, così da poter confrontare i loro costi e tempi di esecuzione.
+                        </blockquote>
+                        </td>
+                        </tr>
+                    </table>
+                </section>
+                <!-- EURISTICHE - GREEDY -->
+                <section>
+                    <section data-background="#db4337">
+                        <h2>Greedy</h2>
+                        <h4>Costruzione e Funzionamento</h4>
+                        <table>
+                            <tr>
+                            <td>
+                            <blockquote align="left">
+                                Si inizia scegliendo il nodo più lontano dal nodo destinazione: questo verrà inserito come primo elemento di un nuovo vettore macchina (diventando un <span>nodo autista</span>).<br/><br/>
+                                La procedura <span>Best</span> esamina i nodi non ancora visitati e va a selezionare il nodo più vicino a quello in cui mi trovo tramite l’algoritmo “Nearest Neighbor”.<br/>Non vengono considerati i nodi che sono "oltre" il nodo destinazione poichè aggiungerli porterebbe un peggioramento.<br/><br/>
+                                La procedura <span>Ind</span> verifica che siano rispettati i vincoli di cardinalità dell’auto, i massimi tempi di viaggio consentiti e le preferenze in fatto di compagni di viaggio.<br/><br/>
+                                Se sono rispettati i vincoli si aggiunge il nodo al vettore macchina e si va a selezionare il nodo successivo. Altrimenti viene generata una nuova macchina al ciclo successivo.
+                            </blockquote>
+                            </td>
+                            </tr>
+                        </table>
+                    </section>
+                    <section data-background="#db4337">
+                        <h2>Greedy</h2>
+                        <h4>Algoritmo</h4>
+                        <table class="noborder">
+                        <tr>
+                        <td>
+                        <pre><code data-trim contenteditable>
+S = {}
+N = node_to_visit
+  while N ≠ {∅}
+    Y = Best(x ∈ N)
+    .
+    .
+    if Ind(S ∪ {Y})
+         .
+         .
+         .
+         then (Add Y to S)
+         .
+         and  (Remove Y from N)
+return S
+
+                    </code></pre>
+                        </td>
+                        <td>
+                            <pre><code data-trim contenteditable>
+def greedy(self):
+  arcToDest_dict[key] = self.arc_dict[key]['0']
+  while len(arcToDest_dict) > 0:
+    car = sorted(arcToDest_dict.values())[0]
+            .getId_i()
+    for arc in arc_start.values():
+      if (self.NotVisited([...]) and
+              self.CheckDuration([...]) and
+              self.checkNotWith([...]) and
+              self.minDurationGreedy([...])):
+        car = arc.getId_f()
+        cars_list[nauto].append(car)
+        arcToDest_dict.pop(car)
+  return (cars_list)
+                    </code></pre>
+                        </td>
+                        </tr>
+                    </table>
+                    </section>
+                    <section data-background="#db4337">
+                        <h2>Greedy</h2>
+                        <h4>Benchmark</h4>
+                        <table>
+                            <tr>
+                            <td align="center">
+                                <img src="images/costo_greedy.png" height="250px">
+                                <img src="images/tempo_greedy.png" height="250px">
+                            </td>
+                            </tr>
+                        </table>
+                    </section>
+                    <section data-background="#db4337">
+                        <h2>Greedy</h2>
+                        <h4>Come Migliorare</h4>
+                        <table>
+                            <tr>
+                            <td>
+                            <blockquote align="left">
+                                L’euristica Greedy <span>non garantisce l’ottimalità della soluzione</span> perchè compie decisioni parziali "localmente ottime" senza mai modificarle.<br/> Costruisce infatti la soluzione attraverso iterazioni successive, effettuando ad ogni iterazione la scelta più favorevole compatibile con i vincoli del problema.<br/>Le ultime scelte però sono prese solamente in base alla ricerca di ammissibilità della soluzione e non in base al suo costo.<br/><br/>
+                                Combinando un algoritmo di ricerca locale a una Greedy randomizzata si ottiene l’euristica <span>GRASP</span> (Greedy Randomized Adaptive Search Procedure) che è un’evoluzione della Multi Start Local Search.
+                            </blockquote>
+                            </td>
+                            </tr>
+                        </table>
+                    </section>
+                </section>
+                <!-- EURISTICHE - GRASP -->
+                <section>
+                    <section data-background="#db4337">
+                        <h2>Grasp</h2>
+                        <h4>Costruzione e Funzionamento</h4>
+                        <table>
+                            <tr>
+                            <td>
+                            <blockquote align="left">
+                                Si utilizza lo stesso algoritmo creato per la Greedy, ma la procedura Best cambia perchè ad ogni passo <span>viene scelto un nodo random</span> tra un sottoinsieme di k nodi "migliori" (nel nostro caso k=3, con k=1 si avrebbe la Greedy standard).<br/><br/>
+                                Si utilizza una funzione random anche per selezionare l’autista iniziale in modo che non sia sempre lo stesso ma ne venga selezionato uno a caso tra i k più lontani dalla destinazione.<br/><br/>
+                                La procedura Ind e il metodo costruttivo delle soluzioni, invece, rimangono invariate rispetto all'algoritmo della Greedy.
+                            </blockquote>
+                            </td>
+                            </tr>
+                        </table>
+                    </section>
+                    <section data-background="#db4337">
+                        <h2>Grasp</h2>
+                        <h4>Algoritmo</h4>
+                        <table class="noborder">
+                        <tr>
+                        <td>
+                        <pre><code data-trim contenteditable>
+S = {}
+N = node_to_visit
+  while N ≠ {∅}
+    .
+    Y = RandomBest(x ∈ N)
+    .
+    .
+    if Ind(S ∪ {Y})
+         .
+         .
+         .
+         then (Add Y to S)
+         .
+         and  (Remove Y from N)
+return S
+                    </code></pre>
+                        </td>
+                        <td>
+                            <pre><code data-trim contenteditable>
+def grasp(self):
+  arcToDest_dict[key] = self.arc_dict[key]['0']
+  while len(arcToDest_dict) > 0:
+    k = 5
+    bestKE = sorted(arcToDest_dict.values(), k)
+    car = Random(bestKE, 1).getId_i()
+    for arc in arc_start.values():
+      if (self.NotVisited([...]) and
+              self.CheckDuration([...]) and
+              self.checkNotWith([...]) and
+              self.minDurationGreedy([...])):
+        car = arc.getId_f()
+        cars_list[nauto].append(car)
+        arcToDest_dict.pop(car)
+  return (cars_list)
+                    </code></pre>
+                        </td>
+                        </tr>
+                    </table>
+                    </section>
+                    <section data-background="#db4337">
+                        <h2>Grasp</h2>
+                        <h4>Benchmark</h4>
+                        <table>
+                            <tr>
+                            <td align="center">
+                                <img src="images/costo_grasp.png" height="250px">
+                                <img src="images/tempo_grasp.png" height="250px">
+                            </td>
+                            </tr>
+                        </table>
+                    </section>
+                    <section data-background="#db4337">
+                        <h2>Grasp</h2>
+                        <h4>Come Migliorare</h4>
+                        <table>
+                            <tr>
+                            <td>
+                            <blockquote align="left">
+                                I limiti della GRASP sono rappresentati principalmente dal fatto che <span>non possiede memoria</span> (ogni restart è quindi indipendente dai precedenti) e che non dà nessuna garanzia sulla qualità della soluzione iniziale.<br/>
+                                La procedura inoltre non accetta peggioramenti, <span>rimanendo intrappolata negli ottimi locali</span> di qualità spesso peggiore rispetto all’ottimo globale (potenzialmente si converge più volte allo stesso ottimo locale).<br/><br/>
+                                Si può trovare una soluzione a questi problemi utilizzando l'euristica <span>Path Relinking</span>, che esplora le soluzioni ottenute operando delle mosse a partire da una popolazione di soluzioni elite { s<sub>i</sub> } avvicinandosi ad una soluzione target s*.
+                            </blockquote>
+                            </td>
+                            </tr>
+                        </table>
+                    </section>
+                </section>
+                <!-- EURISTICHE - PATH RELINKING -->
+                <section>
+                    <section data-background="#db4337">
+                        <h2>Path Relinking</h2>
+                        <h4>Costruzione e Funzionamento</h4>
+                        <table>
+                            <tr>
+                            <td>
+                            <blockquote align="left">
+                                Si costruisce una <span>popolazione di soluzioni elite</span> { s<sub>i</sub> } ripetendo la GRASP più volte e aggiungendo la Greedy trovata precedentemente.<br/>
+                                Si operano quindi in successione delle mosse di scambio di componenti per avvicinarsi alla soluzione target s*.<br/><br/>
+                                Ad ogni passo si valuta ogni <span>mossa</span> potenziale, cioè la modifica di una componente di s<sub>i</sub> con una della target s*, per ciascuna delle componenti per cui s<sub>i</sub> e s* differiscono (e.g. lo scambio di due passeggeri in due macchine differenti).<br/><br/>
+                                Tra tutte le soluzioni trovate, una per ogni mossa possibile, si seleziona quella più conveniente e si itera l'algoritmo. Conclusa l'esecuzione si sceglie la <span>migliore soluzione trovata</span> lungo il percorso.
+                            </blockquote>
+                            </td>
+                            </tr>
+                        </table>
+                    </section>
+                    <section data-background="#db4337">
+                        <h2>Path Relinking</h2>
+                        <h4>Algoritmo</h4>
+                        <table class="noborder">
+                        <tr>
+                        <td>
+                            <pre><code data-trim contenteditable style="overflow: visible">
+def path(self, target, elite, iteration):
+  while True:
+   for x in Cars:
+     for y in Cars.Utenti:
+       if target_tmp.cars[x][y] != elite_tmp_pope[-1].cars[x][y]:
+         elite_tmp_pope[-1].cars[x][y] = target_tmp.cars[x][y]
+
+  if self.controllo_stop(target, elite_ok, iteration):
+    return elite_ok
+  else:
+    iteration += 1
+    deep_sol = self.path(target, elite_ok, iteration)
+    if depp_sol.getDur() > elite_ok.getDur():
+      return elite_ok
+    else:
+      return deep_sol
+                    </code></pre>
+                        </td>
+                        </tr>
+                    </table>
+                    </section>
+                    <section data-background="#db4337">
+                        <h2>Path Relinking</h2>
+                        <h4>Benchmark</h4>
+                        <table>
+                            <tr>
+                            <td align="center">
+                                <img src="images/costo_path.png" height="250px">
+                                <img src="images/tempo_path.png" height="250px">
+                            </td>
+                            </tr>
+                        </table>
+                    </section>
+                </section>
+                <!-- EURISTICHE - REVERSE PATH RELINKING -->
+                <section>
+                    <section data-background="#db4337">
+                        <h2>Backward Path Relinking</h2>
+                        <h4>Costruzione e Funzionamento</h4>
+                        <table>
+                            <tr>
+                            <td>
+                            <blockquote align="left">
+                                Secondo alcuni studi è più conveniente procedere in <span>senso inverso</span>, quindi dalla soluzione target s*, ad ogni mossa, si cerca di raggiungere la soluzione elite s<sub>i</sub>.<br/><br/>
+                                Si può infatti verificare che ad ogni mossa effettuata il grado di ramificazione delle possibili soluzioni venga ridotto ma secondo il <span>Proximate Optimality Principle</span> spesso si osserva che gli ottimi locali sono concentrati in una regione limitata.<br/>
+                                Per questo è preferibile iniziare la ricerca in senso inverso così da controllare maggiori soluzioni vicino alla soluzione target s* che è di fatto un ottimo locale.<br/><br/>
+                                Questo approccio, come per la Path Relinking normale, è possibile grazie alla proprietà di <span>Raggiungibilità</span> di tutte le soluzioni del problema.
+                            </blockquote>
+                            </td>
+                            </tr>
+                        </table>
+                    </section>
+                    <section data-background="#db4337">
+                        <h2>backward Path Relinking</h2>
+                        <h4>Benchmark</h4>
+                        <table>
+                            <tr>
+                            <td align="center">
+                                <img src="images/costo_pathR.png" height="250px">
+                                <img src="images/tempo_pathR.png" height="250px">
+                            </td>
+                            </tr>
+                        </table>
+                    </section>
+                </section>
+                <!-- EURISTICHE - CONFRONTO PATH RELINKING -->
+                <section>
+                    <section data-background="#db4337">
+                        <h2>Confronto Path Relinking</h2>
+                        <h4>Tempi di Esecuzione</h4>
+                        <table>
+                            <tr>
+                            <td align="center">
+                            <img src="images/confronto_path.png" height="400px">
+                            <blockquote align="left">
+                                Confrontando le due euristiche si è notato che, sebbene il costo delle soluzioni sia identico, il tempo di esecuzione della Path Relinking è leggermente migliore nel 54,53% dei casi.
+                            </blockquote>
+                            </td>
+                            </tr>
+                        </table>
+                    </section>
+                    <section data-background="#db4337">
+                        <h2>Confronto Path Relinking</h2>
+                        <h4>Come Migliorare</h4>
+                        <table>
+                            <tr>
+                            <td>
+                            <blockquote align="left">
+                                Una limitazione che rimane anche nella Path Relinking riguarda il fatto di non avere memoria, per questo si rischia di ritornare in soluzioni già visitate.<br/><br/>
+                                Per risolvere questo problema, e uscire quindi dal bacino di attrazione degli ottimi locali, si può usare la tecnica <span>Tabu Search</span>.<br/>
+                                Questa euristica ammette anche soluzioni peggiorative e non ammissibili durante la propria esecuzione (penalizzando in caso di violazione di vincoli) partendo da una soluzione random e valutando ogni possibile mossa di spostamento.
+                            </blockquote>
+                            </td>
+                            </tr>
+                        </table>
+                    </section>
+                </section>
+                <!-- EURISTICHE - TABU SEARCH -->
+                <section>
+                    <section data-background="#db4337">
+                        <h2>Tabu Search</h2>
+                        <h4>Costruzione e Funzionamento</h4>
+                        <table>
+                            <tr>
+                            <td>
+                            <blockquote align="left">
+                            Si parte da una soluzione generica e si valutano tutte le possibili soluzioni a distanza di una mossa: <span>Swap</span>, <span>Stack</span> o <span>Unstack</span>. Si seleziona poi la soluzione migliore dell’intorno valutato (si accettano anche peggioramenti in modo da sfuggire agli ottimi locali) e si mantiene memoria della soluzione migliore visitata. Nel caso in cui la soluzione non sia ammissibile allora verrà aggiunta una <span>penalty</span> al costo.<br/><br/>
+                            Per evitare di avere dei loop, occorre che l’inversa della mossa appena effettuata venga memorizzata in una <span>Tabu List</span> di lunghezza k (e.g. k = 7), e che le mosse presenti nella lista siano proibite per le prossime k iterazioni (senza considerare il <span>Criterio di Aspirazione</span>).<br/><br/>
+                            Iterando questa ricerca, l'algoritmo finisce nel caso siano eseguite 30 iterazioni senza trovare una soluzione migliore di quella già in memoria o dopo un numero di iterazioni globali massimo.
+                            </blockquote>
+                            </td>
+                            </tr>
+                        </table>
+                    </section>
+                    <section data-background="#db4337">
+                        <h2>Tabu Search</h2>
+                        <h4>Algoritmo</h4>
+                        <table class="noborder">
+                        <tr>
+                        <td>
+                        <pre><code data-trim contenteditable style="overflow-x: hidden; padding-right: 40px;">
+def tabu(self, best_solution, actual_solution, [...]):
+    global_iteration += 1
+    [...]
+    # SwapCar
+    for x in range(len(cars)):
+        for y in range(len(cars[x])):
+            if x != len(cars):
+                for x1 in range(x+1, len(cars)):
+                    for y1 in range(len(cars[x1])):
+                        [CheckOldPenalty]
+                    eur = Euristiche(self.node_dict, self.arc_dict)
+                    eur = self.reorder(eur)
+                    if not self.ammissibileNotWith(eur):
+                        totDur += penality
+                    if not self.ammissibileMinDur(eur):
+                        totDur += penality
+                    totDur += self.ammissibileCard(eur)*penality
+                    solutions_list.append((eur, mossa, delta))
+
+    # Stack
+    for x in range(len(cars)):
+        for y in range(len(cars[x])):
+            for x1 in range(x, len(cars)):
+                if x != x1:
+                    [...]
+                    solutions_list.append((eur, mossa, delta))
+
+            # Unstack
+            cars_tmp_list = copy.deepcopy(cars)
+            if len(cars_tmp_list[x]) > 1:
+                [...]
+                solutions_list.append((eur, mossa, delta))
+
+    solutions_list = sorted(solutions_list, key=itemgetter(2))
+    if len(tabu_list) > 0:
+        if solutions_list[0][1] == tabu_list[-1]:
+            solutions_list.pop(0)
+    best_delta_solution = copy.deepcopy(solutions_list[0][0])
+
+    # Criterio di aspirazione
+    if solutions_list[0][1] in tabu_list:
+        tabu_list.pop(solutions_list[0][1])
+        tabu_list.append(solutions_list[0][1])
+
+    if len(tabu_list) > 7:
+        tabu_list.pop(0)
+
+    if best_delta_solution.getDur() < best_solution.getDur():
+        best_solution = best_delta_solution
+        iteration = 0
+    else:
+        iteration += 1
+    if iteration >= max_it or global_iteration >= max_global_it:
+        return best_delta_solution
+    else:
+        return self.tabu([...])
+
+                    </code></pre>
+                        </td>
+                        </tr>
+                    </table>
+                    </section>
+                    <section data-background="#db4337">
+                        <h2>Tabu Search</h2>
+                        <h4>Benchmark</h4>
+                        <table>
+                            <tr>
+                            <td align="center">
+                                <img src="images/costo_tabu.png" height="250px">
+                                <img src="images/tempo_tabu.png" height="250px">
+                            </td>
+                            </tr>
+                        </table>
+                    </section>
+                </section>
+                <!-- CONCLUSIONE COMPLESSITA' -->
+                <section>
+                    <section data-background="#db4337">
+                        <h2>Osservazioni Conclusive</h2>
+                        <h4>Tempi di Esecuzione in funzione dell'Input</h4>
+                        <table>
+                            <tr>
+                            <td>
+                            <blockquote align="left">
+                                E' possibile confrontare i tempi di esecuzione dell'algoritmo utilizzato in funzione di valori di input (numero di nodi da valutare) differenti.<br/>
+                                All'aumento del input corrisponde, infatti, una <span>minore linearità</span> nei tempi di esecuzione ed un loro <span>aumento esponenziale</span>.
+                            </blockquote>
+                            <blockquote>
+                                Sono presenti alcune limitazioni a questo studio a causa dell'accesso free alle API di Google Maps; non si è potuto superare il valore di 46 nodi e si è dovuto tenere conto del tempo necessario tra una richiesta e l'altra.
+                            </blockquote>
+                            </td>
+                            </tr>
+                        </table>
+                    </section>
+                    <section data-background="images/confronto_tempi.png">
+                    </section>
+                    <section data-background="#db4337">
+                        <h2>Osservazioni Conclusive</h2>
+                        <h4>Crescita Esponenziale</h4>
+                        <table>
+                            <tr>
+                            <td>
+                            <blockquote style="float:right;">
+                                <table>
+                                <thead>
+                                    <tr>
+                                        <th>Nodi</th>
+                                        <th align="center">Tmp Exec(s)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td align="center">10</td>
+                                        <td align="right">1,7271</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="center">20</td>
+                                        <td align="right">15,0993</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="center">30</td>
+                                        <td align="right">46,0919</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="center">40</td>
+                                        <td align="right">116,6371</td>
+                                    <tr>
+                                    </tr>
+                                        <td align="center">46</td>
+                                        <td align="right">142,6476</td>
+                                    <tr>
+                                </tbody>
+                                </table>
+                            </blockquote>
+                            <blockquote style="float:right;">
+                                Visualizza tutti i <a href="../benchmark_tempi_esecuzione.xlsx" target="top">Dati</a>.
+                            </blockquote>
+                            </td><td>
+                            <img src="images/media_tempi.png" height="450px" style="float:left; margin: 20px;">
+                            </td>
+                            </tr></table>
+                    </section>
+                </section>
+                <!-- CONCLUSIONI -->
+                <section>
+                    <section data-background="#db4337">
+                        <h2>Osservazioni Conclusive</h2>
+                        <h4>Confronto Costi</h4>
+                        <table>
+                            <tr>
+                            <td>
+                            <blockquote align="left">
+                                A conclusione dello studio effetuato si può osservare che tramite la <span>Tabu Search</span> si riesce ad ottenere un buon risultato al problema NP-Hard del <span>Car Pooling</span> con un input di dimensione non ridotta.
+                                La soluzione finale risulta inoltre non solo molto buona ma anche applicabile a contesti reali.<br/><br/>
+                                Dai dati ottenuti tramite benchmark risulta però che la <span>Greedy</span> sia non troppo peggiorativa rispetto alla Tabu in confronto ad un tempo di esecuzione nettamente inferiore: la Greedy in media restituisce il risultato in <span>2,445 millisecondi</span> mentre ad esempio la Tabu impiega ben <span>64,928 secondi</span>; il tutto per ottenere un miglioramento, in termini di costo, di solo <span>11 minuti</span> sulla somma delle durate delle singole macchine.<br/><br/>
+                                Per concludere è stata sviluppata una piattaforma che, in tempi limitati e con sforzo computazionale relativamente basso, riesce a rivolvere un problema di grosse dimensioni il cui utilizzo è di interesse reale e attuale.
+                            </blockquote>
+                            </td>
+                            </tr>
+                        </table>
+                    </section>
+                    <section data-background="images/confronto_costi.png">
+                    </section>
+                </section>
+                <!-- GRAZIE -->
+                <section>
+                    <section data-background="#db4337">
+                        <h2>Fine</h2>
+                        <h4>Grazie per l'attenzione</h4>
+                        <table><tr><td>
+                        <blockquote align="center">
+                            Federica Pelli, Giulio Riberto, Tommaso Berlose
+                        </blockquote>
+                        </td></tr></table>
+                    </section>
+                    <!--<section data-background="images/fine.gif">-->
+                </section>
+            </div>
+
+        </div>
+
+        <script src="lib/js/head.min.js"></script>
+        <script src="js/reveal.js"></script>
+
+        <script>
+
+            // Full list of configuration options available at:
+            // https://github.com/hakimel/reveal.js#configuration
+            Reveal.initialize({
+                controls: true,
+                progress: true,
+                history: true,
+                center: true,
+
+                transition: 'slide', // none/fade/slide/convex/concave/zoom
+                // Optional reveal.js plugins
+                dependencies: [
+                    { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+                    { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+                    { src: 'plugin/zoom-js/zoom.js', async: true },
+                    { src: 'plugin/notes/notes.js', async: true },
+                    { src: 'plugin/math/math.js', async: true }
+                ]
+            });
+
+        </script>
+
+    </body>
+</html>
