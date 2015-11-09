@@ -20,9 +20,9 @@ from weppy import App, request
 from weppy.tools import service
 
 app = App(__name__)
-key_googleMaps = 'AIzaSyB27xz94JVRPsuX4qJMMiZpGVoQiQITFb8'
+key_googleMaps1 = 'AIzaSyB27xz94JVRPsuX4qJMMiZpGVoQiQITFb8'
 key_googleMaps2 = 'AIzaSyDEeQ7ybauE3th_3d-GQZQcvGI-UxKOFF8'
-key_googleMaps3 = 'AIzaSyC549poFoVcUz3BsDOJ9XpO7CniNTDC6b4'
+key_googleMaps = 'AIzaSyC549poFoVcUz3BsDOJ9XpO7CniNTDC6b4'
 isTest = False
 isBenchmark = False
 isLoop = False
@@ -278,30 +278,38 @@ def floatToStringWithComma(num):
     return str(num).replace('.', ',')
 
 
-def saveBenchmark(filename, durata, maxDist, randomizeDog, node_dict,
-        arc_dict, greedy, grasp, path, pathReverse, tabu):
+def saveBenchmark(filename, durata, maxDist, node_dict, arc_dict, randomizeDog=None,
+        greedy=None, grasp=None, path=None, pathReverse=None, tabu=None):
     separetor = ';'
     n_arc = 0
     for key in arc_dict:
         n_arc += len(arc_dict[key])
-    if path.getExecutionTime() > pathReverse.getExecutionTime():
-        pathVSpathReverse = '1'
-    else:
-        pathVSpathReverse = '0'
+    if path and pathReverse:
+        if path.getExecutionTime() > pathReverse.getExecutionTime():
+            pathVSpathReverse = '1'
+        else:
+            pathVSpathReverse = '0'
     line = floatToStringWithComma(durata) + separetor + str(len(node_dict)) + \
-        separetor + str(n_arc) + separetor + str(maxDist) + separetor + \
-        floatToStringWithComma(greedy.getExecutionTime()) + separetor + str(len(greedy.getCars())) + \
-        separetor + str(greedy.getDur()) + separetor  + str(randomizeDog) + \
-        separetor + floatToStringWithComma(grasp.getExecutionTime()) + separetor + \
-        str(len(grasp.getCars())) + separetor + str(grasp.getDur()) + \
-        separetor + floatToStringWithComma(path.getExecutionTime()) + separetor + \
-        str(randomizeDog) + separetor + str(len(path.getCars())) + separetor + \
-        str(path.getDur()) + separetor + floatToStringWithComma(pathReverse.getExecutionTime()) + \
-        separetor + str(randomizeDog) + separetor + \
-        str(len(pathReverse.getCars())) + separetor + \
-        str(pathReverse.getDur()) + separetor + pathVSpathReverse + \
-        separetor + floatToStringWithComma(tabu.getExecutionTime()) + separetor + \
-        str(len(tabu.getCars())) + separetor + str(tabu.getDur()) + '\n'
+        separetor + str(n_arc) + separetor + str(maxDist)
+    if greedy:
+        line += separetor + floatToStringWithComma(greedy.getExecutionTime()) + \
+            separetor + str(len(greedy.getCars())) + separetor + \
+            str(greedy.getDur())
+    if grasp:
+        line += separetor  + str(randomizeDog) + separetor + \
+            floatToStringWithComma(grasp.getExecutionTime()) + separetor + \
+            str(len(grasp.getCars())) + separetor + str(grasp.getDur())
+    if path and pathReverse:
+        line += separetor + floatToStringWithComma(path.getExecutionTime()) + \
+            separetor + str(randomizeDog) + separetor + str(len(path.getCars())) + \
+            separetor + str(path.getDur()) + separetor + \
+            floatToStringWithComma(pathReverse.getExecutionTime()) + \
+            separetor + str(randomizeDog) + separetor + str(len(pathReverse.getCars())) + \
+            separetor + str(pathReverse.getDur()) + separetor + pathVSpathReverse
+    if tabu:
+        line += separetor + floatToStringWithComma(tabu.getExecutionTime()) + \
+            separetor + str(len(tabu.getCars())) + separetor + str(tabu.getDur())
+    line += '\n'
 
     with LockFile(filename):
         with open(filename, "a") as file:
@@ -400,7 +408,7 @@ def main():
 
         start_time = time.clock()
         grasp = Euristiche(node_dict, arc_dict)
-        (cars_list, dur_list, dur) = grasp.grasp()
+        (cars_list, dur_list, dur) = grasp.grasp(nIteration=3)
         grasp.setExecutionTime(time.clock() - start_time)
         if not isLoop:
             printInfo('Grasp', grasp)
@@ -416,7 +424,7 @@ def main():
             reverse=True)[0].getDur()
 
         randomizeDog = 5
-
+        #'''
         tmp_time_path = time.clock()
         path = Euristiche(node_dict, arc_dict)
         localSearch_list_path = path.preparePath(copy.deepcopy(greedy), randomizeDog)
@@ -458,11 +466,13 @@ def main():
             printInfo('Tabu', tabu)
         dataOut = updateDataOutput(dataOut, 'tabu', cars_list, dur_list, dur,
             node_dict['0'].getMaxDur())
-
+        #'''
         durata = time.clock() - startP
         if isBenchmark:
-            saveBenchmark('benchmark.txt', durata, penality, randomizeDog,
-                node_dict, arc_dict, greedy, grasp, path, pathReverse, tabu)
+            saveBenchmark('benchmark.txt', durata, penality, node_dict, arc_dict,
+                randomizeDog, greedy, grasp, path, pathReverse, tabu)
+            #saveBenchmark('benchmark.txt', durata, penality, node_dict, arc_dict,
+            #    randomizeDog, greedy, grasp)
 
         if ncycle > 1 and i < (ncycle-1):
             # da decidere se e' meglio effettuare il calcolo ogni volta

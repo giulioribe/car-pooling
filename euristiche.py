@@ -171,7 +171,7 @@ class Euristiche(object):
         return (cars_list, dur_list, dur)
 
 
-    def grasp(self):
+    def grasp(self, nIteration=3):
         """
         per ogni chiave del dizionario estraggo i nodi e li inserisco in un
         dizionario che contiene solo nodi verso la destinazione
@@ -183,7 +183,6 @@ class Euristiche(object):
         creo una lista di liste dove ogni lista contiene il percorso di una
         macchina
         """
-        nIteration = 3
         # imposto a -1 nauto cosi' nel ciclo while la prima volta che aggiungo un
         # valore = 0
         nauto = -1
@@ -332,6 +331,9 @@ class Euristiche(object):
                         swap_done = True
                         break
                     if not found and target_tmp.cars_list[x][y] != grasp_tmp_pope[-1].cars_list[x][y]:
+                        # andiamo a controllare se i due valori da scambiare
+                        # sono gia' stati cambiati; in reata' non e' necessarrio
+                        # perche' andiamo in ordine di come troviamo le differenze
                         if not ((grasp_tmp_pope[-1].cars_list[x][y],target_tmp.cars_list[x][y]) in path_list):
                             found = True
                             value_tmp_grasp = grasp_tmp_pope[-1].cars_list[x][y]
@@ -499,10 +501,8 @@ class Euristiche(object):
             tabu_list.pop(solutions_list[0][1])
             tabu_list.append(solutions_list[0][1])
         # Al massimo teniamo 7 liste
-        """
         if len(tabu_list) > 7:
             tabu_list.pop(0)
-        """
         if best_delta_solution.getDur() < best_solution.getDur():
             best_solution = best_delta_solution
             iteration = 0
