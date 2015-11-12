@@ -28,6 +28,14 @@
             link.type = 'text/css';
             link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
             document.getElementsByTagName( 'head' )[0].appendChild( link );
+
+            window.addEventListener("mousedown", handleClick, false);
+            window.addEventListener("contextmenu", function(e) { e.preventDefault(); }, false);
+            function handleClick(e) {
+                e.preventDefault();
+                if(e.button === 0) Reveal.next();
+                if(e.button === 2) Reveal.prev();
+            }
         </script>
 
         <!--[if lt IE 9]>
@@ -66,7 +74,7 @@
                     <table><tr><td>
                     <blockquote style="text-align:left;">
                         Il decreto interministeriale <span>Mobilità Sostenibile nelle Aree Urbane</span> del 27/03/1998, ha introdotto la figura professionale del <span>Mobility Manager</span> di azienda.
-                        <br/><BR/>Egli ha l'obiettivo di ridurre l'uso dell'auto privata adottando strumenti che favoriscono soluzioni di trasporto alternativo a <span>ridotto impatto ambientale</span>.
+                        <br/><BR/>Egli ha l'obiettivo di ridurre l'uso dell'auto privata adottando strumenti che favoriscano soluzioni di trasporto alternativo a <span>ridotto impatto ambientale</span>.
                     </blockquote>
                     <blockquote style="text-align:left;">
                         Attualmente sono presenti soltanto soluzioni proprietarie sviluppate da enti e aziende di grosse dimensioni (e.g. Software <a target="top" href="http://www.poliedra.polimi.it/attivita/mobilita/servizi-flessibili-di-trasporto/dreams">DREAMS</a> del Politecnico di Milano),
@@ -189,7 +197,7 @@ Node {
                         </tr>
                         <tr><td colspan="2">
                             <blockquote align="left">
-                                Per ogni utente selezionato viene creato un <span>Nodo</span> che contiente tutte le informazioni necessarie.
+                                Per ogni utente selezionato viene creato un <span>Nodo</span> che contiene tutte le informazioni necessarie.
                                 Queste formano i punti di ancoraggio sulla mappa.
                             </blockquote>
                         </td></tr>
@@ -224,8 +232,8 @@ Arc {
 }
                     </code></pre></td></tr><tr><td colspan="2" style="padding-top: 0;">
                     <blockquote align="left">
-                        Per ogni coppia di nodi viene creato un <span>Arco</span> che contiente tutte le informazioni necessarie.
-                        Ogni arco è bidirezionale con costo differente in base al verso di percorrenza.
+                        Per ogni coppia di nodi vengono creati due <span>Archi</span> che contengono tutte le informazioni necessarie.
+                        Gli archi sono due perchè il costo cambia in base al verso di percorrenza.
                     </blockquote>
                     </td></tr></table>
                 </section>
@@ -826,7 +834,7 @@ def tabu(self, best_solution, actual_solution, [...]):
                         </blockquote>
                         </td></tr></table>
                     </section>
-                    <!--<section data-background="images/fine.gif">-->
+                    <section data-background="images/fine.gif">
                 </section>
             </div>
 
