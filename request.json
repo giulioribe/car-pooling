@@ -1,60 +1,192 @@
 {
-    "time_to_arrive": 1447092031890, 
-    "place_to_arrive": "Via della Fornace, 1, 44123 Ferrara FE, Italia", 
+    "time_to_arrive": 1447696838027, 
+    "place_to_arrive": "Via della Fornace, 11, 44123 Ferrara, Province of Ferrara, Italy", 
     "users": [
         {
-            "max_duration": 18000000, 
-            "not_with": "8", 
+            "max_duration": 0, 
+            "not_with": "", 
             "id": "1", 
-            "address": "Via Otello Putinati, 122, 44123 Ferrara FE, Italia"
-        }, 
-        {
-            "max_duration": 1200000, 
-            "not_with": "8,11,14", 
-            "id": "2", 
-            "address": "Corso Porta Po, 30, 44121 Ferrara FE, Italia"
-        }, 
-        {
-            "max_duration": 1200000, 
-            "not_with": "2,9,14,17,30,33,36,41,44,48", 
-            "id": "3", 
-            "address": "Via Giuseppe Saragat, 1, 44122 Ferrara FE, Italia"
+            "address": "Via Mortara 11, 44100 Ferrara, Italia"
         }, 
         {
             "max_duration": 0, 
-            "not_with": "5,6,21,24,43,48", 
+            "not_with": "", 
+            "id": "2", 
+            "address": "Via Fossato di Mortara 3, 44100 Ferrara, Italia"
+        }, 
+        {
+            "max_duration": 0, 
+            "not_with": "", 
+            "id": "3", 
+            "address": "Via Modena 51, 44100 Ferrara, Italia"
+        }, 
+        {
+            "max_duration": 0, 
+            "not_with": "", 
             "id": "4", 
-            "address": "Via Alessandro Volta, 71, 45020 Castelguglielmo RO, Italia"
+            "address": "Via Pomposa 18, 44100 Ferrara, Italia"
         }, 
         {
-            "max_duration": 2400000, 
-            "not_with": "4,6", 
+            "max_duration": 0, 
+            "not_with": "", 
             "id": "5", 
-            "address": "Via Giuseppe Verdi, 5, 45030 Occhiobello RO, Italia"
+            "address": "Via Padova 15, 44100 Ferrara, Italia"
         }, 
         {
-            "max_duration": 3600000, 
-            "not_with": "2,4,24,43,47", 
+            "max_duration": 0, 
+            "not_with": "", 
             "id": "6", 
-            "address": "Via Venezia, 1, 44123 Ferrara FE, Italia"
+            "address": "Via Ragno 1, 44100 Ferrara, Italia"
         }, 
         {
-            "max_duration": 600000, 
-            "not_with": "1", 
+            "max_duration": 0, 
+            "not_with": "", 
+            "id": "7", 
+            "address": "Via Porta Mare 16, 44100 Ferrara, Italia"
+        }, 
+        {
+            "max_duration": 0, 
+            "not_with": "", 
             "id": "8", 
-            "address": "Via Otello Putinati, 130, 44123 Ferrara FE, Italia"
+            "address": "Via Wagner 15, 44100 Ferrara, Italia"
         }, 
         {
-            "max_duration": 600000, 
-            "not_with": "2,13,15,20,25,27,41,47", 
+            "max_duration": 0, 
+            "not_with": "", 
             "id": "9", 
-            "address": "Via Giuseppe Fabbri, 11, 44123 Ferrara FE, Italia"
+            "address": "Via Garibaldi 33, 44100 Ferrara, Italia"
+        }, 
+        {
+            "max_duration": 0, 
+            "not_with": "", 
+            "id": "10", 
+            "address": "Via Comacchio 88, 44100 Ferrara, Italia"
         }, 
         {
             "max_duration": 0, 
             "not_with": "", 
             "id": "11", 
-            "address": "Via Nazionale, 45034 Canaro RO, Italia"
+            "address": "Via Coppare78, 44100 Ferrara, Italia"
+        }, 
+        {
+            "max_duration": 0, 
+            "not_with": "", 
+            "id": "12", 
+            "address": "Via Krasnodar 54, 44100 Ferrara, Italia"
+        }, 
+        {
+            "max_duration": 0, 
+            "not_with": "", 
+            "id": "13", 
+            "address": "Corso Biagio Rossetti 31, 44100 Ferrara, Italia"
+        }, 
+        {
+            "max_duration": 0, 
+            "not_with": "", 
+            "id": "14", 
+            "address": "Via Arrigo Boito 9, 44100 Ferrara, Italia"
+        }, 
+        {
+            "max_duration": 0, 
+            "not_with": "", 
+            "id": "15", 
+            "address": "Via Comacchio 334, 44100 Ferrara, Italia"
+        }, 
+        {
+            "max_duration": 0, 
+            "not_with": "", 
+            "id": "16", 
+            "address": "Via Arginone 339, 44100 Ferrara, Italia"
+        }, 
+        {
+            "max_duration": 0, 
+            "not_with": "", 
+            "id": "17", 
+            "address": "Via Eridano 10, 44100 Ferrara, Italia"
+        }, 
+        {
+            "max_duration": 0, 
+            "not_with": "", 
+            "id": "18", 
+            "address": "Via Bentivoglio 73, 44100 Ferrara, Italia"
+        }, 
+        {
+            "max_duration": 0, 
+            "not_with": "", 
+            "id": "19", 
+            "address": "Via Ladino 44, 44100 Ferrara, Italia"
+        }, 
+        {
+            "max_duration": 0, 
+            "not_with": "", 
+            "id": "20", 
+            "address": "Via Bologna 643, 44100 Ferrara, Italia"
+        }, 
+        {
+            "max_duration": 0, 
+            "not_with": "", 
+            "id": "21", 
+            "address": "Via Giuseppe Fabbri 516, 44100 Ferrara, Italia"
+        }, 
+        {
+            "max_duration": 0, 
+            "not_with": "", 
+            "id": "22", 
+            "address": "Via della Misericordia 41, 44100 Ferrara, Italia"
+        }, 
+        {
+            "max_duration": 0, 
+            "not_with": "", 
+            "id": "23", 
+            "address": "Via dell'Acero 2, 44100 Ferrara, Italia"
+        }, 
+        {
+            "max_duration": 0, 
+            "not_with": "", 
+            "id": "24", 
+            "address": "Via Anna Banti 19, 44100 Ferrara, Italia"
+        }, 
+        {
+            "max_duration": 0, 
+            "not_with": "", 
+            "id": "25", 
+            "address": "Via Conca 26, 44100 Ferrara, Italia"
+        }, 
+        {
+            "max_duration": 0, 
+            "not_with": "", 
+            "id": "26", 
+            "address": "Via Vallelunga 75, 44100 Ferrara, Italia"
+        }, 
+        {
+            "max_duration": 0, 
+            "not_with": "", 
+            "id": "27", 
+            "address": "Via Copparo 216, 44100 Ferrara, Italia"
+        }, 
+        {
+            "max_duration": 0, 
+            "not_with": "", 
+            "id": "28", 
+            "address": "Via Pomposa 272, 44100 Ferrara, Italia"
+        }, 
+        {
+            "max_duration": 0, 
+            "not_with": "", 
+            "id": "29", 
+            "address": "Via Comacchio 1175, 44100 Ferrara, Italia"
+        }, 
+        {
+            "max_duration": 0, 
+            "not_with": "", 
+            "id": "30", 
+            "address": "Via Provinciale 22, 44100 Ferrara, Italia"
+        }, 
+        {
+            "max_duration": 0, 
+            "not_with": "", 
+            "id": "31", 
+            "address": "Via Corazza 404, 44100 Ferrara, Italia"
         }
     ]
 }

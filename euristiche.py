@@ -78,7 +78,7 @@ class Euristiche(object):
             for k in range(i,len(car)):
                 # se non sono in fondo allora sommo il costo del passaggio da una persona all'altra
                 if k != len(car)-1:
-                    sumdur += self.arc_dict[car[k]][car[k+1]].getDur() # e' getDur per avere la durata dell'arco?
+                    sumdur += self.arc_dict[car[k]][car[k+1]].getDur()
                 if self.node_dict[car[i]].getMaxDur() != 0:
                     # se sono in fondo, e in ogni caso ad ogni iterazione, controllo l'ammissibilia'
                     if (sumdur + dur) > self.node_dict[car[i]].getMaxDur():
@@ -94,10 +94,11 @@ class Euristiche(object):
             for k in range(i,len(car)):
                 # se non sono in fondo allora sommo il costo del passaggio da una persona all'altra
                 if k != len(car)-1:
-                    sumdur += self.arc_dict[car[k]][car[k+1]].getDur() # e' getDur per avere la durata dell'arco?
-                # se sono in fondo, e in ogni caso ad ogni iterazione, controllo l'ammissibilia'
+                    sumdur += self.arc_dict[car[k]][car[k+1]].getDur()
+                # se sono in fondo
                 else:
                     sumdur += self.arc_dict[car[k]][nodeNew.getId()].getDur() + self.arc_dict[nodeNew.getId()]['0'].getDur()
+                # ad ogni iterazione, controllo l'ammissibilia'
                 if self.node_dict[car[i]].getMaxDur() != 0:
                     if sumdur > self.node_dict[car[i]].getMaxDur():
                         return False
@@ -117,7 +118,7 @@ class Euristiche(object):
         macchina
         """
         # imposto a -1 nauto cosi' nel ciclo while la prima volta che aggiungo un
-        # valore = 0
+        # valore risulta uguale 0
         nauto = -1
         cars_list = list()
         dur_list = list()
@@ -170,6 +171,17 @@ class Euristiche(object):
         self.setDur(dur)
         return (cars_list, dur_list, dur)
 
+    def initGrasp(self, nIteration=3):
+        local_grasp_list = list()
+        while len(local_grasp_list) < 10:
+            eur = Euristiche(self.node_dict, self.arc_dict)
+            eur.grasp(nIteration)
+            local_grasp_list.append(eur)
+        grasp_ok = sorted(local_grasp_list, key=attrgetter('dur'))[0]
+        self.setCars(grasp_ok.getCars())
+        self.setDurList(grasp_ok.getDurList())
+        self.setDur(grasp_ok.getDur())
+        return (grasp_ok.getCars(), grasp_ok.getDurList(), grasp_ok.getDur())
 
     def grasp(self, nIteration=3):
         """
@@ -261,7 +273,7 @@ class Euristiche(object):
         print "\nSto preparando le grasp per la path relinking, attendi..."
         while len(localSearch_list) <= randimizeDog and iteration < 10:
             g = Euristiche(self.getNode(), self.getArc())
-            g.grasp()
+            g.initGrasp()
             if not (g in localSearch_list):
                 localSearch_list.append(g)
                 iteration = 0
@@ -285,7 +297,7 @@ class Euristiche(object):
         return (best_path[0], best_path[1], best_path[2])
 
 
-    def initPathReverse(self, localSearch_list, k, penality):
+    def initBackwardPath(self, localSearch_list, k, penality):
         sorted_ls = sorted(localSearch_list, key=attrgetter('dur'))
         target = sorted_ls.pop(0)
         path_list_reverse = list()

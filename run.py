@@ -10,6 +10,7 @@ import time
 import os
 import time
 from datetime import datetime, timedelta
+from operator import attrgetter
 import winsound
 from lockfile import LockFile
 from operator import attrgetter
@@ -117,6 +118,7 @@ def googleMapsRequest(node_dict):
     node_origins_tmp = list()
     node_destinations_tmp = list()
     # il ciclo for parte dal primo nodo dopo la destionazione cioe' 0
+    first = True
     for x, key in enumerate(node_dict.keys()[1:]):
         origins_tmp.append(node_dict[key])
         node_origins_tmp.append(node_dict[key].getId())
@@ -135,12 +137,15 @@ def googleMapsRequest(node_dict):
                         with open('googleMapsTest.json', 'r') as data_file:
                             google_dict = json.load(data_file)
                     else:
+                        if not first:
+                            time.sleep(timesleep)
+                        else:
+                            first = False
                         print "Sto effettuando le richiesete a Google Maps, attendi..."
                         resp = requests.get(url=url, params=params)
                         google_dict = json.loads(resp.text)
                         # metto in pausa l'applicazione per dieci secondi per aggirare
                         # i limiti delle Google Maps Api
-                        time.sleep(timesleep)
                     arc_dict = createArc(google_dict, node_origins_tmp, node_destinations_tmp, arc_dict)
                     destinations_tmp = list()
                     node_destinations_tmp = list()
@@ -279,33 +284,35 @@ def floatToStringWithComma(num):
 
 
 def saveBenchmark(filename, durata, maxDist, node_dict, arc_dict, randomizeDog=None,
-        greedy=None, grasp=None, path=None, pathReverse=None, tabu=None):
+        greedy=None, grasp=None, path=None, backwardPath=None, tabu=None):
     separetor = ';'
     n_arc = 0
     for key in arc_dict:
         n_arc += len(arc_dict[key])
-    if path and pathReverse:
-        if path.getExecutionTime() > pathReverse.getExecutionTime():
-            pathVSpathReverse = '1'
+    if path and backwardPath:
+        if path.getExecutionTime() > backwardPath.getExecutionTime():
+            pathVSbackwardPath = '1'
         else:
-            pathVSpathReverse = '0'
+            pathVSbackwardPath = '0'
     line = floatToStringWithComma(durata) + separetor + str(len(node_dict)) + \
         separetor + str(n_arc) + separetor + str(maxDist)
     if greedy:
         line += separetor + floatToStringWithComma(greedy.getExecutionTime()) + \
+            separetor + floatToStringWithComma(greedy.getExecutionTime()*1000) +\
             separetor + str(len(greedy.getCars())) + separetor + \
             str(greedy.getDur())
     if grasp:
         line += separetor  + str(randomizeDog) + separetor + \
             floatToStringWithComma(grasp.getExecutionTime()) + separetor + \
+            floatToStringWithComma(grasp.getExecutionTime()*1000) + separetor + \
             str(len(grasp.getCars())) + separetor + str(grasp.getDur())
-    if path and pathReverse:
+    if path and backwardPath:
         line += separetor + floatToStringWithComma(path.getExecutionTime()) + \
             separetor + str(randomizeDog) + separetor + str(len(path.getCars())) + \
             separetor + str(path.getDur()) + separetor + \
-            floatToStringWithComma(pathReverse.getExecutionTime()) + \
-            separetor + str(randomizeDog) + separetor + str(len(pathReverse.getCars())) + \
-            separetor + str(pathReverse.getDur()) + separetor + pathVSpathReverse
+            floatToStringWithComma(backwardPath.getExecutionTime()) + \
+            separetor + str(randomizeDog) + separetor + str(len(backwardPath.getCars())) + \
+            separetor + str(backwardPath.getDur()) + separetor + pathVSbackwardPath
     if tabu:
         line += separetor + floatToStringWithComma(tabu.getExecutionTime()) + \
             separetor + str(len(tabu.getCars())) + separetor + str(tabu.getDur())
@@ -371,11 +378,11 @@ def initMain():
     for key in arc_dict:
         n_arc += len(arc_dict[key])
     print "len(arc_dict)", len(arc_dict), n_arc
-    """
+
     if not isBenchmark and not isTest:
         saveNode(node_dict)
         saveArc(arc_dict)
-    """
+
     return (node_dict, arc_dict)
 
 def main():
@@ -408,7 +415,7 @@ def main():
 
         start_time = time.clock()
         grasp = Euristiche(node_dict, arc_dict)
-        (cars_list, dur_list, dur) = grasp.grasp(nIteration=3)
+        (cars_list, dur_list, dur) = grasp.initGrasp(3)
         grasp.setExecutionTime(time.clock() - start_time)
         if not isLoop:
             printInfo('Grasp', grasp)
@@ -431,11 +438,11 @@ def main():
         tmp_time_path = time.clock() - tmp_time_path
         # Effettuo subito la copia per non rischiare di usare una lista modificata
         tmp_time_path_reverse = time.clock()
-        localSearch_list_pathReverse = copy.deepcopy(localSearch_list_path)
+        localSearch_list_backwardPath = copy.deepcopy(localSearch_list_path)
         tmp_time_path_reverse = time.clock() - tmp_time_path_reverse
         """
         Il tempo parte da qua e non da 'path = Euristiche(node_dict, arc_dict)'
-        perche' prima effettuo anche la copia per la localSearch_list_pathReverse
+        perche' prima effettuo anche la copia per la localSearch_list_backwardPath
         e quindi le due tempistiche non sarebbero veritiere
         """
         start_time = time.clock()
@@ -446,21 +453,27 @@ def main():
         dataOut = updateDataOutput(dataOut, 'path', cars_list, dur_list, dur,
             node_dict['0'].getMaxDur())
 
-        pathReverse = Euristiche(node_dict, arc_dict)
+        backwardPath = Euristiche(node_dict, arc_dict)
         # Stesso discorso di della path
         start_time = time.clock()
-        (cars_list, dur_list, dur) = pathReverse.initPath(localSearch_list_pathReverse, randomizeDog, penality/2)
-        pathReverse.setExecutionTime((time.clock() - start_time) + tmp_time_path_reverse)
+        (cars_list, dur_list, dur) = backwardPath.initBackwardPath(localSearch_list_backwardPath, randomizeDog, penality/2)
+        backwardPath.setExecutionTime((time.clock() - start_time) + tmp_time_path_reverse)
         if not isLoop:
-            printInfo('Path Reverse', pathReverse)
-        dataOut = updateDataOutput(dataOut, 'pathReverse', cars_list, dur_list, dur,
+            printInfo('Backward Path', backwardPath)
+        dataOut = updateDataOutput(dataOut, 'backwardPath', cars_list, dur_list, dur,
             node_dict['0'].getMaxDur())
 
         #viewDirection(node_dict, geocode_results, cars_list)
 
         start_time = time.clock()
         tabu = Euristiche(node_dict, arc_dict)
-        (cars_list, dur_list, dur) = tabu.tabu(greedy, greedy, 0, 0, list(), penality/2)
+        start_tabu_list = list()
+        start_tabu_list.append(greedy)
+        start_tabu_list.append(grasp)
+        start_tabu_list.append(path)
+        start_tabu_list.append(backwardPath)
+        start_tabu = sorted(start_tabu_list, key=attrgetter('dur'))[0]
+        (cars_list, dur_list, dur) = tabu.tabu(start_tabu, start_tabu, 0, 0, list(), penality/2)
         tabu.setExecutionTime(time.clock() - start_time)
         if not isLoop:
             printInfo('Tabu', tabu)
@@ -470,7 +483,7 @@ def main():
         durata = time.clock() - startP
         if isBenchmark:
             saveBenchmark('benchmark.txt', durata, penality, node_dict, arc_dict,
-                randomizeDog, greedy, grasp, path, pathReverse, tabu)
+                randomizeDog, greedy, grasp, path, backwardPath, tabu)
             #saveBenchmark('benchmark.txt', durata, penality, node_dict, arc_dict,
             #    randomizeDog, greedy, grasp)
 
