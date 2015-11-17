@@ -232,8 +232,7 @@ Arc {
 }
                     </code></pre></td></tr><tr><td colspan="2" style="padding-top: 0;">
                     <blockquote align="left">
-                        Per ogni coppia di nodi vengono creati due <span>Archi</span> che contengono tutte le informazioni necessarie.
-                        Gli archi sono due perchè il costo cambia in base al verso di percorrenza.
+                        Per ogni coppia di nodi vengono creati due archi con costo differente in base al verso di percorrenza. La struttura <span>Arco</span> contiene tutte le informazioni necessarie.
                     </blockquote>
                     </td></tr></table>
                 </section>
@@ -357,7 +356,7 @@ Arc {
                         <tr>
                         <td>
                         <pre><code data-trim contenteditable>
-S = {}
+S = {1}
 N = node_to_visit
   while N ≠ {∅}
     Y = Best(x ∈ N)
@@ -415,7 +414,7 @@ def greedy(self):
                             <td>
                             <blockquote align="left">
                                 L’euristica Greedy <span>non garantisce l’ottimalità della soluzione</span> perchè compie decisioni parziali "localmente ottime" senza mai modificarle.<br/> Costruisce infatti la soluzione attraverso iterazioni successive, effettuando ad ogni iterazione la scelta più favorevole compatibile con i vincoli del problema.<br/>Le ultime scelte però sono prese solamente in base alla ricerca di ammissibilità della soluzione e non in base al suo costo.<br/><br/>
-                                Combinando un algoritmo di ricerca locale a una Greedy randomizzata si ottiene l’euristica <span>GRASP</span> (Greedy Randomized Adaptive Search Procedure) che è un’evoluzione della Multi Start Local Search.
+                                Combinando un algoritmo di ricerca locale a una Greedy randomizzata si ottiene l’euristica <span>GRASP</span> (Greedy Randomized Adaptive Search Procedure).
                             </blockquote>
                             </td>
                             </tr>
@@ -446,7 +445,7 @@ def greedy(self):
                         <tr>
                         <td>
                         <pre><code data-trim contenteditable>
-S = {}
+S = {Random(k)}
 N = node_to_visit
   while N ≠ {∅}
     .
@@ -468,7 +467,7 @@ return S
 def grasp(self):
   arcToDest_dict[key] = self.arc_dict[key]['0']
   while len(arcToDest_dict) > 0:
-    k = 5
+    k = 3
     bestKE = sorted(arcToDest_dict.values(), k)
     car = Random(bestKE, 1).getId_i()
     for arc in arc_start.values():
@@ -550,7 +549,7 @@ def path(self, target, elite, iteration):
   else:
     iteration += 1
     deep_sol = self.path(target, elite_ok, iteration)
-    if depp_sol.getDur() > elite_ok.getDur():
+    if deep_sol.getDur() > elite_ok.getDur():
       return elite_ok
     else:
       return deep_sol
