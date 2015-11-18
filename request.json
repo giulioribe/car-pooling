@@ -1,120 +1,36 @@
 {
-    "time_to_arrive": 1447783243757, 
-    "place_to_arrive": "Via Giuseppe Saragat, 1, 44122 Ferrara, Province of Ferrara, Italy", 
+    "time_to_arrive": 1447844408867, 
+    "place_to_arrive": "Via della Fornace, 1, 44123 Ferrara FE, Italia", 
     "users": [
         {
             "max_duration": 0, 
-            "not_with": "39", 
-            "id": "32", 
-            "address": "Via Alessandro Volta, 1, 45020 Castelguglielmo Province of Rovigo, Italy"
+            "not_with": "", 
+            "id": "1", 
+            "address": "Via Otello Putinati, 122, 44123 Ferrara FE, Italia"
         }, 
         {
             "max_duration": 0, 
             "not_with": "", 
-            "id": "33", 
-            "address": "Via Giuseppe Verdi, 45024 Fiesso Umbertiano Province of Rovigo, Italy"
+            "id": "2", 
+            "address": "Corso Porta Po, 130, 44121 Ferrara FE, Italia"
         }, 
         {
             "max_duration": 0, 
-            "not_with": "", 
-            "id": "34", 
-            "address": "Via Venezia, 1, 44123 Ferrara, Province of Ferrara, Italy"
+            "not_with": "5,6,58", 
+            "id": "4", 
+            "address": "Via Alessandro Volta, 71, 45020 Castelguglielmo RO, Italia"
         }, 
         {
             "max_duration": 0, 
-            "not_with": "", 
-            "id": "35", 
-            "address": "Via della Fornace, 1, 44123 Ferrara, Province of Ferrara, Italy"
+            "not_with": "3,8,13", 
+            "id": "5", 
+            "address": "Via Giuseppe Verdi, 5, 45030 Occhiobello RO, Italia"
         }, 
         {
             "max_duration": 0, 
-            "not_with": "", 
-            "id": "36", 
-            "address": "Via Darsena, 1, 44122 Ferrara, Province of Ferrara, Italy"
-        }, 
-        {
-            "max_duration": 0, 
-            "not_with": "", 
-            "id": "37", 
-            "address": "Via Palestro, 1, 44121 Ferrara, Province of Ferrara, Italy"
-        }, 
-        {
-            "max_duration": 0, 
-            "not_with": "", 
-            "id": "38", 
-            "address": "Via Orlando Furioso, Ferrara, Province of Ferrara, Italy"
-        }, 
-        {
-            "max_duration": 0, 
-            "not_with": "", 
-            "id": "39", 
-            "address": "Venice, Italy, null"
-        }, 
-        {
-            "max_duration": 0, 
-            "not_with": "", 
-            "id": "40", 
-            "address": "Corso Porta Po, 130, 44121 Ferrara, Province of Ferrara, Italy"
-        }, 
-        {
-            "max_duration": 0, 
-            "not_with": "", 
-            "id": "41", 
-            "address": "Via Otello Putinati, 122, 44123 Ferrara, Province of Ferrara, Italy"
-        }, 
-        {
-            "max_duration": 0, 
-            "not_with": "", 
-            "id": "43", 
-            "address": "Via Indipendenza, 1, 40069 Zola Predosa Metropolitan City of Bologna, Italy"
-        }, 
-        {
-            "max_duration": 0, 
-            "not_with": "", 
-            "id": "44", 
-            "address": "Via Ferrara, 1, 40139 Bologna, Italy"
-        }, 
-        {
-            "max_duration": 0, 
-            "not_with": "", 
-            "id": "45", 
-            "address": "Ravenna Province of Ravenna, Italy, null"
-        }, 
-        {
-            "max_duration": 0, 
-            "not_with": "", 
-            "id": "46", 
-            "address": "Rimini Province of Rimini, Italy, null"
-        }, 
-        {
-            "max_duration": 0, 
-            "not_with": "", 
-            "id": "47", 
-            "address": "Interporto Bologna, 40010 Bentivoglio Metropolitan City of Bologna, Italy"
-        }, 
-        {
-            "max_duration": 0, 
-            "not_with": "", 
-            "id": "48", 
-            "address": "44015 Portomaggiore Province of Ferrara, Italy, null"
-        }, 
-        {
-            "max_duration": 0, 
-            "not_with": "", 
-            "id": "50", 
-            "address": "Via Giuseppe Fabbri, 1, 44123 Ferrara, Province of Ferrara, Italy"
-        }, 
-        {
-            "max_duration": 0, 
-            "not_with": "", 
-            "id": "51", 
-            "address": "Taglio di Po Province of Rovigo, Italy, null"
-        }, 
-        {
-            "max_duration": 0, 
-            "not_with": "", 
-            "id": "52", 
-            "address": "Via Giuseppe Saragat, 2, 44122 Ferrara, Province of Ferrara, Italy"
+            "not_with": "5", 
+            "id": "6", 
+            "address": "Via Venezia, 1, 44123 Ferrara FE, Italia"
         }
     ]
 }

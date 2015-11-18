@@ -1,20 +1,6 @@
-0#1447783243757#Via Giuseppe Saragat, 1, 44122 Ferrara, Province of Ferrara, Italy#
-32#0#Via Alessandro Volta, 1, 45020 Castelguglielmo Province of Rovigo, Italy#39
-33#0#Via Giuseppe Verdi, 45024 Fiesso Umbertiano Province of Rovigo, Italy#
-34#0#Via Venezia, 1, 44123 Ferrara, Province of Ferrara, Italy#
-35#0#Via della Fornace, 1, 44123 Ferrara, Province of Ferrara, Italy#
-36#0#Via Darsena, 1, 44122 Ferrara, Province of Ferrara, Italy#
-37#0#Via Palestro, 1, 44121 Ferrara, Province of Ferrara, Italy#
-38#0#Via Orlando Furioso, Ferrara, Province of Ferrara, Italy#
-39#0#Venice, Italy, null#
-40#0#Corso Porta Po, 130, 44121 Ferrara, Province of Ferrara, Italy#
-41#0#Via Otello Putinati, 122, 44123 Ferrara, Province of Ferrara, Italy#
-43#0#Via Indipendenza, 1, 40069 Zola Predosa Metropolitan City of Bologna, Italy#
-44#0#Via Ferrara, 1, 40139 Bologna, Italy#
-45#0#Ravenna Province of Ravenna, Italy, null#
-46#0#Rimini Province of Rimini, Italy, null#
-47#0#Interporto Bologna, 40010 Bentivoglio Metropolitan City of Bologna, Italy#
-48#0#44015 Portomaggiore Province of Ferrara, Italy, null#
-50#0#Via Giuseppe Fabbri, 1, 44123 Ferrara, Province of Ferrara, Italy#
-51#0#Taglio di Po Province of Rovigo, Italy, null#
-52#0#Via Giuseppe Saragat, 2, 44122 Ferrara, Province of Ferrara, Italy#
+0#1447844408867#Via della Fornace, 1, 44123 Ferrara FE, Italia#
+1#0#Via Otello Putinati, 122, 44123 Ferrara FE, Italia#
+2#0#Corso Porta Po, 130, 44121 Ferrara FE, Italia#
+4#0#Via Alessandro Volta, 71, 45020 Castelguglielmo RO, Italia#5,6,58
+5#0#Via Giuseppe Verdi, 5, 45030 Occhiobello RO, Italia#3,8,13
+6#0#Via Venezia, 1, 44123 Ferrara FE, Italia#5

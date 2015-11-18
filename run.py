@@ -22,12 +22,12 @@ from weppy.tools import service
 
 app = App(__name__)
 key_googleMaps1 = 'AIzaSyB27xz94JVRPsuX4qJMMiZpGVoQiQITFb8'
-key_googleMaps2 = 'AIzaSyDEeQ7ybauE3th_3d-GQZQcvGI-UxKOFF8'
+key_googleMaps = 'AIzaSyDEeQ7ybauE3th_3d-GQZQcvGI-UxKOFF8'
 key_googleMaps3 = 'AIzaSyC549poFoVcUz3BsDOJ9XpO7CniNTDC6b4'
 key_googleMaps4 = 'AIzaSyCGikzsm0Bc1uOQzDX78Q15fUCXFV6C1ZQ'
 key_googleMaps5 = 'AIzaSyBU1ZCLrPVP3jO--jkEO7aILisum9ip73I'
 key_googleMaps6 = 'AIzaSyC2jdBIolYJ3ttIuDn2AGdbBCDjLHzm2Cg'
-key_googleMaps = 'AIzaSyAXKpiXm64FfQxXRym4gLqNipU2wgVHG0w'
+key_googleMaps7 = 'AIzaSyAXKpiXm64FfQxXRym4gLqNipU2wgVHG0w'
 isTest = False
 isBenchmark = False
 isLoop = False
