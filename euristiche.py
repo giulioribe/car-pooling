@@ -283,18 +283,29 @@ class Euristiche(object):
 
 
     def initPath(self, localSearch_list, k, penality):
+        with open('path.txt', 'w') as outfile:
+            outfile.write("")
+            outfile.flush()
         sorted_ls = sorted(localSearch_list, key=attrgetter('dur'))
         target = sorted_ls.pop(0)
         path_list = list()
         if k > len(sorted_ls):
             k = len(sorted_ls)
         for i in range(k):
-            path_list.append(self.path(target, sorted_ls[i], 0, penality))
-        best_path = sorted(path_list, key=itemgetter(2)).pop(0)
-        self.setCars(best_path[0])
-        self.setDurList(best_path[1])
-        self.setDur(best_path[2])
-        return (best_path[0], best_path[1], best_path[2])
+            tmp_result = self.path(target, sorted_ls[i], 0, penality, True)
+            if tmp_result[2] < sorted_ls[i].getDur():
+                path_list.append(tmp_result)
+        if len(path_list) > 0:
+            best_path = sorted(path_list, key=itemgetter(2)).pop(0)
+            self.setCars(best_path[0])
+            self.setDurList(best_path[1])
+            self.setDur(best_path[2])
+            return (best_path[0], best_path[1], best_path[2])
+        else:
+            self.setCars(target.getCars())
+            self.setDurList(target.getDurList())
+            self.setDur(target.getDur())
+            return (target.getCars(), target.getDurList(), target.getDur())
 
 
     def initBackwardPath(self, localSearch_list, k, penality):
@@ -304,15 +315,32 @@ class Euristiche(object):
         if k > len(sorted_ls):
             k = len(sorted_ls)
         for i in range(k):
-            path_list_reverse.append(self.path(sorted_ls[i], target, 0, penality))
-        best_path_reverse = sorted(path_list_reverse, key=itemgetter(2)).pop(0)
-        self.setCars(best_path_reverse[0])
-        self.setDurList(best_path_reverse[1])
-        self.setDur(best_path_reverse[2])
-        return (best_path_reverse[0], best_path_reverse[1], best_path_reverse[2])
+            tmp_result = self.path(sorted_ls[i], target, 0, penality, False)
+            if tmp_result[2] < sorted_ls[i].getDur():
+                path_list_reverse.append(tmp_result)
+        if len(path_list_reverse) > 0:
+            best_path_reverse = sorted(path_list_reverse, key=itemgetter(2)).pop(0)
+            self.setCars(best_path_reverse[0])
+            self.setDurList(best_path_reverse[1])
+            self.setDur(best_path_reverse[2])
+            return (best_path_reverse[0], best_path_reverse[1], best_path_reverse[2])
+        else:
+            self.setCars(target.getCars())
+            self.setDurList(target.getDurList())
+            self.setDur(target.getDur())
+            return (target.getCars(), target.getDurList(), target.getDur())
 
 
-    def path(self, target, grasp, iteration, penality):
+    def path(self, target, grasp, iteration, penality, isPath):
+        if isPath:
+            with open('path.txt', "a") as outfile:
+                outfile.write("Target: ")
+                json.dump(target.getCars(), outfile)
+                outfile.write("\n")
+                outfile.write("Grasp:  ")
+                json.dump(grasp.getCars(), outfile)
+                outfile.write("\n")
+                outfile.flush()
         #print "Sono in path, iterazione n", iteration
         # Creo matrici di supporto
         maxRig = max(len(target.cars_list), len(grasp.cars_list))
@@ -382,14 +410,27 @@ class Euristiche(object):
         if len(grasp_tmp_pope) != 0:
             grasp_tmp_pope_ordered = sorted(grasp_tmp_pope, key=attrgetter('dur'),
                 reverse=True)
+            if isPath:
+                with open('path.txt', "a") as outfile:
+                    for i_p, tmp in enumerate(grasp_tmp_pope):
+                        if i_p > 3:
+                            break
+                        outfile.write("Pope " + str(i_p) + ": ")
+                        json.dump(tmp.getCars(), outfile)
+                        outfile.write("\n")
+                        outfile.flush()
             grasp_ok = grasp_tmp_pope_ordered.pop(0)
         else:
+            if isPath:
+                with open('path.txt', "a") as outfile:
+                    outfile.write("Pope: lista pope uguale a 0\n")
+                    outfile.flush()
             return (target.getCars(), target.getDurList(), target.getDur())
         if self.controllo_stop(target, grasp_ok, iteration):
             return (grasp_ok.getCars(), grasp_ok.getDurList(), grasp_ok.getDur())
         else:
             iteration += 1
-            (deep_cars, deep_dur_list, deep_dur) = self.path(target, grasp_ok, iteration, penality)
+            (deep_cars, deep_dur_list, deep_dur) = self.path(target, grasp_ok, iteration, penality, isPath)
             if deep_dur > grasp_ok.getDur():
                 return (grasp_ok.getCars(), grasp_ok.getDurList(), grasp_ok.getDur())
             else:
@@ -526,7 +567,7 @@ class Euristiche(object):
         for i, sol in enumerate(solutions_list):
             print i, "\t", sol[0].getCars(), "\t\t", sol[2]
         """
-        if iteration >= 30 or global_iteration >= 50:
+        if iteration >= 100 or global_iteration >= 200:
             #print "iteration", iteration
             self.setCars(best_delta_solution.getCars())
             self.setDurList(best_delta_solution.getDurList())
@@ -623,8 +664,8 @@ class Euristiche(object):
         # se ho gia' fatto #nodi / 2 iterazioni mi fermo
         # anche perche' in teoria non dovremmo arrivare esattamente alla
         # target ma ad una euristica simile
-        if (target.cars_list == grasp.cars_list or
-                (iteration > (len(self.node_dict) / 2))):
+        if ((target.cars_list == grasp.cars_list) or
+                (iteration > 50)):
             return True
         else:
             return False

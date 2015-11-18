@@ -21,9 +21,13 @@ from weppy import App, request
 from weppy.tools import service
 
 app = App(__name__)
-key_googleMaps = 'AIzaSyB27xz94JVRPsuX4qJMMiZpGVoQiQITFb8'
+key_googleMaps1 = 'AIzaSyB27xz94JVRPsuX4qJMMiZpGVoQiQITFb8'
 key_googleMaps2 = 'AIzaSyDEeQ7ybauE3th_3d-GQZQcvGI-UxKOFF8'
 key_googleMaps3 = 'AIzaSyC549poFoVcUz3BsDOJ9XpO7CniNTDC6b4'
+key_googleMaps4 = 'AIzaSyCGikzsm0Bc1uOQzDX78Q15fUCXFV6C1ZQ'
+key_googleMaps5 = 'AIzaSyBU1ZCLrPVP3jO--jkEO7aILisum9ip73I'
+key_googleMaps6 = 'AIzaSyC2jdBIolYJ3ttIuDn2AGdbBCDjLHzm2Cg'
+key_googleMaps = 'AIzaSyAXKpiXm64FfQxXRym4gLqNipU2wgVHG0w'
 isTest = False
 isBenchmark = False
 isLoop = False
@@ -290,7 +294,7 @@ def saveBenchmark(filename, durata, maxDist, node_dict, arc_dict, randomizeDog=N
     for key in arc_dict:
         n_arc += len(arc_dict[key])
     if path and backwardPath:
-        if path.getExecutionTime() > backwardPath.getExecutionTime():
+        if path.getDur() > backwardPath.getDur():
             pathVSbackwardPath = '1'
         else:
             pathVSbackwardPath = '0'
@@ -390,26 +394,25 @@ def main():
     #geocode_results = viewMarkers(node_dict)
     #node_dict = loadNode('nodeDict.txt')
     #arc_dict = googleMapsRequest(node_dict)
-    calcEndTime = False
     for i in range(ncycle):
         if isLoop:
-            """
-            if (i != 0) and ((i % 10) == 0):
-                print "\nSono in pausa per 60 secondi"
-                time.sleep(60)
+
+            if (i > 15) and ((i % 50) == 0):
+                print "\nSono in pausa per 30 secondi"
+                time.sleep(30)
                 print "Riprendo l'esecuzione"
-            """
+
             print "\nCiclo numero:", i+1, "di", ncycle
         startP = time.clock()
-
+        dataOut = initDataOutput()
         start_time = time.clock()
         greedy = Euristiche(node_dict, arc_dict)
         (cars_list, dur_list, dur) = greedy.greedy()
         greedy.setExecutionTime(time.clock() - start_time)
         if not isLoop:
             printInfo('Greedy', greedy)
-        dataOut = updateDataOutput(initDataOutput(), 'greedy', cars_list,
-            dur_list, dur, node_dict['0'].getMaxDur())
+        #dataOut = updateDataOutput(dataOut, 'greedy', cars_list,
+        #    dur_list, dur, node_dict['0'].getMaxDur())
 
         #viewDirection(node_dict, geocode_results, cars_list)
 
@@ -419,8 +422,8 @@ def main():
         grasp.setExecutionTime(time.clock() - start_time)
         if not isLoop:
             printInfo('Grasp', grasp)
-        dataOut = updateDataOutput(dataOut, 'grasp', cars_list, dur_list, dur,
-            node_dict['0'].getMaxDur())
+        #dataOut = updateDataOutput(dataOut, 'grasp', cars_list, dur_list, dur,
+        #    node_dict['0'].getMaxDur())
 
         #viewDirection(node_dict, geocode_results, cars_list)
 
@@ -450,8 +453,8 @@ def main():
         path.setExecutionTime((time.clock() - start_time) + tmp_time_path)
         if not isLoop:
             printInfo('Path', path)
-        dataOut = updateDataOutput(dataOut, 'path', cars_list, dur_list, dur,
-            node_dict['0'].getMaxDur())
+        #dataOut = updateDataOutput(dataOut, 'path', cars_list, dur_list, dur,
+        #    node_dict['0'].getMaxDur())
 
         backwardPath = Euristiche(node_dict, arc_dict)
         # Stesso discorso di della path
@@ -460,25 +463,25 @@ def main():
         backwardPath.setExecutionTime((time.clock() - start_time) + tmp_time_path_reverse)
         if not isLoop:
             printInfo('Backward Path', backwardPath)
-        dataOut = updateDataOutput(dataOut, 'backwardPath', cars_list, dur_list, dur,
-            node_dict['0'].getMaxDur())
+        #dataOut = updateDataOutput(dataOut, 'backwardPath', cars_list, dur_list, dur,
+        #    node_dict['0'].getMaxDur())
 
         #viewDirection(node_dict, geocode_results, cars_list)
 
         start_time = time.clock()
         tabu = Euristiche(node_dict, arc_dict)
-        start_tabu_list = list()
-        start_tabu_list.append(greedy)
-        start_tabu_list.append(grasp)
-        start_tabu_list.append(path)
-        start_tabu_list.append(backwardPath)
-        start_tabu = sorted(start_tabu_list, key=attrgetter('dur'))[0]
+        start_list = list()
+        start_list.append(greedy)
+        start_list.append(grasp)
+        start_list.append(path)
+        start_list.append(backwardPath)
+        start_tabu = sorted(start_list, key=attrgetter('dur'))[0]
         (cars_list, dur_list, dur) = tabu.tabu(start_tabu, start_tabu, 0, 0, list(), penality/2)
         tabu.setExecutionTime(time.clock() - start_time)
         if not isLoop:
             printInfo('Tabu', tabu)
-        dataOut = updateDataOutput(dataOut, 'tabu', cars_list, dur_list, dur,
-            node_dict['0'].getMaxDur())
+        #dataOut = updateDataOutput(dataOut, 'tabu', cars_list, dur_list, dur,
+        #    node_dict['0'].getMaxDur())
         #'''
         durata = time.clock() - startP
         if isBenchmark:
@@ -486,13 +489,13 @@ def main():
                 randomizeDog, greedy, grasp, path, backwardPath, tabu)
             #saveBenchmark('benchmark.txt', durata, penality, node_dict, arc_dict,
             #    randomizeDog, greedy, grasp)
-
+        start_list.append(tabu)
+        best_eur = sorted(start_list, key=attrgetter('dur'))[0]
+        dataOut = updateDataOutput(dataOut, 'Result', best_eur.getCars(),
+            best_eur.getDurList(), best_eur.getDur(), node_dict['0'].getMaxDur())
         if ncycle > 1 and i < (ncycle-1):
-            # da decidere se e' meglio effettuare il calcolo ogni volta
-            if not calcEndTime:
-                #calcEndTime = True
-                totalTime = durata * (ncycle-i)
-                endExec = datetime.now() + timedelta(seconds=totalTime)
+            totalTime = durata * (ncycle-i)
+            endExec = datetime.now() + timedelta(seconds=totalTime)
             print "\nDurata esecuzione: (H:M:S):", timedelta(seconds=durata)
             print "La fine dell'esecuzione e' prevista per", endExec#'{:%d:%H:%M:%S}'.format(endExec)
         elif i == (ncycle-1):
