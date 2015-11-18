@@ -243,7 +243,7 @@ Arc {
                     <h4>Grafo e Soluzioni</h4>
                     <table><tr><td>
                     <blockquote align="left">
-                        Il problema è quindi formalizzato a partire da un grafo <span>completo</span>, <span>fortemente connesso</span>, <span>orientato</span>, con costi differenti su ogni arco in base al verso di percorrenza.
+                        Il problema è quindi formalizzato a partire da un grafo <span>completo</span>, <span>orientato</span>, <span>fortemente connesso</span>, con costi differenti su ogni arco in base al verso di percorrenza.
                     </blockquote>
                     <blockquote align="left">
                         Dai dati inseriti, tramite determinati metodi costruttivi, è possibile ottenere una <span>Soluzione</span> del problema che rispetti i vincoli di ammissibilità.<br/>
@@ -325,7 +325,7 @@ Arc {
                         <blockquote align="left">
                             Come primo approccio si sceglie un'euristica di tipo <span>Greedy</span> poichè di facile implementazione e notevole efficienza computazionale.<br/>
                             Gli algoritmi Greedy determinano la soluzione attraverso una sequenza di decisioni parziali (localmente ottime), senza mai modificarle.<BR/><br/>
-                            Si vuole poi procedere valutando i risultati delle singole euristiche, ottenuti tramite un <span>Benchmark</span> di circa 1000 ripetizioni su 46 elementi, così da poter confrontare i loro costi e tempi di esecuzione.
+                            Si vuole procedere inoltre valutando i risultati delle singole euristiche tramite un <span>Benchmark</span> di 500 ripetizioni su 20 elementi, così da poter confrontare i loro costi e tempi di esecuzione. La scelta di 20 nodi è stata necessaria per valutare in tempi ragionevoli il corretto funzionamento dell'algoritmo.
                         </blockquote>
                         </td>
                         </tr>
@@ -503,8 +503,7 @@ def grasp(self):
                             <tr>
                             <td>
                             <blockquote align="left">
-                                I limiti della GRASP sono rappresentati principalmente dal fatto che <span>non possiede memoria</span> (ogni restart è quindi indipendente dai precedenti) e che non dà nessuna garanzia sulla qualità della soluzione iniziale.<br/>
-                                La procedura inoltre non accetta peggioramenti, <span>rimanendo intrappolata negli ottimi locali</span> di qualità spesso peggiore rispetto all’ottimo globale (potenzialmente si converge più volte allo stesso ottimo locale).<br/><br/>
+                                Il limite della GRASP è rappresentato dal fatto che <span>non possiede memoria</span> (ogni restart è quindi indipendente dai precedenti), infatti la procedura <span>rimane intrappolata negli ottimi locali</span> di qualità spesso peggiore rispetto all’ottimo globale (potenzialmente si converge più volte alla stessa soluzione).<br/><br/>
                                 Si può trovare una soluzione a questi problemi utilizzando l'euristica <span>Path Relinking</span>, che esplora le soluzioni ottenute operando delle mosse a partire da una popolazione di soluzioni elite { s<sub>i</sub> } avvicinandosi ad una soluzione target s*.
                             </blockquote>
                             </td>
@@ -537,18 +536,17 @@ def grasp(self):
                         <tr>
                         <td>
                             <pre><code data-trim contenteditable style="overflow: visible">
-def path(self, target, elite, iteration):
+def path(self, target, elite):
   while True:
    for x in Cars:
      for y in Cars.Utenti:
        if target_tmp.cars[x][y] != elite_tmp_pope[-1].cars[x][y]:
          elite_tmp_pope[-1].cars[x][y] = target_tmp.cars[x][y]
 
-  if self.controllo_stop(target, elite_ok, iteration):
+  if self.controllo_stop(target, elite_ok):
     return elite_ok
   else:
-    iteration += 1
-    deep_sol = self.path(target, elite_ok, iteration)
+    deep_sol = self.path(target, elite_ok)
     if deep_sol.getDur() > elite_ok.getDur():
       return elite_ok
     else:
@@ -581,16 +579,16 @@ def path(self, target, elite, iteration):
                             <td>
                             <blockquote align="left">
                                 Secondo alcuni studi è più conveniente procedere in <span>senso inverso</span>, quindi dalla soluzione target s*, ad ogni mossa, si cerca di raggiungere la soluzione elite s<sub>i</sub>.<br/><br/>
-                                Si può infatti verificare che ad ogni mossa effettuata il grado di ramificazione delle possibili soluzioni venga ridotto ma secondo il <span>Proximate Optimality Principle</span> spesso si osserva che gli ottimi locali sono concentrati in una regione limitata.<br/>
+                                Si può infatti verificare che ad ogni mossa effettuata il grado di ramificazione delle possibili soluzioni venga ridotto ma secondo il <span>Proximate Optimality Principle</span> spesso si osserva che gli ottimi locali sono concentrati in regioni limitate.<br/>
                                 Per questo è preferibile iniziare la ricerca in senso inverso così da controllare maggiori soluzioni vicino alla soluzione target s* che è di fatto un ottimo locale.<br/><br/>
-                                Questo approccio, come per la Path Relinking normale, è possibile grazie alla proprietà di <span>Raggiungibilità</span> di tutte le soluzioni del problema.
+                                Questo approccio, come per la Path Relinking normale, è possibile grazie alla proprietà di <span>Raggiungibilità</span> delle soluzioni del problema.
                             </blockquote>
                             </td>
                             </tr>
                         </table>
                     </section>
                     <section data-background="#db4337">
-                        <h2>backward Path Relinking</h2>
+                        <h2>Backward Path Relinking</h2>
                         <h4>Benchmark</h4>
                         <table>
                             <tr>
@@ -606,13 +604,13 @@ def path(self, target, elite, iteration):
                 <section>
                     <section data-background="#db4337">
                         <h2>Confronto Path Relinking</h2>
-                        <h4>Tempi di Esecuzione</h4>
+                        <h4>Costo Soluzione</h4>
                         <table>
                             <tr>
                             <td align="center">
                             <img src="images/confronto_path.png" height="400px">
-                            <blockquote align="left">
-                                Confrontando le due euristiche si è notato che, sebbene il costo delle soluzioni sia identico, il tempo di esecuzione della Path Relinking è leggermente migliore nel 54,53% dei casi.
+                            <blockquote align="left"s>
+                                Confrontando le due euristiche si è notato, infatti, che il costo della Backward Path Relinking è migliore nel 54,53% dei casi.
                             </blockquote>
                             </td>
                             </tr>
@@ -625,9 +623,9 @@ def path(self, target, elite, iteration):
                             <tr>
                             <td>
                             <blockquote align="left">
-                                Una limitazione che rimane anche nella Path Relinking riguarda il fatto di non avere memoria, per questo si rischia di ritornare in soluzioni già visitate.<br/><br/>
+                                Una limitazione che rimane anche nella Path Relinking riguarda il fatto di non avere memoria, per questo lungo percorsi diversi si rischia di ritornare su soluzioni già visitate.<br/><br/>
                                 Per risolvere questo problema, e uscire quindi dal bacino di attrazione degli ottimi locali, si può usare la tecnica <span>Tabu Search</span>.<br/>
-                                Questa euristica ammette anche soluzioni peggiorative e non ammissibili durante la propria esecuzione (penalizzando in caso di violazione di vincoli) partendo da una soluzione random e valutando ogni possibile mossa di spostamento.
+                                Questa euristica ammette anche soluzioni peggiorative e non ammissibili durante la propria esecuzione (penalizzandole in caso di violazione di vincoli) partendo da una soluzione random e valutando ogni possibile mossa di spostamento.
                             </blockquote>
                             </td>
                             </tr>
@@ -643,9 +641,9 @@ def path(self, target, elite, iteration):
                             <tr>
                             <td>
                             <blockquote align="left">
-                            Si parte da una soluzione generica e si valutano tutte le possibili soluzioni a distanza di una mossa: <span>Swap</span>, <span>Stack</span> o <span>Unstack</span>. Si seleziona poi la soluzione migliore dell’intorno valutato (si accettano anche peggioramenti in modo da sfuggire agli ottimi locali) e si mantiene memoria della soluzione migliore visitata. Nel caso in cui la soluzione non sia ammissibile allora verrà aggiunta una <span>penalty</span> al costo.<br/><br/>
+                            Si parte da una soluzione generica (nel nostro caso la migliore trovata) e si valutano tutte le possibili soluzioni a distanza di una mossa: <span>Swap</span>, <span>Stack</span> o <span>Unstack</span>. Si seleziona poi la soluzione migliore dell’intorno valutato (si accettano anche peggioramenti in modo da sfuggire agli ottimi locali) e si mantiene memoria della soluzione migliore visitata. Nel caso in cui la soluzione non sia ammissibile allora verrà aggiunta una <span>penalty</span> al costo.<br/><br/>
                             Per evitare di avere dei loop, occorre che l’inversa della mossa appena effettuata venga memorizzata in una <span>Tabu List</span> di lunghezza k (e.g. k = 7), e che le mosse presenti nella lista siano proibite per le prossime k iterazioni (senza considerare il <span>Criterio di Aspirazione</span>).<br/><br/>
-                            Iterando questa ricerca, l'algoritmo finisce nel caso siano eseguite 30 iterazioni senza trovare una soluzione migliore di quella già in memoria o dopo un numero di iterazioni globali massimo.
+                            Iterando questa ricerca, l'algoritmo finisce nel caso siano eseguite 100 iterazioni senza trovare una soluzione migliore di quella già in memoria o dopo un numero di iterazioni globali massimo.
                             </blockquote>
                             </td>
                             </tr>
@@ -810,10 +808,9 @@ def tabu(self, best_solution, actual_solution, [...]):
                             <tr>
                             <td>
                             <blockquote align="left">
-                                A conclusione dello studio effetuato si può osservare che tramite la <span>Tabu Search</span> si riesce ad ottenere un buon risultato al problema NP-Hard del <span>Car Pooling</span> con un input di dimensione non ridotta.
-                                La soluzione finale risulta inoltre non solo molto buona ma anche applicabile a contesti reali.<br/><br/>
-                                Dai dati ottenuti tramite benchmark risulta però che la <span>Greedy</span> sia non troppo peggiorativa rispetto alla Tabu in confronto ad un tempo di esecuzione nettamente inferiore: la Greedy in media restituisce il risultato in <span>2,445 millisecondi</span> mentre ad esempio la Tabu impiega ben <span>64,928 secondi</span>; il tutto per ottenere un miglioramento, in termini di costo, di solo <span>11 minuti</span> sulla somma delle durate delle singole macchine.<br/><br/>
-                                Per concludere è stata sviluppata una piattaforma che, in tempi limitati e con sforzo computazionale relativamente basso, riesce a rivolvere un problema di grosse dimensioni il cui utilizzo è di interesse reale e attuale.
+                                A conclusione dello studio effetuato si può osservare che tramite la <span>Tabu Search</span> si riesce ad ottenere un buon risultato al problema NP-Hard del <span>Car Pooling</span> migliorando sempre l'iniziale soluzione ricavata tramite la Greedy costruttiva.<br/><br/>
+                                Si può anche verificare che, con un input di dimensione non ridotta, l'algoritmo restituisce un risultato in tempi relativamente brevi e con una soluzione finale non solo molto buona, ma anche applicabile a contesti reali.<br/><br/>
+                                Per concludere è stata quindi sviluppata una piattaforma che, in tempi limitati e con sforzo computazionale relativamente basso, riesce a risolvere un problema di grosse dimensioni il cui utilizzo è di interesse reale e attuale.
                             </blockquote>
                             </td>
                             </tr>
@@ -833,7 +830,7 @@ def tabu(self, best_solution, actual_solution, [...]):
                         </blockquote>
                         </td></tr></table>
                     </section>
-                    <section data-background="images/fine.gif">
+                    <!--<section data-background="images/fine.gif">-->
                 </section>
             </div>
 
